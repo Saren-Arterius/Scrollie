@@ -42,6 +42,7 @@ variable:
         # Default: paper
         # Expected Minecraft item ID in Dec 
         ScrollItem: 339
+        
         # Basic EXP = BaseEXPRequired*ScrollDestinationExpFactor
         BaseEXPRequired: 50
         ScrollDestinationExpFactor:
@@ -49,6 +50,7 @@ variable:
             Home: 1
             CurrentLocation: 2
             Random: 1.5
+            
         # Extra EXP (warm up): WarmUpEXPBase / (WarmUpTime + WarmUpEXPDenominatorSum) <WarmUpTime is set by player>
         # Case 1: WarmUpEXPBase = 50, WarmUpEXPDenominatorSum = 1, WarmUpTime = 15
         # Extra EXP required = 50 / (15 + 1) = 50/16 = 3.125
@@ -59,10 +61,13 @@ variable:
         WarmUpEXPBase: 50
         # Set this to less than 1 to screw your server up.
         WarmUpEXPDenominatorSum: 1
+        
         # Similar to above
         CoolDownExpBase: 50
         CoolDownEXPDenominatorSum: 1
+        
         # Multiplies the whole equation.
+        # Expected >= 1
         CrossWorldTPExpFactor: 3
         # Total EXP required = (Basic EXP + Extra EXP (warm up) + Extra EXP(cool down) ) * CrossWorldTPExpFactor
     use:
