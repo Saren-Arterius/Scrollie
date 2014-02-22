@@ -1,0 +1,15 @@
+limit:
+    fuckPower: 10
+    fuckTimes: 10
+
+message:
+    playerNotSpecfied: §cI don't know which player you wanted to fuck.
+    playerNotFound: §cThe player you wanted to fuck with is offline.
+    canNotFuckSelf: §cYou can not fuck yourself because you are not awesome enough!
+    canFuckSelf: You just fucked yourself! Woohoo.
+    justBeenFucked: You have just been fucked by {0} for {1} times!
+    justFuckedSomebody: You have just fucked {0} for {1} times!
+    pluginReloadedConsole: §aSomebody just reloaded her penis!
+    pluginReloadedPlayer: §aYou just reloaded your penis!
+    notStrongEnoughTimes: §cYou are not strong enough to fuck that many times!
+    notStrongEnoughPower: §cYou are not strong enough to fuck using that power!

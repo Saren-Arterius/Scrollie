@@ -1,0 +1,41 @@
+name: Scrollie
+version: 0.0.1a
+description: This plugin is useless.
+author: Saren
+website: https://github.com/Shaorune/BukkitHelloWorld/
+ 
+main: hk.coms.wtako.BukkitHelloWorld.Main
+database: false
+ 
+commands:
+    fuck:
+        description: Fuck somebody.
+        usage: Type /<command> (somebody) to fuck somebody.
+        permission: fuck.qualifiedToFuck
+        permission-message: You are not qualified to fuck with somebody!
+    fuckreload:
+        description: Reload this plugin.
+        usage: Type /<command> to reload this plugin.
+        permission: fuck.reload
+        permission-message: You are not qualified to reload your penis!
+
+permissions:
+    fuck.*:
+        description: Gives access to all BukkitHelloWorld commands.
+        children:
+            fuck.qualifiedToFuck: true
+            fuck.allowsSelfFucking: true
+            fuck.allowsLimitsOverriding: true
+            fuck.reload: true
+    fuck.qualifiedToFuck:
+        description: Allows you to fuck somebody.
+        default: op
+    fuck.allowsSelfFucking:
+        description: Allows you to fuck yourself.
+        default: op
+    fuck.allowsLimitsOverriding:
+        description: Allows you to override the limits.
+        default: op
+    fuck.reload:
+        description: Allows you to reload your penis.
+        default: op
