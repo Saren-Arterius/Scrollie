@@ -9,35 +9,35 @@ main: net.wtako.Scrollie.Main
 database: false 
 
 commands:
-    scrollie:
+    Scrollie:
         description: Basic command.
         usage: Type /<command> help to get help.
-        permission: scrollie.Use
+        permission: Scrollie.Use
         permission-message: You are not permitted to use this plugin.
 
 permissions:
-    scrollie.*:
+    Scrollie.*:
         description: Gives access to all Scrollie commands.
         children:
-            scrollie.Use: True
-            scrollie.OP: True
+            Scrollie.Use: True
+            Scrollie.OP: True
         default: op
-    scrollie.OP:
+    Scrollie.OP:
         description: Gives access to all Scrollie administrative commands.
         children:
-            scrollie.OverrideLimit: True
-            scrollie.NoExpRequiredToMake: True
-            scrollie.Reload: True
+            Scrollie.OverrideLimit: True
+            Scrollie.NoExpRequiredToMake: True
+            Scrollie.Reload: True
         default: op
-    scrollie.OverrideLimit:
+    Scrollie.OverrideLimit:
         description: Gives access to override min/max limit set in config.yml.
         default: op
-    scrollie.NoExpRequiredToMake:
+    Scrollie.NoExpRequiredToMake:
         description: Player with this permission doesn't need experience to make scrolls.
         default: op
-    scrollie.Reload:
+    Scrollie.Reload:
         description: Reloads the plugin.
         default: op
-    scrollie.Use:
+    Scrollie.Use:
         description: Gives access to basic commands.
         default: player

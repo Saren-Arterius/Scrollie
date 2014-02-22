@@ -1,5 +1,5 @@
 variable:
-    new:
+    create:
         ScrollDestination:
             # Expected string
             Default: "Spawn"
@@ -69,7 +69,7 @@ variable:
         # If set to Yes, remaining count will get decreased by 1 on teleportation success/fail.
         # If set to No, remaining count will get decreased by 1 on teleportation success.
         # Expected Yes/No
-        MovingDoHarmToScroll: No
+        MovingDoesHarmToScroll: No
 
 system:
     # Change this to get this plugin eaten by Ender Dragon.
@@ -77,7 +77,7 @@ system:
 
 message:
     general:
-        new:
+        create:
             Wizard: "Enter wizard mode. Type 'exit' to exit."
             WizardInterrupt: "Exiting wizard mode."
             WhatDestination: "What is the destination of the new scroll? To <Spawn>, To <Home>, To your <CurrentLocation> or To <Random>? [Default: {0}]"
@@ -97,23 +97,23 @@ message:
         delete:
             FinishedDeleting: "You deleted the scroll <{0}>."
     help:
-        HelpText1: "Type '/scrollie new' to create a new scroll."
-        HelpText2: "Type '/scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional' to make a predefined scroll."
-        HelpText3: "Type '/scrollie list' to the scrolls you have created."
-        HelpText4: "Type '/scrollie delete <Scroll ID>' to delete a specific scroll you have created. (Use '/scrollie list' first)"
-        HelpText5: "Type '/scrollie reload' to reload the plugin."
-        new:
-            MakeThisScroll: "Type '/scrollie make {0}' to make this scroll."
-            ViewScrollList: "Type '/scrollie list' to view other scrolls."
-            DeleteThisScroll: "Type '/scrollie delete {0}' to delete this scroll."
+        HelpText1: "Type '/Scrollie create' to create a new scroll."
+        HelpText2: "Type '/Scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional' to make a predefined scroll."
+        HelpText3: "Type '/Scrollie list' to the scrolls you have created."
+        HelpText4: "Type '/Scrollie delete <Scroll ID>' to delete a specific scroll you have created. (Use '/Scrollie list' first)"
+        HelpText5: "Type '/Scrollie reload' to reload the plugin."
+        create:
+            MakeThisScroll: "Type '/Scrollie make {0}' to make this scroll."
+            ViewScrollList: "Type '/Scrollie list' to view other scrolls."
+            DeleteThisScroll: "Type '/Scrollie delete {0}' to delete this scroll."
         make:
-            Usage: "Usage: /scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional"
+            Usage: "Usage: /Scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional"
         delete:
-            Usage: "Usage: /scrollie delete <Scroll ID>"
+            Usage: "Usage: /Scrollie delete <Scroll ID>"
     error:
         NoSuchScroll: "Could not find scroll ID {0}."
         WrongValue: "Value {0} in config.yml is invalid. Falling back to hard-coded default. [Expected: {1}. Got: {2}. Falling back to: {3}]"
-        new:
+        create:
             EnterAgain: "Sorry, please enter again. [Expected: {0}. Got: {1}]"
         make:
             PleaseHoldAPaper: "Please hold an unused paper in your hand."
