@@ -116,7 +116,7 @@ message:
         new:
             EnterAgain: "Sorry, please enter again. [Expected: {0}. Got: {1}]"
         make:
-            PleaseHoldAPaper: "Please hold a paper in your hand."
+            PleaseHoldAPaper: "Please hold an unused paper in your hand."
             YouDontHaveEnoughExp: "You don't have enough experience. [Required: {0}xp. You have: {1}xp]"
         use:
             WarmUpFail: "Warming up process has been interrupted."
