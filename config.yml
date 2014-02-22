@@ -96,6 +96,8 @@ message:
             FinishedUsing: "You used the scroll <{0}>. You are teleported to {1}. [X:{2} Y:{3} Z:{4}]"
         delete:
             FinishedDeleting: "You deleted the scroll <{0}>."
+        reload:
+            PluginReloaded: "Plugin reloaded."
     help:
         HelpText1: "Type '/scrollie create' to create a new scroll."
         HelpText2: "Type '/scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional' to make a predefined scroll."
