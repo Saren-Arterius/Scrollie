@@ -1,15 +1,123 @@
-limit:
-    fuckPower: 10
-    fuckTimes: 10
+variable:
+    new:
+        ScrollDestination:
+            # Expected string
+            Default: "Spawn"
+            Allows:
+            - "Spawn"
+            - "Home"
+            - "CurrentLocation"
+            - "Random"
+            # If players cannot customize the variable, default value will be applied.
+            CanCustomize: Yes
+        WarmUpTime:
+            # Expected >= 0
+            Default: 10
+            Min: 0
+            Max: 60
+            CanCustomize: Yes
+        CoolDownTime:
+            # Expected >= 0
+            Default: 600
+            Min: 0
+            Max: 3600
+            CanCustomize: Yes
+        CrossWorldTP:
+            # Expected Yes/No
+            Default: No
+            CanCustomize: Yes
+        TimesBeUsed:
+            # Expected >= 1
+            Default: 1
+            Min: 1
+            Max: 9999
+            CanCustomize: Yes
+        EnterName:
+            # Expected string
+            Default: "My scroll"
+            # Maximum String length.
+            # Expected >= 0
+            MaxCharacters: 64
+    make:
+        # Default: paper
+        # Expected Minecraft item ID in Dec 
+        ScrollItem: 339
+        # Basic EXP = BaseEXPRequired*ScrollDestinationExpFactor
+        BaseEXPRequired: 50
+        ScrollDestinationExpFactor:
+            Spawn: 1
+            Home: 1
+            CurrentLocation: 2
+            Random: 1.5
+        # Extra EXP (warm up): WarmUpEXPBase / (WarmUpTime + WarmUpEXPDenominatorSum) <WarmUpTime is set by player>
+        # Case 1: WarmUpEXPBase = 50, WarmUpEXPDenominatorSum = 1, WarmUpTime = 15
+        # Extra EXP required = 50 / (15 + 1) = 50/16 = 3.125
+        # Case 2: WarmUpEXPBase = 50, WarmUpEXPDenominatorSum = 2, WarmUpTime = 0
+        # Extra EXP required = 50 / (0 + 2) = 50/2 = 25
+        # Case 3: WarmUpEXPBase = 100, WarmUpEXPDenominatorSum = 1, WarmUpTime = 0
+        # Extra EXP required = 100 / (0 + 1) = 100/1 = 100
+        WarmUpEXPBase: 50
+        # Set this to less than 1 to screw your server up.
+        WarmUpEXPDenominatorSum: 1
+        # Similar to above
+        CoolDownExpBase: 50
+        CoolDownEXPDenominatorSum: 1
+        # Multiplies the whole equation.
+        CrossWorldTPExpFactor: 3
+        # Total EXP required = (Basic EXP + Extra EXP (warm up) + Extra EXP(cool down) ) * CrossWorldTPExpFactor
+    use:
+        # If set to Yes, remaining count will get decreased by 1 on teleportation success/fail.
+        # If set to No, remaining count will get decreased by 1 on teleportation success.
+        # Expected Yes/No
+        MovingDoHarmToScroll: No
+
+system:
+    # Change this to get this plugin eaten by Ender Dragon.
+    PluginVersion: 0.0.1
 
 message:
-    playerNotSpecfied: §cI don't know which player you wanted to fuck.
-    playerNotFound: §cThe player you wanted to fuck with is offline.
-    canNotFuckSelf: §cYou can not fuck yourself because you are not awesome enough!
-    canFuckSelf: You just fucked yourself! Woohoo.
-    justBeenFucked: You have just been fucked by {0} for {1} times!
-    justFuckedSomebody: You have just fucked {0} for {1} times!
-    pluginReloadedConsole: §aSomebody just reloaded her penis!
-    pluginReloadedPlayer: §aYou just reloaded your penis!
-    notStrongEnoughTimes: §cYou are not strong enough to fuck that many times!
-    notStrongEnoughPower: §cYou are not strong enough to fuck using that power!
+    general:
+        new:
+            Wizard: "Enter wizard mode. Type 'exit' to exit."
+            WizardInterrupt: "Exiting wizard mode."
+            WhatDestination: "What is the destination of the new scroll? To <Spawn>, To <Home>, To your <CurrentLocation> or To <Random>? [Default: {0}]"
+            WhatWouldTheWarmUpTimeBe: "How about the warm up time? (The shorter time the more exp required) <{0} - {1} seconds> [Default: {2})]"
+            WhatWouldTheCoolDownTimeBe: "How about the cool down time? (The shorter time the more exp required) <{0} - {1} seconds> [Default: {2}]"
+            AllowCrossWorldTPOrNot: "Allow cross-world teleportation? (Need {0}*xp to make) <yes/no> [Default: {1}]"
+            HowManyTimesCouldThisScrollBeUsed: "How many times could this scroll be used? (Need times*xp to make) <{0} - {1}> [Default: {2}]"
+            EnterName: "Enter any name to identify your scroll. <Max {0} characters> [Default: {1}]"
+            FinishedCreating: "Finished creating a new scroll."
+        make:
+            FinishedMaking: "You made the scroll <{0}>. Right click on the paper to use it."
+        use:
+            WarmingUp: "Warming up for {0} seconds."
+            CoolingDown: "Cooling down is in process. You have to wait for {0} seconds before using teleportation scrolls again."
+            ScrollDisappeared: "Your scroll <{0}> is faded away."
+            FinishedUsing: "You used the scroll <{0}>. You are teleported to {1}. [X:{2} Y:{3} Z:{4}]"
+        delete:
+            FinishedDeleting: "You deleted the scroll <{0}>."
+    help:
+        HelpText1: "Type '/scrollie new' to create a new scroll."
+        HelpText2: "Type '/scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional' to make a predefined scroll."
+        HelpText3: "Type '/scrollie list' to the scrolls you have created."
+        HelpText4: "Type '/scrollie delete <Scroll ID>' to delete a specific scroll you have created. (Use '/scrollie list' first)"
+        HelpText5: "Type '/scrollie reload' to reload the plugin."
+        new:
+            MakeThisScroll: "Type '/scrollie make {0}' to make this scroll."
+            ViewScrollList: "Type '/scrollie list' to view other scrolls."
+            DeleteThisScroll: "Type '/scrollie delete {0}' to delete this scroll."
+        make:
+            Usage: "Usage: /scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional"
+        delete:
+            Usage: "Usage: /scrollie delete <Scroll ID>"
+    error:
+        NoSuchScroll: "Could not find scroll ID {0}."
+        WrongValue: "Value {0} in config.yml is invalid. Falling back to hard-coded default. [Expected: {1}. Got: {2}. Falling back to: {3}]"
+        new:
+            EnterAgain: "Sorry, please enter again. [Expected: {0}. Got: {1}]"
+        make:
+            PleaseHoldAPaper: "Please hold a paper in your hand."
+            YouDontHaveEnoughExp: "You don't have enough experience. [Required: {0}xp. You have: {1}xp]"
+        use:
+            WarmUpFail: "Warming up process has been interrupted."
+            NotPowerfulEnough: "Your scroll <{0}> is not powerful enough to perform cross-world teleportation."

@@ -1,41 +1,43 @@
 name: Scrollie
-version: 0.0.1a
-description: This plugin is useless.
+version: 0.0.1
+description: Yet another useless Minecraft Craftbukkit plugin.
 author: Saren
-website: https://github.com/Shaorune/BukkitHelloWorld/
+website: https://github.com/Shaorune/Scrollie
  
-main: hk.coms.wtako.BukkitHelloWorld.Main
-database: false
- 
+main: net.wtako.Scrollie.Main
+# No, shit.
+database: false 
+
 commands:
-    fuck:
-        description: Fuck somebody.
-        usage: Type /<command> (somebody) to fuck somebody.
-        permission: fuck.qualifiedToFuck
-        permission-message: You are not qualified to fuck with somebody!
-    fuckreload:
-        description: Reload this plugin.
-        usage: Type /<command> to reload this plugin.
-        permission: fuck.reload
-        permission-message: You are not qualified to reload your penis!
+    scrollie:
+        description: Basic command.
+        usage: Type /<command> help to get help.
+        permission: scrollie.Use
+        permission-message: You are not permitted to use this plugin.
 
 permissions:
-    fuck.*:
-        description: Gives access to all BukkitHelloWorld commands.
+    scrollie.*:
+        description: Gives access to all Scrollie commands.
         children:
-            fuck.qualifiedToFuck: true
-            fuck.allowsSelfFucking: true
-            fuck.allowsLimitsOverriding: true
-            fuck.reload: true
-    fuck.qualifiedToFuck:
-        description: Allows you to fuck somebody.
+            scrollie.Use: True
+            scrollie.OP: True
         default: op
-    fuck.allowsSelfFucking:
-        description: Allows you to fuck yourself.
+    scrollie.OP:
+        description: Gives access to all Scrollie administrative commands.
+        children:
+            scrollie.OverrideLimit: True
+            scrollie.NoExpRequiredToMake: True
+            scrollie.Reload: True
         default: op
-    fuck.allowsLimitsOverriding:
-        description: Allows you to override the limits.
+    scrollie.OverrideLimit:
+        description: Gives access to override min/max limit set in config.yml.
         default: op
-    fuck.reload:
-        description: Allows you to reload your penis.
+    scrollie.NoExpRequiredToMake:
+        description: Player with this permission doesn't need experience to make scrolls.
         default: op
+    scrollie.Reload:
+        description: Reloads the plugin.
+        default: op
+    scrollie.Use:
+        description: Gives access to basic commands.
+        default: player
