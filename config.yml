@@ -40,7 +40,7 @@ variable:
             MaxCharacters: 64
     make:
         # Default: paper
-        # Expected Minecraft item ID in Dec 
+        # Expected Minecraft item ID in Dec data format
         ScrollItem: 339
         
         # Basic EXP = BaseEXPRequired*ScrollDestinationExpFactor
