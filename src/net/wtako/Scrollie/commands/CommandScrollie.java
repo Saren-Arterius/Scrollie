@@ -14,6 +14,10 @@ public class CommandScrollie implements CommandExecutor {
     }
     
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (args[1].toLowerCase() == "create") {
+            
+            return true;
+        }
         return true;
     }
 }

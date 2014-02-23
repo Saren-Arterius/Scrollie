@@ -1,4 +1,4 @@
-package net.wtako.Scrollie.Methods.scrollie;
+package net.wtako.Scrollie.Methods;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
