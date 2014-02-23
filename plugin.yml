@@ -2,7 +2,7 @@ name: Scrollie
 version: 0.0.1
 description: Yet another useless Minecraft Craftbukkit plugin.
 author: Saren
-website: https://github.com/Shaorune/Scrollie
+website: https://gitlab.wtako.net/Saren/scrollie
  
 main: net.wtako.Scrollie.Main
 # No, shit.
