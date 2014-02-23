@@ -1,6 +1,6 @@
 package net.wtako.Scrollie;
 
-import net.wtako.Scrollie.commands.CommandScrollie;
+import net.wtako.Scrollie.Commands.CommandScrollie;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -10,7 +10,6 @@ public final class Main extends JavaPlugin {
 	    this.saveDefaultConfig();
 	    this.getConfig().options().copyDefaults(true);
 	    this.getLogger().info("Hello bloody java world!");
-	    
 	    getCommand("scrollie").setExecutor(new CommandScrollie(this));
 	}
 	

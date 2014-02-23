@@ -40,4 +40,4 @@ permissions:
         default: op
     Scrollie.Use:
         description: Gives access to basic commands.
-        default: player
+        default: true

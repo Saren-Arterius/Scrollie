@@ -42,10 +42,14 @@ variable:
         # Default: paper
         # Expected Minecraft item ID in Dec data format
         ScrollItem: 339
+        # Expected Yes/No
+        UseEconInsteadOfEXP: No
         
         # Basic EXP = BaseEXPRequired*ScrollDestinationExpFactor
+        # Expected >= 0
         BaseEXPRequired: 50
         ScrollDestinationExpFactor:
+            # Expected >= 0
             Spawn: 1
             Home: 1
             CurrentLocation: 2
@@ -90,7 +94,7 @@ message:
             WhatWouldTheCoolDownTimeBe: "How about the cool down time? (The shorter time the more exp required) <{0} - {1} seconds> [Default: {2}]"
             AllowCrossWorldTPOrNot: "Allow cross-world teleportation? (Need {0}*xp to make) <yes/no> [Default: {1}]"
             HowManyTimesCouldThisScrollBeUsed: "How many times could this scroll be used? (Need times*xp to make) <{0} - {1}> [Default: {2}]"
-            EnterName: "Enter any name to identify your scroll. <Max {0} characters> [Default: {1}]"
+            EnterName: "Enter any name to identify your new scroll. <Max {0} characters> [Default: {1}]"
             FinishedCreating: "Finished creating a new scroll."
         make:
             FinishedMaking: "You made the scroll <{0}>. Right click on the paper to use it."
