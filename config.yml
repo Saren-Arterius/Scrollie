@@ -3,7 +3,7 @@ variable:
         ScrollDestination:
             # Expected string
             Default: "Spawn"
-            Allows:
+            Enabled:
             - "Spawn"
             - "Home"
             - "CurrentLocation"

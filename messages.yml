@@ -2,20 +2,22 @@ general:
     create:
         Wizard: "Enter wizard mode. Type 'exit' to exit."
         WizardInterrupt: "Exiting wizard mode."
-        WhatDestination: "What is the destination of the new scroll? To <Spawn>, To <Home>, To your <CurrentLocation> or To <Random>? [Default: {0}]"
+        WhatDestination: "What is the destination of the new scroll?"
+        AllDestinations: "<0>: To <Spawn>, <1>: To <Home>, <2>: To your <CurrentLocation>, <3>: To <Random> [Default: {0}]"
         WhatWouldTheWarmUpTimeBe: "How about the warm up time? (The shorter time the more exp required) <{0} - {1} seconds> [Default: {2})]"
         WhatWouldTheCoolDownTimeBe: "How about the cool down time? (The shorter time the more exp required) <{0} - {1} seconds> [Default: {2}]"
         AllowCrossWorldTPOrNot: "Allow cross-world teleportation? (Need {0}*xp to make) <yes/no> [Default: {1}]"
         HowManyTimesCouldThisScrollBeUsed: "How many times could this scroll be used? (Need times*xp to make) <{0} - {1}> [Default: {2}]"
         EnterName: "Enter any name to identify your new scroll. <Max {0} characters> [Default: {1}]"
         FinishedCreating: "Finished creating a new scroll."
+        ValueSet: "Value successfully set. >{0}: {1}<"
     make:
         FinishedMaking: "You made the scroll <{0}>. Right click on the paper to use it."
     use:
         WarmingUp: "Warming up for {0} seconds."
         CoolingDown: "Cooling down is in process. You have to wait for {0} seconds before using teleportation scrolls again."
         ScrollDisappeared: "Your scroll <{0}> is faded away."
-        FinishedUsing: "You used the scroll <{0}>. You are teleported to {1}. [X:{2} Y:{3} Z:{4}]"
+        FinishedUsing: "You used the scroll <{0}>. You are teleported to {1}. >X:{2} Y:{3} Z:{4}<"
     delete:
         FinishedDeleting: "You deleted the scroll <{0}>."
     reload:
@@ -36,12 +38,12 @@ help:
         Usage: "Usage: /scrollie delete <Scroll ID>"
 error:
     NoSuchScroll: "Could not find scroll ID {0}."
-    WrongValue: "Value {0} in config.yml is invalid. Falling back to hard-coded default. [Expected: {1}. Got: {2}. Falling back to: {3}]"
+    WrongValue: "Value {0} in config.yml is invalid. Falling back to hard-coded default. >Expected: {1}. Got: {2}. Falling back to: {3}<"
     create:
-        EnterAgain: "Sorry, please enter again. [Expected: {0}. Got: {1}]"
+        EnterAgain: "Sorry, please enter again. >Expected: {0}. Got: {1}<"
     make:
         PleaseHoldAPaper: "Please hold an unused paper in your hand."
-        YouDontHaveEnoughExp: "You don't have enough experience. [Required: {0}xp. You have: {1}xp]"
+        YouDontHaveEnoughExp: "You don't have enough experience. >Required: {0}xp. You have: {1}xp<"
     use:
         WarmUpFail: "Warming up process has been interrupted."
         NotPowerfulEnough: "Your scroll <{0}> is not powerful enough to perform cross-world teleportation."

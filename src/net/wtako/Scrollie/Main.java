@@ -1,8 +1,6 @@
 package net.wtako.Scrollie;
 
 import net.wtako.Scrollie.Commands.CommandScrollie;
-import net.wtako.Scrollie.EventHandlers.PlayerListener;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
@@ -14,7 +12,6 @@ public final class Main extends JavaPlugin {
         this.saveDefaultConfig();
         this.getConfig().options().copyDefaults(true);
         this.getCommand("scrollie").setExecutor(new CommandScrollie());
-        this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
     public void onDisable() {

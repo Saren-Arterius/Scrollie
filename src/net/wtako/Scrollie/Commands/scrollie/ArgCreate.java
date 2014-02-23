@@ -1,5 +1,8 @@
 package net.wtako.Scrollie.Commands.scrollie;
 
+import net.wtako.Scrollie.Methods.Wizard;
+import net.wtako.Scrollie.Methods.scrollie.create.CreateWizard;
+
 import org.bukkit.entity.Player;
 
 public class ArgCreate {
@@ -11,7 +14,7 @@ public class ArgCreate {
     }
 
     public void goToWizard() {
-        sender.sendMessage("Just a test lol.");
+        Wizard.enterOrLeave(sender, new CreateWizard(sender));
     }
 
 }
