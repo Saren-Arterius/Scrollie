@@ -5,12 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import net.wtako.Scrollie.Utils.Logging;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class CustomConfig extends YamlConfiguration {
 
@@ -25,19 +23,15 @@ public class CustomConfig extends YamlConfiguration {
         try {
             super.load(configFile);
         } catch (FileNotFoundException e) {
-            Logger.getLogger(JavaPlugin.class.getName()).log(
-                    Level.SEVERE,
-                    "Could not find " + configFile.getName()
-                            + ", creating new one...");
+            Logging logger = new Logging();
+            logger.logError("Could not find " + configFile.getName() + ", creating new one...");
             reload();
         } catch (IOException e) {
-            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE,
-                    "Could not load " + configFile.getName(), e);
+            Logging logger = new Logging();
+            logger.logError("Could not load " + configFile.getName() + e);
         } catch (InvalidConfigurationException e) {
-            Logger.getLogger(JavaPlugin.class.getName())
-                    .log(Level.SEVERE,
-                            configFile.getName()
-                                    + " is not a valid configuration file.", e);
+            Logging logger = new Logging();
+            logger.logError(configFile.getName() + " is not a valid configuration file." + e);
         }
     }
 
@@ -55,16 +49,15 @@ public class CustomConfig extends YamlConfiguration {
         try {
             super.save(configFile);
         } catch (IOException ex) {
-            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE,
-                    "Could not save config to " + configFile.getName(), ex);
+            Logging logger = new Logging();
+            logger.logError("Could not save config to " + configFile.getName() + ex);
         }
     }
 
     public boolean loadRessource(File file) {
         boolean out = true;
         if (!file.exists()) {
-            InputStream fis = getClass().getResourceAsStream(
-                    "/" + file.getName());
+            InputStream fis = getClass().getResourceAsStream("/" + file.getName());
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(file);
@@ -74,8 +67,8 @@ public class CustomConfig extends YamlConfiguration {
                     fos.write(buf, 0, i);
                 }
             } catch (Exception e) {
-                Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE,
-                        "Failed to load config from JAR");
+                Logging messager = new Logging();
+                messager.logError("Failed to load config from JAR");
                 out = false;
             } finally {
                 try {
