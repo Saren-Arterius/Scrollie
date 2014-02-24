@@ -39,6 +39,7 @@ variable:
             # Expected >= 0
             MaxCharacters: 64
     make:
+        BanCreative: Yes
         # Default: paper
         # Expected Minecraft item ID in Dec data format
         ScrollItem: 339
@@ -75,6 +76,7 @@ variable:
         CrossWorldTPExpFactor: 3
         # Total EXP required = (Basic EXP + Extra EXP (warm up) + Extra EXP(cool down) ) * CrossWorldTPExpFactor
     use:
+        BanCreative: Yes
         # If set to Yes, remaining count will get decreased by 1 on teleportation success/fail.
         # If set to No, remaining count will get decreased by 1 on teleportation success.
         # Expected Yes/No

@@ -17,18 +17,21 @@ public abstract class Wizard implements Listener {
 
     private static void enter(Player player, Wizard wizard) {
         wizard.begin();
-        player.getServer().getPluginManager().registerEvents(wizard, player.getServer().getPluginManager().getPlugin("Scrollie"));
+        if (inWizardMode.size() == 0) {
+            player.sendMessage("EVENT REGISTERED");
+            player.getServer().getPluginManager().registerEvents(wizard, player.getServer().getPluginManager().getPlugin("Scrollie"));
+        }
         inWizardMode.put(player.getName(), wizard);
     }
 
-    public static void enterOrLeave(Player player, Wizard editor) {
-        if (editor == null) {
+    public static void enterOrLeave(Player player, Wizard wizard) {
+        if (wizard == null) {
             return;
         }
-        Wizard edit = inWizardMode.get(player.getName());
-        if (edit == null) {
-            enter(player, editor);
-        } else if (edit.getClass() == editor.getClass()) {
+        Wizard wizarding = inWizardMode.get(player.getName());
+        if (wizarding == null) {
+            enter(player, wizard);
+        } else if (wizarding.getClass() == wizard.getClass()) {
             leave(player);
         } else {
             player.sendMessage("Player already in wizard!");
@@ -43,15 +46,20 @@ public abstract class Wizard implements Listener {
         if (!hasEditor(player)) {
             return;
         }
-        Wizard editor = inWizardMode.remove(player.getName());
-        HandlerList.unregisterAll(editor);
-        editor.end();
+        Wizard wizard = inWizardMode.remove(player.getName());
+        if (inWizardMode.size() == 0) {
+            HandlerList.unregisterAll(wizard);
+            player.sendMessage("EVENT UNREGISTERED");
+        }
+        wizard.end();
     }
 
     public static void leaveAll() {
         for (Entry<String, Wizard> entry : inWizardMode.entrySet()) {
             entry.getValue().end();
-            HandlerList.unregisterAll(entry.getValue());
+            if (inWizardMode.size() == 0) {
+                HandlerList.unregisterAll(entry.getValue());
+            }
         }
         inWizardMode.clear();
     }
