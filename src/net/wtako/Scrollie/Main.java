@@ -14,47 +14,48 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
 
-    private static Main instance;
+    private static Main             instance;
     public static YamlConfiguration LANG;
-    public static File LANG_FILE;
-    public static Logger log = Logger.getLogger("Scrollie");
+    public static File              LANG_FILE;
+    public static Logger            log = Logger.getLogger("Scrollie");
 
+    @Override
     public void onEnable() {
-        instance = this;
-        this.saveDefaultConfig();
-        this.getConfig().options().copyDefaults(true);
-        this.getCommand("scrollie").setExecutor(new CommandScrollie());
-        this.loadLang();
+        Main.instance = this;
+        saveDefaultConfig();
+        getConfig().options().copyDefaults(true);
+        getCommand("scrollie").setExecutor(new CommandScrollie());
+        loadLang();
     }
 
+    @Override
     public void onDisable() {
-        this.getLogger().info("Good-bye bloody chalon!");
+        getLogger().info("Good-bye bloody chalon!");
     }
 
     public void loadLang() {
-        File lang = new File(getDataFolder(), "messages.yml");
+        final File lang = new File(getDataFolder(), "messages.yml");
         if (!lang.exists()) {
             try {
                 getDataFolder().mkdir();
                 lang.createNewFile();
-                InputStream defConfigStream = this.getResource("messages.yml");
+                final InputStream defConfigStream = getResource("messages.yml");
                 if (defConfigStream != null) {
-                    YamlConfiguration defConfig = YamlConfiguration
-                            .loadConfiguration(defConfigStream);
+                    final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
                     defConfig.save(lang);
                     Lang.setFile(defConfig);
                     return;
                 }
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace(); // So they notice
-                log.severe("[Scrollie] Couldn't create language file.");
-                log.severe("[Scrollie] This is a fatal error. Now disabling");
-                this.setEnabled(false); // Without it loaded, we can't send them
-                                        // messages
+                Main.log.severe("[Scrollie] Couldn't create language file.");
+                Main.log.severe("[Scrollie] This is a fatal error. Now disabling");
+                setEnabled(false); // Without it loaded, we can't send them
+                                   // messages
             }
         }
-        YamlConfiguration conf = YamlConfiguration.loadConfiguration(lang);
-        for (Lang item : Lang.values()) {
+        final YamlConfiguration conf = YamlConfiguration.loadConfiguration(lang);
+        for (final Lang item: Lang.values()) {
             if (conf.getString(item.getPath()) == null) {
                 conf.set(item.getPath(), item.getDefault());
             }
@@ -64,11 +65,10 @@ public final class Main extends JavaPlugin {
         Main.LANG_FILE = lang;
         try {
             conf.save(getLangFile());
-        } catch (IOException e) {
+        } catch (final IOException e) {
 
-            log.log(Level.WARNING, "PluginName: Failed to save messages.yml.");
-            log.log(Level.WARNING,
-                    "PluginName: Report this stack trace to <your name>.");
+            Main.log.log(Level.WARNING, "PluginName: Failed to save messages.yml.");
+            Main.log.log(Level.WARNING, "PluginName: Report this stack trace to Saren.");
             e.printStackTrace();
         }
     }
@@ -79,7 +79,7 @@ public final class Main extends JavaPlugin {
      * @return The messages.yml config.
      */
     public YamlConfiguration getLang() {
-        return LANG;
+        return Main.LANG;
     }
 
     /**
@@ -88,10 +88,10 @@ public final class Main extends JavaPlugin {
      * @return The messages.yml file.
      */
     public File getLangFile() {
-        return LANG_FILE;
+        return Main.LANG_FILE;
     }
 
     public static Main getInstance() {
-        return instance;
+        return Main.instance;
     }
 }

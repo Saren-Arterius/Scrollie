@@ -84,7 +84,6 @@ public class Scroll {
     }
 
     private String[] checkDestinationType(Integer destinationType) {
-
         final List<String> enabledDestinationTypes = Main.getInstance().getConfig()
                 .getStringList("variable.create.ScrollDestination.Enabled");
         String humanEnabledDestinationTypes = "";
@@ -93,7 +92,7 @@ public class Scroll {
             humanEnabledDestinationTypes += destinationTypeIntegerToString(enabledDestinationInteger) + ", ";
             if ((enabledDestinationInteger == destinationType) && (enabledDestinationInteger != -1)) {
                 this.destinationType = destinationType;
-                return success("Destination Type", destinationTypeIntegerToString(destinationType));
+                return success(Lang.DESTINATION_TYPE.toString(), destinationTypeIntegerToString(destinationType));
             }
         }
         return enterAgain(humanEnabledDestinationTypes, destinationTypeIntegerToString(destinationType));
@@ -107,7 +106,7 @@ public class Scroll {
         try {
             return checkWarmUpTime(Integer.parseInt(input));
         } catch (final Exception ex) {
-            return enterAgain("Integer", "Not integer");
+            return enterAgain(Lang.INTEGER.toString(), Lang.NOT_AN_INTEGER.toString());
         }
     }
 
@@ -119,25 +118,30 @@ public class Scroll {
 
         if ((warmUpTime >= min) && (warmUpTime <= max) && (warmUpTime >= 0)) {
             this.warmUpTime = warmUpTime;
-            return success("Warm up time", warmUpTime.toString());
+            return success(Lang.WARM_UP_TIME.toString(), warmUpTime.toString());
         } else if (min < 0) {
             if (defaultVal >= 0) {
                 this.warmUpTime = defaultVal;
-                return wrongConfigValue("variable.create.WarmUpTime.Min", "Min >= 0", min, defaultVal);
+                final String expected = MessageFormat.format("{0} >= 0", Lang.MIN_VALUE.toString());
+                return wrongConfigValue("variable.create.WarmUpTime.Min", expected, min, defaultVal);
             } else {
                 this.warmUpTime = fallback;
-                return wrongConfigValue("variable.create.WarmUpTime.Default", "Default >= 0", defaultVal, fallback);
+                final String expected = MessageFormat.format("{0} >= 0", Lang.DEFAULT_VALUE.toString());
+                return wrongConfigValue("variable.create.WarmUpTime.Default", expected, defaultVal, fallback);
             }
         } else if ((max < 0) || (min > max)) {
             if (defaultVal >= 0) {
                 this.warmUpTime = defaultVal;
-                return wrongConfigValue("variable.create.WarmUpTime.Max", "Max >= 0, Min <= Max", max, defaultVal);
+                final String expected = MessageFormat.format("{0} >= 0, {1} <= {0}", Lang.MAX_VALUE.toString(),
+                        Lang.MIN_VALUE.toString());
+                return wrongConfigValue("variable.create.WarmUpTime.Max", expected, max, defaultVal);
             } else {
                 this.warmUpTime = fallback;
-                return wrongConfigValue("variable.create.WarmUpTime.Default", "Default >= 0", defaultVal, fallback);
+                final String expected = MessageFormat.format("{0} >= 0", Lang.DEFAULT_VALUE.toString());
+                return wrongConfigValue("variable.create.WarmUpTime.Default", expected, defaultVal, fallback);
             }
         } else {
-            final String expected = MessageFormat.format("{0} - {1} seconds", min, max);
+            final String expected = MessageFormat.format("{0} - {1} {2}", min, max, Lang.SECONDS.toString());
             return enterAgain(expected, warmUpTime.toString());
         }
     }
@@ -150,7 +154,7 @@ public class Scroll {
         try {
             return checkCoolDownTime(Integer.parseInt(input));
         } catch (final Exception ex) {
-            return enterAgain("Integer", "Not integer");
+            return enterAgain(Lang.INTEGER.toString(), Lang.NOT_AN_INTEGER.toString());
         }
     }
 
@@ -162,25 +166,30 @@ public class Scroll {
 
         if ((coolDownTime >= min) && (coolDownTime <= max) && (coolDownTime >= 0)) {
             this.coolDownTime = coolDownTime;
-            return success("Cool down time", coolDownTime.toString());
+            return success(Lang.COOL_DOWN_TIME.toString(), coolDownTime.toString());
         } else if (min < 0) {
             if (defaultVal >= 0) {
                 this.coolDownTime = defaultVal;
-                return wrongConfigValue("variable.create.CoolDownTime.Min", "Min >= 0", min, defaultVal);
+                final String expected = MessageFormat.format("{0} >= 0", Lang.MIN_VALUE.toString());
+                return wrongConfigValue("variable.create.CoolDownTime.Min", expected, min, defaultVal);
             } else {
                 this.coolDownTime = fallback;
-                return wrongConfigValue("variable.create.CoolDownTime.Default", "Default >= 0", defaultVal, fallback);
+                final String expected = MessageFormat.format("{0} >= 0", Lang.DEFAULT_VALUE.toString());
+                return wrongConfigValue("variable.create.CoolDownTime.Default", expected, defaultVal, fallback);
             }
         } else if ((max < 0) || (min > max)) {
             if (defaultVal >= 0) {
                 this.coolDownTime = defaultVal;
-                return wrongConfigValue("variable.create.CoolDownTime.Max", "Max >= 0, Min <= Max", max, defaultVal);
+                final String expected = MessageFormat.format("{0} >= 0, {1} <= {0}", Lang.MAX_VALUE.toString(),
+                        Lang.MIN_VALUE.toString());
+                return wrongConfigValue("variable.create.CoolDownTime.Max", expected, max, defaultVal);
             } else {
                 this.coolDownTime = fallback;
-                return wrongConfigValue("variable.create.CoolDownTime.Default", "Default >= 0", defaultVal, fallback);
+                final String expected = MessageFormat.format("{0} >= 0", Lang.DEFAULT_VALUE.toString());
+                return wrongConfigValue("variable.create.CoolDownTime.Default", expected, defaultVal, fallback);
             }
         } else {
-            final String expected = MessageFormat.format("{0} - {1} seconds", min, max);
+            final String expected = MessageFormat.format("{0} - {1} {2}", min, max, Lang.SECONDS.toString());
             return enterAgain(expected, coolDownTime.toString());
         }
     }
@@ -193,7 +202,7 @@ public class Scroll {
         try {
             return checkTimesBeUsed(Integer.parseInt(input));
         } catch (final Exception ex) {
-            return enterAgain("Integer", "Not integer");
+            return enterAgain(Lang.INTEGER.toString(), Lang.NOT_AN_INTEGER.toString());
         }
     }
 
@@ -205,25 +214,30 @@ public class Scroll {
 
         if ((timesBeUsed >= min) && (timesBeUsed <= max) && (timesBeUsed >= 1)) {
             this.timesBeUsed = timesBeUsed;
-            return success("Times be used", timesBeUsed.toString());
+            return success(Lang.TIMES_BE_USED.toString(), timesBeUsed.toString());
         } else if (min < 1) {
             if (defaultVal >= 1) {
                 this.timesBeUsed = defaultVal;
-                return wrongConfigValue("variable.create.TimesBeUsed.Min", "Min >= 1", min, defaultVal);
+                final String expected = MessageFormat.format("{0} >= 1", Lang.MIN_VALUE.toString());
+                return wrongConfigValue("variable.create.TimesBeUsed.Min", expected, min, defaultVal);
             } else {
                 this.timesBeUsed = fallback;
-                return wrongConfigValue("variable.create.TimesBeUsed.Default", "Default >= 1", defaultVal, fallback);
+                final String expected = MessageFormat.format("{0} >= 1", Lang.DEFAULT_VALUE.toString());
+                return wrongConfigValue("variable.create.TimesBeUsed.Default", expected, defaultVal, fallback);
             }
         } else if ((max < 1) || (min > max)) {
             if (defaultVal >= 1) {
                 this.timesBeUsed = defaultVal;
-                return wrongConfigValue("variable.create.TimesBeUsed.Max", "Max >= 1, Min <= Max", max, defaultVal);
+                final String expected = MessageFormat.format("{0} >= 1, {1} <= {0}", Lang.MAX_VALUE.toString(),
+                        Lang.MIN_VALUE.toString());
+                return wrongConfigValue("variable.create.TimesBeUsed.Max", expected, max, defaultVal);
             } else {
                 this.timesBeUsed = fallback;
-                return wrongConfigValue("variable.create.TimesBeUsed.Default", "Default >= 1", defaultVal, fallback);
+                final String expected = MessageFormat.format("{0} >= 1", Lang.DEFAULT_VALUE.toString());
+                return wrongConfigValue("variable.create.TimesBeUsed.Default", expected, defaultVal, fallback);
             }
         } else {
-            final String expected = MessageFormat.format("{0} - {1} times", min, max);
+            final String expected = MessageFormat.format("{0} - {1} {2}", min, max, Lang.TIMES_MEASURE_WORD.toString());
             return enterAgain(expected, timesBeUsed.toString());
         }
     }
