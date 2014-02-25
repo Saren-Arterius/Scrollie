@@ -85,6 +85,13 @@ public class CreateWizard extends Wizard {
                 if (wizardScroll.getCoolDownTime() == null) {
                     chatPlayer.sendMessage(Lang.WHAT_WOULD_THE_COOL_DOWN_TIME_BE.toString());
                 } else {
+                    chatPlayer.sendMessage(Lang.HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED.toString());
+                }
+            } else if (wizardScroll.getTimesBeUsed() == null) {
+                chatPlayer.sendMessage(wizardScroll.setTimesBeUsed(input));
+                if (wizardScroll.getTimesBeUsed() == null) {
+                    chatPlayer.sendMessage(Lang.HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED.toString());
+                } else {
                     Wizard.leave(chatPlayer);
                 }
             }

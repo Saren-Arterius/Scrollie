@@ -17,7 +17,7 @@ public enum Lang {
     TO_TEXT("to-text", "To"),
     WHAT_WOULD_THE_WARM_UP_TIME_BE("what-would-the-warm-up-time-be", "How about the warm up time? (The shorter time the more exp required)"),
     WHAT_WOULD_THE_COOL_DOWN_TIME_BE("what-would-the-cool-down-time-be", "How about the cool down time? (The shorter time the more exp required)"),
-    ALLOW_CROSS_WORLD_T_P_OR_NOT("allow-cross-world-t-p-or-not", "Allow cross-world teleportation? (Need {0}*xp to make) <yes/no>"),
+    ALLOW_CROSS_WORLD_TP_OR_NOT("allow-cross-world-tp-or-not", "Allow cross-world teleportation? (Need {0}*xp to make) <yes/no>"),
     HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED("how-many-times-could-this-scroll-be-used", "How many times could this scroll be used? (Need times*xp to make)"),
     ENTER_NAME("enter-name", "Enter any name to identify your new scroll."),
     FINISHED_CREATING("finished-creating", "Finished creating a new scroll."),
@@ -25,7 +25,11 @@ public enum Lang {
     VALUE_SET("value-set", "Value set."),
     KEY_VALUE("key-value", "{0}: {1}"),
 
+    PLEASE_CLICK_ON_A_PLAYER("please-click-on-a-player", "Please right click on a player so that you can teleport to him/her using the scroll."),
+    LEFT_CLICK_TO_CANCEL("left-click-to-cancel", "Left click to cancel."),
+    EXIT_MAKING("exit-making", "Cancelled making a scroll."),
     FINISHED_MAKING("finished-making", "You made the scroll <{0}>. Right click on the paper to use it."),
+    
     WARMING_UP("warming-up", "Warming up for {0} seconds."),
     COOLING_DOWN("cooling-down", "Cooling down is in process. You have to wait for {0} seconds before using teleportation scrolls again."),
     SCROLL_DISAPPEARED("scroll-disappeared", "Your scroll <{0}> is faded away."),
@@ -56,6 +60,21 @@ public enum Lang {
     DELETE_THIS_SCROLL("delete-this-scroll", "Type '/scrollie delete {0}' to delete this scroll."),
     MAKE_USAGE("make-usage", "Usage: /scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional"),
     DELETE_USAGE("delete-usage", "Usage: /scrollie delete <Scroll ID>"),
+    
+    DEFAULT_VALUE("default-value", "Default"),
+    MIN_VALUE("min-value", "Min"),
+    MAX_VALUE("max-value", "Max"),
+    INTEGER("integer", "Integer"),
+    NOT_AN_INTEGER("not-an-integer", "Not an integer"),
+    TIMES_MEASURE_WORD("times-measure-word", "times"),
+    SECONDS("seconds", "second(s)"),
+    
+    DESTINATION_TYPE("destination-type", "Destination type"),
+    WARM_UP_TIME("warm-up-time", "Warm up time"),
+    COOL_DOWN_TIME("cool-down-time", "Cool down time"),
+    CROSS_WORLD_TP("cross-world-tp", "Cross world TP"),
+    TIMES_BE_USED("times-be-used", "Times available"),
+    TIMES_REMAINING("times-remaining", "Times remaining"),
     
     DESTINATION_SPAWN("destination-spawn", "Spawn"),
     DESTINATION_HOME("destination-home", "Home"),
