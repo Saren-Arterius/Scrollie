@@ -19,11 +19,12 @@ public abstract class Wizard implements Listener {
 
     private static void enter(Player player, Wizard wizard) {
         wizard.begin();
+        /* The following code should cease to exist in my memory. */
         boolean needToRegisterEvent = true;
         for (final RegisteredListener listener: HandlerList.getRegisteredListeners(player.getServer()
                 .getPluginManager().getPlugin("Scrollie"))) {
-            /* What have I done? */
-            if (listener.getListener().toString().toLowerCase().contains("wizard") || Wizard.inWizardMode.size() != 0) {
+            String wizardInstanceClassName = wizard.toString().split("@")[0];
+            if (listener.getListener().toString().contains(wizardInstanceClassName) || Wizard.inWizardMode.size() != 0) {
                 needToRegisterEvent = false;
                 break;
             }
