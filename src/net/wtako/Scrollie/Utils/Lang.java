@@ -13,14 +13,17 @@ public enum Lang {
     WIZARD_ENTER("wizard-enter", "Enter wizard mode. Type 'exit' to exit."),
     WIZARD_EXIT("wizard-exit", "Exiting wizard mode."),
     WHAT_DESTINATION("what-destination", "What is the destination of the new scroll?"),
-    ALL_DESTINATIONS("all-destinations", "<0>: To <Spawn>, <1>: To <Home>, <2>: To your <CurrentLocation>, <3>: To <Random>"),
+    ALL_DESTINATIONS("all-destinations", "{0}. {1} <{2}>"),
+    TO_TEXT("to-text", "To"),
     WHAT_WOULD_THE_WARM_UP_TIME_BE("what-would-the-warm-up-time-be", "How about the warm up time? (The shorter time the more exp required)"),
     WHAT_WOULD_THE_COOL_DOWN_TIME_BE("what-would-the-cool-down-time-be", "How about the cool down time? (The shorter time the more exp required)"),
     ALLOW_CROSS_WORLD_T_P_OR_NOT("allow-cross-world-t-p-or-not", "Allow cross-world teleportation? (Need {0}*xp to make) <yes/no>"),
     HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED("how-many-times-could-this-scroll-be-used", "How many times could this scroll be used? (Need times*xp to make)"),
     ENTER_NAME("enter-name", "Enter any name to identify your new scroll."),
     FINISHED_CREATING("finished-creating", "Finished creating a new scroll."),
-    VALUE_SET("value-set", "Value successfully set. >{0}: {1}<"),
+    
+    VALUE_SET("value-set", "Value set."),
+    KEY_VALUE("key-value", "{0}: {1}"),
 
     FINISHED_MAKING("finished-making", "You made the scroll <{0}>. Right click on the paper to use it."),
     WARMING_UP("warming-up", "Warming up for {0} seconds."),
@@ -32,9 +35,11 @@ public enum Lang {
     PLUGIN_RELOADED("plugin-reloaded", "Plugin reloaded."),
 
     NO_SUCH_SCROLL("no-such-scroll", "Could not find scroll ID {0}."),
-    WRONG_VALUE("wrong-value", "Value {0} in config.yml is invalid. Falling back to hard-coded default. >Expected: {1}. Got: {2}. Falling back to: {3}<"),
+    WRONG_VALUE("wrong-value", "Value {0} in config.yml is invalid. Falling back to hard-coded default."),
+    FALLING_BACK_TO("falling-back-to", "Falling back to: {0}"),
 
-    ENTER_AGAIN("enter-again", "Sorry, please enter again. >Expected: {0}. Got: {1}<"),
+    ENTER_AGAIN("enter-again", "Sorry, please enter again."),
+    EXPECTED_GOT("expected-got", "Expected: {0}. Got: {1}"),
     PLEASE_HOLD_A_PAPER("please-hold-a-paper", "Please hold an unused paper in your hand."),
     YOU_DONT_HAVE_ENOUGH_EXP("you-dont-have-enough-exp", "You don't have enough experience. >Required: {0}xp. You have: {1}xp<"),
     WARM_UP_FAIL("warm-up-fail", "Warming up process has been interrupted."),
@@ -45,11 +50,20 @@ public enum Lang {
     HELP_TEXT3("help-text3", "Type '/scrollie list' to the scrolls you have created."),
     HELP_TEXT4("help-text4", "Type '/scrollie delete <Scroll ID>' to delete a specific scroll you have created. (Use '/scrollie list' first)"),
     HELP_TEXT5("help-text5", "Type '/scrollie reload' to reload the plugin."),
+    
     MAKE_THIS_SCROLL("make-this-scroll", "Type '/scrollie make {0}' to make this scroll."),
     VIEW_SCROLL_LIST("view-scroll-list", "Type '/scrollie list' to view other scrolls."),
     DELETE_THIS_SCROLL("delete-this-scroll", "Type '/scrollie delete {0}' to delete this scroll."),
     MAKE_USAGE("make-usage", "Usage: /scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional"),
-    DELETE_USAGE("delete-usage", "Usage: /scrollie delete <Scroll ID>");
+    DELETE_USAGE("delete-usage", "Usage: /scrollie delete <Scroll ID>"),
+    
+    DESTINATION_SPAWN("destination-spawn", "Spawn"),
+    DESTINATION_HOME("destination-home", "Home"),
+    DESTINATION_FACTION_HOME("destination-faction-home", "Faction home"),
+    DESTINATION_PLAYER("destination-player", "Player's location"),
+    DESTINATION_CURRENT_LOCATION("destination-current-location", "Current location"),
+    DESTINATION_RANDOM("destination-random", "Random location"),
+    DESTINATION_NOT_SET("destination-not-set", "Not a location");
 
     private String path;
     private String def;

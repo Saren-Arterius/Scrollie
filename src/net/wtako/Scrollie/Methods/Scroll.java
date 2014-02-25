@@ -12,126 +12,133 @@ public class Scroll {
     private Integer warmUpTime;
     private Integer coolDownTime;
     private Integer timesBeUsed;
-    
+
+    public String[] wrongConfigValue(String node, String expected, Integer got, Integer fallback) {
+        final String msg1 = MessageFormat.format(Lang.WRONG_VALUE.toString(), node);
+        final String msg2 = MessageFormat.format(Lang.EXPECTED_GOT.toString(), expected, got);
+        final String msg3 = MessageFormat.format(Lang.FALLING_BACK_TO.toString(), fallback);
+        final String[] finalMessage = {msg1, msg2, msg3};
+        return finalMessage;
+    }
+
+    public String[] enterAgain(String expected, String got) {
+        final String msg1 = Lang.ENTER_AGAIN.toString();
+        final String msg2 = MessageFormat.format(Lang.EXPECTED_GOT.toString(), expected, got);
+        final String[] finalMessage = {msg1, msg2};
+        return finalMessage;
+    }
+
+    public String[] success(String key, String value) {
+        final String msg1 = Lang.VALUE_SET.toString();
+        final String msg2 = MessageFormat.format(Lang.KEY_VALUE.toString(), key, value);
+        final String[] finalMessage = {msg1, msg2};
+        return finalMessage;
+    }
+
     public Integer getDestinationType() {
         return destinationType;
     }
 
-    public String setDestinationType(String input) {
+    public String[] setDestinationType(String input) {
         try {
             return checkDestinationType(Integer.parseInt(input));
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             return checkDestinationType(destinationTypeStringToInteger(input));
         }
     }
 
-    private Integer destinationTypeStringToInteger(String destinationType) {
+    public Integer destinationTypeStringToInteger(String destinationType) {
         switch (destinationType.toLowerCase()) {
-        case "spawn":
-            return 0;
-        case "home":
-            return 1;
-        case "currentlocation":
-            return 2;
-        case "random":
-            return 3;
+            case "spawn":
+                return 0;
+            case "home":
+                return 1;
+            case "factionhome":
+                return 2;
+            case "player":
+                return 3;
+            case "currentlocation":
+                return 4;
+            case "random":
+                return 5;
         }
         return -1;
     }
 
-    private String destinationTypeIntegerToString(Integer destinationType) {
+    public String destinationTypeIntegerToString(Integer destinationType) {
         switch (destinationType) {
-        case 0:
-            return "Spawn";
-        case 1:
-            return "Home";
-        case 2:
-            return "CurrentLocation";
-        case 3:
-            return "Random";
+            case 0:
+                return Lang.DESTINATION_SPAWN.toString();
+            case 1:
+                return Lang.DESTINATION_HOME.toString();
+            case 2:
+                return Lang.DESTINATION_FACTION_HOME.toString();
+            case 3:
+                return Lang.DESTINATION_PLAYER.toString();
+            case 4:
+                return Lang.DESTINATION_CURRENT_LOCATION.toString();
+            case 5:
+                return Lang.DESTINATION_RANDOM.toString();
         }
-        return "NotSet";
+        return Lang.DESTINATION_NOT_SET.toString();
     }
 
-    private String checkDestinationType(Integer destinationType) {
+    private String[] checkDestinationType(Integer destinationType) {
 
-        List<String> enabledDestinationTypes = Main.getInstance().getConfig()
+        final List<String> enabledDestinationTypes = Main.getInstance().getConfig()
                 .getStringList("variable.create.ScrollDestination.Enabled");
-        for (String enabledDestinationType : enabledDestinationTypes) {
-            Integer enabledDestinationInteger = destinationTypeStringToInteger(enabledDestinationType);
-            if ((enabledDestinationInteger == destinationType)
-                    && (enabledDestinationInteger != -1)) {
+        String humanEnabledDestinationTypes = "";
+        for (final String enabledDestinationType: enabledDestinationTypes) {
+            final Integer enabledDestinationInteger = destinationTypeStringToInteger(enabledDestinationType);
+            humanEnabledDestinationTypes += destinationTypeIntegerToString(enabledDestinationInteger) + ", ";
+            if ((enabledDestinationInteger == destinationType) && (enabledDestinationInteger != -1)) {
                 this.destinationType = destinationType;
-                String message = Lang.VALUE_SET.toString();
-                return MessageFormat.format(message, "Destination Type",
-                        enabledDestinationType);
+                return success("Destination Type", destinationTypeIntegerToString(destinationType));
             }
         }
-        String message = Lang.ENTER_AGAIN.toString();
-        return MessageFormat.format(message,
-                enabledDestinationTypes.toString(),
-                destinationTypeIntegerToString(destinationType));
+        return enterAgain(humanEnabledDestinationTypes, destinationTypeIntegerToString(destinationType));
     }
 
     public Integer getWarmUpTime() {
         return warmUpTime;
     }
 
-    public String setWarmUpTime(String input) {
+    public String[] setWarmUpTime(String input) {
         try {
             return checkWarmUpTime(Integer.parseInt(input));
-        } catch (Exception ex) {
-
-            String message = Lang.ENTER_AGAIN.toString();
-            return MessageFormat.format(message, "Integer", "Not integer");
+        } catch (final Exception ex) {
+            return enterAgain("Integer", "Not integer");
         }
     }
 
-    public String checkWarmUpTime(Integer warmUpTime) {
-
-        Integer min = Main.getInstance().getConfig()
-                .getInt("variable.create.WarmUpTime.Min");
-        Integer max = Main.getInstance().getConfig()
-                .getInt("variable.create.WarmUpTime.Max");
-        Integer defaultVal = Main.getInstance().getConfig()
-                .getInt("variable.create.WarmUpTime.Default");
-        Integer fallback = 10;
+    public String[] checkWarmUpTime(Integer warmUpTime) {
+        final Integer min = Main.getInstance().getConfig().getInt("variable.create.WarmUpTime.Min");
+        final Integer max = Main.getInstance().getConfig().getInt("variable.create.WarmUpTime.Max");
+        final Integer defaultVal = Main.getInstance().getConfig().getInt("variable.create.WarmUpTime.Default");
+        final Integer fallback = 10;
 
         if ((warmUpTime >= min) && (warmUpTime <= max) && (warmUpTime >= 0)) {
             this.warmUpTime = warmUpTime;
-            String message = Lang.VALUE_SET.toString();
-            return MessageFormat.format(message, "Warm up time", warmUpTime);
+            return success("Warm up time", warmUpTime.toString());
         } else if (min < 0) {
-            String message = Lang.WRONG_VALUE.toString();
             if (defaultVal >= 0) {
                 this.warmUpTime = defaultVal;
-                return MessageFormat.format(message,
-                        "variable.create.WarmUpTime.Min", "Min >= 0", min,
-                        defaultVal);
+                return wrongConfigValue("variable.create.WarmUpTime.Min", "Min >= 0", min, defaultVal);
             } else {
                 this.warmUpTime = fallback;
-                return MessageFormat.format(message,
-                        "variable.create.WarmUpTime.Default", "Default >= 0",
-                        defaultVal, fallback);
+                return wrongConfigValue("variable.create.WarmUpTime.Default", "Default >= 0", defaultVal, fallback);
             }
         } else if ((max < 0) || (min > max)) {
-            String message = Lang.WRONG_VALUE.toString();
             if (defaultVal >= 0) {
                 this.warmUpTime = defaultVal;
-                return MessageFormat.format(message,
-                        "variable.create.WarmUpTime.Max",
-                        "Max >= 0, Min <= Max", max, defaultVal);
+                return wrongConfigValue("variable.create.WarmUpTime.Max", "Max >= 0, Min <= Max", max, defaultVal);
             } else {
                 this.warmUpTime = fallback;
-                return MessageFormat.format(message,
-                        "variable.create.WarmUpTime.Default", "Default >= 0",
-                        defaultVal, fallback);
+                return wrongConfigValue("variable.create.WarmUpTime.Default", "Default >= 0", defaultVal, fallback);
             }
         } else {
-            String message = Lang.ENTER_AGAIN.toString();
-            String expected = MessageFormat.format("{0} - {1} seconds", min,
-                    max);
-            return MessageFormat.format(message, expected, warmUpTime);
+            final String expected = MessageFormat.format("{0} - {1} seconds", min, max);
+            return enterAgain(expected, warmUpTime.toString());
         }
     }
 
@@ -139,61 +146,42 @@ public class Scroll {
         return coolDownTime;
     }
 
-    public String setCoolDownTime(String input) {
+    public String[] setCoolDownTime(String input) {
         try {
             return checkCoolDownTime(Integer.parseInt(input));
-        } catch (Exception ex) {
-            String message = Lang.ENTER_AGAIN.toString();
-            return MessageFormat.format(message, "Integer", "Not integer");
+        } catch (final Exception ex) {
+            return enterAgain("Integer", "Not integer");
         }
     }
 
-    public String checkCoolDownTime(Integer coolDownTime) {
-        Integer min = Main.getInstance().getConfig()
-                .getInt("variable.create.CoolDownTime.Min");
-        Integer max = Main.getInstance().getConfig()
-                .getInt("variable.create.CoolDownTime.Max");
-        Integer defaultVal = Main.getInstance().getConfig()
-                .getInt("variable.create.CoolDownTime.Default");
-        Integer fallback = 600;
+    public String[] checkCoolDownTime(Integer coolDownTime) {
+        final Integer min = Main.getInstance().getConfig().getInt("variable.create.CoolDownTime.Min");
+        final Integer max = Main.getInstance().getConfig().getInt("variable.create.CoolDownTime.Max");
+        final Integer defaultVal = Main.getInstance().getConfig().getInt("variable.create.CoolDownTime.Default");
+        final Integer fallback = 600;
 
-        if ((coolDownTime >= min) && (coolDownTime <= max)
-                && (coolDownTime >= 0)) {
+        if ((coolDownTime >= min) && (coolDownTime <= max) && (coolDownTime >= 0)) {
             this.coolDownTime = coolDownTime;
-            String message = Lang.VALUE_SET.toString();
-            return MessageFormat
-                    .format(message, "Cool down time", coolDownTime);
+            return success("Cool down time", coolDownTime.toString());
         } else if (min < 0) {
-            String message = Lang.WRONG_VALUE.toString();
             if (defaultVal >= 0) {
                 this.coolDownTime = defaultVal;
-                return MessageFormat.format(message,
-                        "variable.create.CoolDownTime.Min", "Min >= 0", min,
-                        defaultVal);
+                return wrongConfigValue("variable.create.CoolDownTime.Min", "Min >= 0", min, defaultVal);
             } else {
                 this.coolDownTime = fallback;
-                return MessageFormat.format(message,
-                        "variable.create.CoolDownTime.Default", "Default >= 0",
-                        defaultVal, fallback);
+                return wrongConfigValue("variable.create.CoolDownTime.Default", "Default >= 0", defaultVal, fallback);
             }
         } else if ((max < 0) || (min > max)) {
-            String message = Lang.WRONG_VALUE.toString();
             if (defaultVal >= 0) {
                 this.coolDownTime = defaultVal;
-                return MessageFormat.format(message,
-                        "variable.create.CoolDownTime.Max",
-                        "Max >= 0, Min <= Max", max, defaultVal);
+                return wrongConfigValue("variable.create.CoolDownTime.Max", "Max >= 0, Min <= Max", max, defaultVal);
             } else {
                 this.coolDownTime = fallback;
-                return MessageFormat.format(message,
-                        "variable.create.CoolDownTime.Default", "Default >= 0",
-                        defaultVal, fallback);
+                return wrongConfigValue("variable.create.CoolDownTime.Default", "Default >= 0", defaultVal, fallback);
             }
         } else {
-            String message = Lang.ENTER_AGAIN.toString();
-            String expected = MessageFormat.format("{0} - {1} seconds", min,
-                    max);
-            return MessageFormat.format(message, expected, coolDownTime);
+            final String expected = MessageFormat.format("{0} - {1} seconds", min, max);
+            return enterAgain(expected, coolDownTime.toString());
         }
     }
 
@@ -201,59 +189,42 @@ public class Scroll {
         return timesBeUsed;
     }
 
-    public String setTimesBeUsed(String input) {
+    public String[] setTimesBeUsed(String input) {
         try {
-            return checkDestinationType(Integer.parseInt(input));
-        } catch (Exception ex) {
-            String message = Lang.ENTER_AGAIN.toString();
-            return MessageFormat.format(message, "Integer", "Not integer");
+            return checkTimesBeUsed(Integer.parseInt(input));
+        } catch (final Exception ex) {
+            return enterAgain("Integer", "Not integer");
         }
     }
 
-    public String checkTimesBeUsed(Integer timesBeUsed) {
-        Integer min = Main.getInstance().getConfig()
-                .getInt("variable.create.TimesBeUsed.Min");
-        Integer max = Main.getInstance().getConfig()
-                .getInt("variable.create.TimesBeUsed.Max");
-        Integer defaultVal = Main.getInstance().getConfig()
-                .getInt("variable.create.TimesBeUsed.Default");
-        Integer fallback = 1;
+    public String[] checkTimesBeUsed(Integer timesBeUsed) {
+        final Integer min = Main.getInstance().getConfig().getInt("variable.create.TimesBeUsed.Min");
+        final Integer max = Main.getInstance().getConfig().getInt("variable.create.TimesBeUsed.Max");
+        final Integer defaultVal = Main.getInstance().getConfig().getInt("variable.create.TimesBeUsed.Default");
+        final Integer fallback = 1;
 
         if ((timesBeUsed >= min) && (timesBeUsed <= max) && (timesBeUsed >= 1)) {
             this.timesBeUsed = timesBeUsed;
-            String message = Lang.VALUE_SET.toString();
-            return MessageFormat.format(message, "Times be used", timesBeUsed);
+            return success("Times be used", timesBeUsed.toString());
         } else if (min < 1) {
-            String message = Lang.WRONG_VALUE.toString();
             if (defaultVal >= 1) {
                 this.timesBeUsed = defaultVal;
-                return MessageFormat.format(message,
-                        "variable.create.TimesBeUsed.Min", "Min >= 1", min,
-                        defaultVal);
+                return wrongConfigValue("variable.create.TimesBeUsed.Min", "Min >= 1", min, defaultVal);
             } else {
                 this.timesBeUsed = fallback;
-                return MessageFormat.format(message,
-                        "variable.create.TimesBeUsed.Default", "Default >= 1",
-                        defaultVal, fallback);
+                return wrongConfigValue("variable.create.TimesBeUsed.Default", "Default >= 1", defaultVal, fallback);
             }
         } else if ((max < 1) || (min > max)) {
-            String message = Lang.WRONG_VALUE.toString();
             if (defaultVal >= 1) {
                 this.timesBeUsed = defaultVal;
-                return MessageFormat.format(message,
-                        "variable.create.TimesBeUsed.Max",
-                        "Max >= 1, Min <= Max", max, defaultVal);
+                return wrongConfigValue("variable.create.TimesBeUsed.Max", "Max >= 1, Min <= Max", max, defaultVal);
             } else {
                 this.timesBeUsed = fallback;
-                return MessageFormat.format(message,
-                        "variable.create.TimesBeUsed.Default", "Default >= 1",
-                        defaultVal, fallback);
+                return wrongConfigValue("variable.create.TimesBeUsed.Default", "Default >= 1", defaultVal, fallback);
             }
         } else {
-            String message = Lang.ENTER_AGAIN.toString();
-            String expected = MessageFormat.format("{0} - {1} seconds", min,
-                    max);
-            return MessageFormat.format(message, expected, timesBeUsed);
+            final String expected = MessageFormat.format("{0} - {1} times", min, max);
+            return enterAgain(expected, timesBeUsed.toString());
         }
     }
 

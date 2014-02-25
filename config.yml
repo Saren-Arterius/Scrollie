@@ -6,6 +6,8 @@ variable:
             Enabled:
             - "Spawn"
             - "Home"
+            - "FactionHome"
+            - "Player"
             - "CurrentLocation"
             - "Random"
             # If players cannot customize the variable, default value will be applied.
@@ -35,9 +37,7 @@ variable:
         EnterName:
             # Expected string
             Default: "My scroll"
-            # Maximum String length.
-            # Expected >= 0
-            MaxCharacters: 64
+            Regex: "^.{0,64}$"
     make:
         BanCreative: Yes
         # Default: paper
@@ -53,6 +53,8 @@ variable:
             # Expected >= 0
             Spawn: 1
             Home: 1
+            FactionHome: 1
+            Player: 2
             CurrentLocation: 2
             Random: 1.5
             
@@ -68,7 +70,7 @@ variable:
         WarmUpEXPDenominatorSum: 1
         
         # Similar to above
-        CoolDownExpBase: 50
+        CoolDownExpBase: 500
         CoolDownEXPDenominatorSum: 1
         
         # Multiplies the whole equation.
@@ -81,6 +83,10 @@ variable:
         # If set to No, remaining count will get decreased by 1 on teleportation success.
         # Expected Yes/No
         MovingDoesHarmToScroll: No
+        
+        Player:
+            # Expected Yes/No
+            AllowOfflineTP: Yes
 
 system:
     # Change this to get this plugin eaten by Ender Dragon.

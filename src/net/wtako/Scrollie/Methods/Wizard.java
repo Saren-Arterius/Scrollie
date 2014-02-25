@@ -1,4 +1,5 @@
 package net.wtako.Scrollie.Methods;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -6,9 +7,10 @@ import java.util.Map.Entry;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.RegisteredListener;
 
 public abstract class Wizard implements Listener {
-    
+
     public abstract void begin();
 
     public abstract void end();
@@ -17,50 +19,57 @@ public abstract class Wizard implements Listener {
 
     private static void enter(Player player, Wizard wizard) {
         wizard.begin();
-        if (inWizardMode.size() == 0) {
-            player.sendMessage("EVENT REGISTERED");
-            player.getServer().getPluginManager().registerEvents(wizard, player.getServer().getPluginManager().getPlugin("Scrollie"));
+        boolean needToRegisterEvent = true;
+        for (final RegisteredListener listener: HandlerList.getRegisteredListeners(player.getServer()
+                .getPluginManager().getPlugin("Scrollie"))) {
+            /* What have I done? */
+            if (listener.getListener().toString().toLowerCase().contains("wizard") || Wizard.inWizardMode.size() != 0) {
+                needToRegisterEvent = false;
+                break;
+            }
         }
-        inWizardMode.put(player.getName(), wizard);
+        if (needToRegisterEvent) {
+            player.getServer().getPluginManager()
+                    .registerEvents(wizard, player.getServer().getPluginManager().getPlugin("Scrollie"));
+        }
+        Wizard.inWizardMode.put(player.getName(), wizard);
     }
 
     public static void enterOrLeave(Player player, Wizard wizard) {
         if (wizard == null) {
             return;
         }
-        Wizard wizarding = inWizardMode.get(player.getName());
+        final Wizard wizarding = Wizard.inWizardMode.get(player.getName());
         if (wizarding == null) {
-            enter(player, wizard);
+            Wizard.enter(player, wizard);
         } else if (wizarding.getClass() == wizard.getClass()) {
-            leave(player);
+            Wizard.leave(player);
         } else {
             player.sendMessage("Player already in wizard!");
         }
     }
 
     public static boolean hasEditor(Player player) {
-        return inWizardMode.containsKey(player.getName());
+        return Wizard.inWizardMode.containsKey(player.getName());
     }
 
     public static void leave(Player player) {
-        if (!hasEditor(player)) {
+        if (!Wizard.hasEditor(player)) {
             return;
         }
-        Wizard wizard = inWizardMode.remove(player.getName());
-        if (inWizardMode.size() == 0) {
+        final Wizard wizard = Wizard.inWizardMode.get(player.getName());
+        Wizard.inWizardMode.remove(player.getName());
+        if (Wizard.inWizardMode.size() == 0) {
             HandlerList.unregisterAll(wizard);
-            player.sendMessage("EVENT UNREGISTERED");
         }
         wizard.end();
     }
 
     public static void leaveAll() {
-        for (Entry<String, Wizard> entry : inWizardMode.entrySet()) {
+        for (final Entry<String, Wizard> entry: Wizard.inWizardMode.entrySet()) {
             entry.getValue().end();
-            if (inWizardMode.size() == 0) {
-                HandlerList.unregisterAll(entry.getValue());
-            }
+            HandlerList.unregisterAll(entry.getValue());
         }
-        inWizardMode.clear();
+        Wizard.inWizardMode.clear();
     }
 }
