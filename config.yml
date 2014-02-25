@@ -1,7 +1,17 @@
 variable:
     create:
         ScrollDestination:
+            # If players wanted to make a scroll, 
+            # and some of the variables are no longer valid due to config.yml changes,
+            # default value will be applied.
             # Expected string
+            # Must be one of those:
+            # - "Spawn"
+            # - "Home"
+            # - "FactionHome"
+            # - "Player"
+            # - "CurrentLocation"
+            # - "Random"
             Default: "Spawn"
             Enabled:
             - "Spawn"
@@ -37,13 +47,17 @@ variable:
         EnterName:
             # Expected string
             Default: "My scroll"
+            # https://en.wikipedia.org/wiki/Regular_expression
             Regex: "^.{0,64}$"
+            BannedRegex:
+            - "[fF][uU][cC][kK]"
+            - "[sS][hH][iI][tT]"
+            - "[bB][iI][tT][cC][hH]"
     make:
         BanCreative: Yes
         # Default: paper
         # Expected Minecraft item ID in Dec data format
         ScrollItem: 339
-        # Expected Yes/No
         UseEconInsteadOfEXP: No
         
         # Basic EXP = BaseEXPRequired*ScrollDestinationExpFactor
@@ -81,13 +95,14 @@ variable:
         BanCreative: Yes
         # If set to Yes, remaining count will get decreased by 1 on teleportation success/fail.
         # If set to No, remaining count will get decreased by 1 on teleportation success.
-        # Expected Yes/No
         MovingDoesHarmToScroll: No
         
         Player:
+            # If set to Yes, plugin will get target player's offline location as destination.
+            # If set to No, the scroll can't be used until the target player online.
             # Expected Yes/No
             AllowOfflineTP: Yes
 
 system:
-    # Change this to get this plugin eaten by Ender Dragon.
+    # Change this to get you and this plugin eaten by Ender Dragon, not really, seriously.
     PluginVersion: 0.0.1
