@@ -12,6 +12,7 @@ public class Scroll {
     private Integer warmUpTime;
     private Integer coolDownTime;
     private Integer timesBeUsed;
+    private Boolean allowCrossWorldTP;
 
     public String[] wrongConfigValue(String node, String expected, Integer got, Integer fallback) {
         final String msg1 = MessageFormat.format(Lang.WRONG_VALUE.toString(), node);
@@ -92,6 +93,9 @@ public class Scroll {
             humanEnabledDestinationTypes += destinationTypeIntegerToString(enabledDestinationInteger) + ", ";
             if ((enabledDestinationInteger == destinationType) && (enabledDestinationInteger != -1)) {
                 this.destinationType = destinationType;
+                if (destinationType == 5) {
+                    this.allowCrossWorldTP = false; //Random location in a world
+                }
                 return success(Lang.DESTINATION_TYPE.toString(), destinationTypeIntegerToString(destinationType));
             }
         }
@@ -193,7 +197,29 @@ public class Scroll {
             return enterAgain(expected, coolDownTime.toString());
         }
     }
-
+    
+    public Boolean getAllowCrossWorldTP() {
+        return allowCrossWorldTP;
+    }
+    
+    public String[] setAllowCrossWorldTP(String input) {
+        String[] yesList = {"1", "true", "t", "yes", "y"};
+        String[] noList = {"0", "false", "f", "no", "n"};
+        for (String yes: yesList) {
+            if (input.equalsIgnoreCase(yes)) {
+                this.allowCrossWorldTP = true;
+                return success(Lang.CROSS_WORLD_TP.toString(), "Yes");
+            }
+        }
+        for (String no: noList) {
+            if (input.equalsIgnoreCase(no)) {
+                this.allowCrossWorldTP = false;
+                return success(Lang.CROSS_WORLD_TP.toString(), "No");
+            }
+        }
+        return enterAgain("<Yes/No>", "Not <Yes/No>");
+    }
+    
     public Integer getTimesBeUsed() {
         return timesBeUsed;
     }

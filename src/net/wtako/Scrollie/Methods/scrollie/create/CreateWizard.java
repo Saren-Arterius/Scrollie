@@ -45,6 +45,10 @@ public class CreateWizard extends Wizard {
     public void end() {
         player.sendMessage(Lang.WIZARD_EXIT.toString());
         CreateWizard.playerToScroll.remove(player.getName());
+        player.sendMessage(Lang.FINISHED_CREATING.toString());
+        player.sendMessage(Lang.MAKE_THIS_SCROLL.toString());
+        player.sendMessage(Lang.VIEW_SCROLL_LIST.toString());
+        player.sendMessage(Lang.DELETE_THIS_SCROLL.toString());
     }
 
     @EventHandler
@@ -72,25 +76,47 @@ public class CreateWizard extends Wizard {
                     }
                 } else {
                     chatPlayer.sendMessage(Lang.WHAT_WOULD_THE_WARM_UP_TIME_BE.toString());
+                    chatPlayer.sendMessage(Lang.SHORTER_TIME_MORE_EXP.toString());
                 }
             } else if (wizardScroll.getWarmUpTime() == null) {
                 chatPlayer.sendMessage(wizardScroll.setWarmUpTime(input));
                 if (wizardScroll.getWarmUpTime() == null) {
                     chatPlayer.sendMessage(Lang.WHAT_WOULD_THE_WARM_UP_TIME_BE.toString());
+                    chatPlayer.sendMessage(Lang.SHORTER_TIME_MORE_EXP.toString());
                 } else {
                     chatPlayer.sendMessage(Lang.WHAT_WOULD_THE_COOL_DOWN_TIME_BE.toString());
+                    chatPlayer.sendMessage(Lang.SHORTER_TIME_MORE_EXP.toString());
                 }
             } else if (wizardScroll.getCoolDownTime() == null) {
                 chatPlayer.sendMessage(wizardScroll.setCoolDownTime(input));
                 if (wizardScroll.getCoolDownTime() == null) {
                     chatPlayer.sendMessage(Lang.WHAT_WOULD_THE_COOL_DOWN_TIME_BE.toString());
+                    chatPlayer.sendMessage(Lang.SHORTER_TIME_MORE_EXP.toString());
+                } else {
+                    if (wizardScroll.getAllowCrossWorldTP() == null) {
+                        chatPlayer.sendMessage(Lang.ALLOW_CROSS_WORLD_TP_OR_NOT.toString());
+                        chatPlayer.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), Main
+                                .getInstance().getConfig().getInt("variable.make.CrossWorldTPExpFactor")));
+                    } else {
+                        chatPlayer.sendMessage(Lang.HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED.toString());
+                        chatPlayer.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), "*TIMES*"));
+                    }
+                }
+            } else if (wizardScroll.getAllowCrossWorldTP() == null) {
+                chatPlayer.sendMessage(wizardScroll.setAllowCrossWorldTP(input));
+                if (wizardScroll.getAllowCrossWorldTP() == null) {
+                    chatPlayer.sendMessage(Lang.ALLOW_CROSS_WORLD_TP_OR_NOT.toString());
+                    chatPlayer.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), Main
+                            .getInstance().getConfig().getInt("variable.make.CrossWorldTPExpFactor")));
                 } else {
                     chatPlayer.sendMessage(Lang.HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED.toString());
+                    chatPlayer.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), "*TIMES*"));
                 }
             } else if (wizardScroll.getTimesBeUsed() == null) {
                 chatPlayer.sendMessage(wizardScroll.setTimesBeUsed(input));
                 if (wizardScroll.getTimesBeUsed() == null) {
                     chatPlayer.sendMessage(Lang.HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED.toString());
+                    chatPlayer.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), "*TIMES*"));
                 } else {
                     Wizard.leave(chatPlayer);
                 }

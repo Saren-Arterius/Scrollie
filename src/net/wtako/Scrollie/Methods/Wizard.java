@@ -23,7 +23,7 @@ public abstract class Wizard implements Listener {
         boolean needToRegisterEvent = true;
         for (final RegisteredListener listener: HandlerList.getRegisteredListeners(player.getServer()
                 .getPluginManager().getPlugin("Scrollie"))) {
-            String wizardInstanceClassName = wizard.toString().split("@")[0];
+            final String wizardInstanceClassName = wizard.toString().split("@")[0];
             if (listener.getListener().toString().contains(wizardInstanceClassName) || Wizard.inWizardMode.size() != 0) {
                 needToRegisterEvent = false;
                 break;

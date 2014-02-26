@@ -18,9 +18,9 @@ public enum Lang {
     WHAT_WOULD_THE_WARM_UP_TIME_BE("what-would-the-warm-up-time-be", "How about the warm up time?"),
     WHAT_WOULD_THE_COOL_DOWN_TIME_BE("what-would-the-cool-down-time-be", "How about the cool down time?"),   
     SHORTER_TIME_MORE_EXP("shorter-time-more-exp", "(The shorter time the more exp required)"),
-    ALLOW_CROSS_WORLD_TP_OR_NOT("allow-cross-world-tp-or-not", "Allow cross-world teleportation? <Yes/No> <1/0>"),
+    ALLOW_CROSS_WORLD_TP_OR_NOT("allow-cross-world-tp-or-not", "Allow cross-world teleportation? <Yes/No>"),
     HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED("how-many-times-could-this-scroll-be-used", "How many times could this scroll be used?"),
-    WILL_MULTIPLY_BY("will-multiply-by", "(Total experience required to make this scroll will be multiplyed by {0})"),
+    WILL_BE_MULTIPLIED_BY("will-multiply-by", "(Total experience required to make this scroll will be multiplied by {0})"),
     ENTER_NAME("enter-name", "Enter any name to identify your new scroll."),
     FINISHED_CREATING("finished-creating", "Finished creating a new scroll."),
     
@@ -29,6 +29,7 @@ public enum Lang {
 
     PLEASE_CLICK_ON_A_PLAYER("please-click-on-a-player", "Please right click on a player so that you can teleport to him/her using the scroll."),
     LEFT_CLICK_TO_CANCEL("left-click-to-cancel", "Left click to cancel."),
+    NOT_PREMITTED_TO_TELEPORT_TO_THAT_PLAYER("not-permitted-to-teleport-to-that-player", "You are not permitted to teleport to that player."),
     EXIT_MAKING("exit-making", "Cancelled making a scroll."),
     FINISHED_MAKING("finished-making", "You made the scroll <{0}>. Right click on the paper to use it."),
     
@@ -61,7 +62,7 @@ public enum Lang {
     HELP_TEXT5("help-text5", "Type '/scrollie reload' to reload the plugin."),
     
     MAKE_THIS_SCROLL("make-this-scroll", "Type '/scrollie make {0}' to make this scroll."),
-    VIEW_SCROLL_LIST("view-scroll-list", "Type '/scrollie list' to view other scrolls."),
+    VIEW_SCROLL_LIST("view-scroll-list", "Type '/scrollie list' to view all scrolls."),
     DELETE_THIS_SCROLL("delete-this-scroll", "Type '/scrollie delete {0}' to delete this scroll."),
     MAKE_USAGE("make-usage", "Usage: /scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional"),
     DELETE_USAGE("delete-usage", "Usage: /scrollie delete <Scroll ID>"),
