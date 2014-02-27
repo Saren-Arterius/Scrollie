@@ -3,6 +3,8 @@ package net.wtako.Scrollie.Methods;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.bukkit.entity.Player;
+
 import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.Utils.Lang;
 
@@ -13,6 +15,11 @@ public class Scroll {
     private Integer coolDownTime;
     private Integer timesBeUsed;
     private Boolean allowCrossWorldTP;
+    private Player  owner;
+
+    public Scroll(Player player) {
+        this.owner = player;
+    }
 
     public String[] wrongConfigValue(String node, String expected, Integer got, Integer fallback) {
         final String msg1 = MessageFormat.format(Lang.WRONG_VALUE.toString(), node);
@@ -48,7 +55,7 @@ public class Scroll {
         }
     }
 
-    public Integer destinationTypeStringToInteger(String destinationType) {
+    public static Integer destinationTypeStringToInteger(String destinationType) {
         switch (destinationType.toLowerCase()) {
             case "spawn":
                 return 0;
@@ -66,7 +73,7 @@ public class Scroll {
         return -1;
     }
 
-    public String destinationTypeIntegerToString(Integer destinationType) {
+    public static String destinationTypeIntegerToString(Integer destinationType) {
         switch (destinationType) {
             case 0:
                 return Lang.DESTINATION_SPAWN.toString();
@@ -94,7 +101,8 @@ public class Scroll {
             if ((enabledDestinationInteger == destinationType) && (enabledDestinationInteger != -1)) {
                 this.destinationType = destinationType;
                 if (destinationType == 5) {
-                    this.allowCrossWorldTP = false; //Random location in a world
+                    this.allowCrossWorldTP = false; // Random location in a
+                                                    // world
                 }
                 return success(Lang.DESTINATION_TYPE.toString(), destinationTypeIntegerToString(destinationType));
             }
@@ -121,6 +129,9 @@ public class Scroll {
         final Integer fallback = 10;
 
         if ((warmUpTime >= min) && (warmUpTime <= max) && (warmUpTime >= 0)) {
+            this.warmUpTime = warmUpTime;
+            return success(Lang.WARM_UP_TIME.toString(), warmUpTime.toString());
+        } else if (this.owner.hasPermission("Scrollie.overrideLimit.WarmUpTime") && (warmUpTime >= 0)) {
             this.warmUpTime = warmUpTime;
             return success(Lang.WARM_UP_TIME.toString(), warmUpTime.toString());
         } else if (min < 0) {
@@ -171,6 +182,9 @@ public class Scroll {
         if ((coolDownTime >= min) && (coolDownTime <= max) && (coolDownTime >= 0)) {
             this.coolDownTime = coolDownTime;
             return success(Lang.COOL_DOWN_TIME.toString(), coolDownTime.toString());
+        } else if (this.owner.hasPermission("Scrollie.overrideLimit.CoolDownTime") && (coolDownTime >= 0)) {
+            this.coolDownTime = coolDownTime;
+            return success(Lang.COOL_DOWN_TIME.toString(), coolDownTime.toString());
         } else if (min < 0) {
             if (defaultVal >= 0) {
                 this.coolDownTime = defaultVal;
@@ -197,11 +211,11 @@ public class Scroll {
             return enterAgain(expected, coolDownTime.toString());
         }
     }
-    
+
     public Boolean getAllowCrossWorldTP() {
         return allowCrossWorldTP;
     }
-    
+
     public String[] setAllowCrossWorldTP(String input) {
         String[] yesList = {"1", "true", "t", "yes", "y"};
         String[] noList = {"0", "false", "f", "no", "n"};
@@ -219,7 +233,7 @@ public class Scroll {
         }
         return enterAgain("<Yes/No>", "Not <Yes/No>");
     }
-    
+
     public Integer getTimesBeUsed() {
         return timesBeUsed;
     }
@@ -239,6 +253,9 @@ public class Scroll {
         final Integer fallback = 1;
 
         if ((timesBeUsed >= min) && (timesBeUsed <= max) && (timesBeUsed >= 1)) {
+            this.timesBeUsed = timesBeUsed;
+            return success(Lang.TIMES_BE_USED.toString(), timesBeUsed.toString());
+        } else if (this.owner.hasPermission("Scrollie.overrideLimit.TimesBeUsed") && (timesBeUsed >= 1)) {
             this.timesBeUsed = timesBeUsed;
             return success(Lang.TIMES_BE_USED.toString(), timesBeUsed.toString());
         } else if (min < 1) {

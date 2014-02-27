@@ -1,5 +1,6 @@
 variable:
     create:
+        MaxScrolls: 20
         ScrollDestination:
             # If players wanted to make a scroll, 
             # and some of the variables are no longer valid due to config.yml changes,
@@ -90,13 +91,22 @@ variable:
         # Multiplies the whole equation.
         # Expected >= 1
         CrossWorldTPExpFactor: 3
-        # Total EXP required = (Basic EXP + Extra EXP (warm up) + Extra EXP(cool down) ) * CrossWorldTPExpFactor
+        
+        # Permission node: Scrollie.VIP
+        VIPExpFactor: 0.5
+        
+        # Total EXP required = (Basic EXP + Extra EXP (warm up) + Extra EXP(cool down) ) * CrossWorldTPExpFactor * VIPExpFactor * Times available
     use:
         BanCreative: Yes
         # If set to Yes, remaining count will get decreased by 1 on teleportation success/fail.
         # If set to No, remaining count will get decreased by 1 on teleportation success.
-        MovingDoesHarmToScroll: No
+        WarmUpFailDoesHarmToScroll: No
         
+        Factions:
+            CantTeleportToEnemyTerritories: Yes
+            CantTeleportFromEnemyTerritories: Yes
+            OverrideTPToIfSelfFactionPowerIsHigher: Yes
+            OverrideTPFromIfSelfFactionPowerIsHigher: Yes
         Player:
             # If set to Yes, plugin will get target player's offline location as destination.
             # If set to No, the scroll can't be used until the target player online.

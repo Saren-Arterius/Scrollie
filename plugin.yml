@@ -2,7 +2,7 @@ name: Scrollie
 version: 0.0.1
 description: Yet another useless Minecraft Craftbukkit plugin.
 author: Saren
-website: https://gitlab.wtako.net/Saren/scrollie
+website: https://gitlab.wtako.net/Saren/Scrollie
  
 main: net.wtako.Scrollie.Main
 # No, shit.
@@ -12,32 +12,42 @@ commands:
     Scrollie:
         description: Basic command.
         usage: Type /<command> help to get help.
-        permission: Scrollie.Use
+        permission: Scrollie.use
         permission-message: You are not permitted to use this plugin.
 
 permissions:
     Scrollie.*:
         description: Gives access to all Scrollie commands.
         children:
-            Scrollie.Use: True
-            Scrollie.OP: True
+            Scrollie.Use: true
+            Scrollie.OP: true
         default: op
-    Scrollie.OP:
+    Scrollie.admin:
         description: Gives access to all Scrollie administrative commands.
         children:
-            Scrollie.OverrideLimit: True
-            Scrollie.NoExpRequiredToMake: True
-            Scrollie.Reload: True
+            Scrollie.overrideLimit.*: true
+            Scrollie.overrideCanCustomize.*: true
+            Scrollie.noExpRequiredToMake: true
+            Scrollie.reload: true
         default: op
-    Scrollie.OverrideLimit:
-        description: Gives access to override min/max limit set in config.yml.
+    Scrollie.use:
+        description: Gives access to basic command.
+        default: true
+    Scrollie.VIP:
+        description: Player with this permission need less experience to make scrolls.
+        default: no
+    Scrollie.overrideLimit.*:
+        description: Gives access to override all min/max limit set in config.yml.
         default: op
-    Scrollie.NoExpRequiredToMake:
+    Scrollie.overrideCanCustomize.*:
+        description: Gives access to override all CanCustomize in config.yml.
+        default: op
+    Scrollie.noExpRequiredToMake:
         description: Player with this permission doesn't need experience to make scrolls.
         default: op
-    Scrollie.Reload:
+    Scrollie.cantBeTeleportTarget:
+        description: Player with this permission will not be teleportation target.
+        default: op
+    Scrollie.reload:
         description: Reloads the plugin.
         default: op
-    Scrollie.Use:
-        description: Gives access to basic commands.
-        default: true

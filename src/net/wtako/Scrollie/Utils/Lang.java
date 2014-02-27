@@ -29,7 +29,7 @@ public enum Lang {
 
     PLEASE_CLICK_ON_A_PLAYER("please-click-on-a-player", "Please right click on a player so that you can teleport to him/her using the scroll."),
     LEFT_CLICK_TO_CANCEL("left-click-to-cancel", "Left click to cancel."),
-    NOT_PREMITTED_TO_TELEPORT_TO_THAT_PLAYER("not-permitted-to-teleport-to-that-player", "You are not permitted to teleport to that player."),
+    NOT_PREMITTED_TO_TELEPORT_TO_THAT_PLAYER("not-permitted-to-teleport-to-that-player", "You are too weak to teleport to that player."),
     EXIT_MAKING("exit-making", "Cancelled making a scroll."),
     FINISHED_MAKING("finished-making", "You made the scroll <{0}>. Right click on the paper to use it."),
     
@@ -49,11 +49,13 @@ public enum Lang {
     EXPECTED_GOT("expected-got", "Expected: {0}. Got: {1}"),
     NOT_MATCHING_REGEX("not-matching-regex", "Not matching regex {0}"),
     MATCHING_REGEX("matching-regex", "Matching regex {0}"),
-    IS_SCROLL_NAME_CONTAINS_BAD_WORD("is-scroll-name-contains-bad-word", "Is your scroll name contains bad word?"),
+    IS_SCROLL_NAME_CONTAINS_BAD_WORD("is-scroll-name-contains-bad-word", "Is your scroll name containing bad words?"),
     PLEASE_HOLD_A_PAPER("please-hold-a-paper", "Please hold a paper with no effect in your hand."),
-    YOU_DONT_HAVE_ENOUGH_EXP("you-dont-have-enough-exp", "You don't have enough experience. >Required: {0}xp. You have: {1}xp<"),
+    YOU_DONT_HAVE_ENOUGH_EXP("you-dont-have-enough-exp", "You are too weak to make that scroll. >Required: {0}xp. You have: {1}xp<"),
     WARM_UP_FAIL("warm-up-fail", "Warming up process has been interrupted."),
     NOT_POWERFUL_ENOUGH("not-powerful-enough", "Your scroll <{0}> is not powerful enough to perform cross-world teleportation."),
+    CANT_TP_FROM_ENEMY_TERRITORY("cant-tp-from-enemy-territory", "Your scroll isn't going to work! Are you in enemy's territory?"),
+    CANT_TP_FROM_TO_TERRITORY("cant-tp-to-enemy-territory", "Your scroll isn't going to work! Are you teleporting to enemy's territory."),
 
     HELP_TEXT1("help-text1", "Type '/scrollie create' to create a new scroll."),
     HELP_TEXT2("help-text2", "Type '/scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional' to make a predefined scroll."),

@@ -58,8 +58,7 @@ public abstract class Wizard implements Listener {
         if (!Wizard.hasEditor(player)) {
             return;
         }
-        final Wizard wizard = Wizard.inWizardMode.get(player.getName());
-        Wizard.inWizardMode.remove(player.getName());
+        final Wizard wizard = Wizard.inWizardMode.remove(player.getName());
         if (Wizard.inWizardMode.size() == 0) {
             HandlerList.unregisterAll(wizard);
         }
