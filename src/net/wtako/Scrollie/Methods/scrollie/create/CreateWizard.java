@@ -29,6 +29,7 @@ public class CreateWizard extends Wizard {
         final Scroll wizardScroll = new Scroll(this.player);
         CreateWizard.playerToScroll.put(player.getName(), wizardScroll);
         player.sendMessage(Lang.WIZARD_ENTER.toString());
+        setDefaultValue();
     }
 
     @Override
@@ -50,18 +51,7 @@ public class CreateWizard extends Wizard {
         } else if (wizardScroll.getDestinationType() == null) {
             chatPlayer.sendMessage(wizardScroll.setDestinationType(input));
             if (wizardScroll.getDestinationType() == null) {
-                chatPlayer.sendMessage(Lang.WHAT_DESTINATION.toString());
-                final List<String> enabledDestinationTypes = Main.getInstance().getConfig()
-                        .getStringList("variable.create.ScrollDestination.Enabled");
-                final String messageTemplate = Lang.ALL_DESTINATIONS.toString();
-                for (final String enabledDestinationType: enabledDestinationTypes) {
-                    final Integer destinationTypeInteger = Scroll
-                            .destinationTypeStringToInteger(enabledDestinationType);
-                    final String humanText = Scroll.destinationTypeIntegerToString(destinationTypeInteger);
-                    final String humanMessage = MessageFormat.format(messageTemplate, destinationTypeInteger,
-                            Lang.TO_TEXT.toString(), humanText);
-                    chatPlayer.sendMessage(humanMessage);
-                }
+                chatPlayer.sendMessage(getDestinationMessage());
             } else {
                 chatPlayer.sendMessage(Lang.WHAT_WOULD_THE_WARM_UP_TIME_BE.toString());
                 chatPlayer.sendMessage(Lang.SHORTER_TIME_MORE_EXP.toString());
@@ -131,5 +121,9 @@ public class CreateWizard extends Wizard {
         }
         String[] messageSimpleArray = new String[messageList.size()];
         return messageSimpleArray;
+    }
+
+    private void setDefaultValue() {
+        // TODO Auto-generated method stub
     }
 }
