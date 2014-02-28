@@ -21,9 +21,9 @@ public abstract class Wizard implements Listener {
         wizard.begin();
         /* The following code should cease to exist in my memory. */
         boolean needToRegisterEvent = true;
+        final String wizardInstanceClassName = wizard.toString().split("@")[0];
         for (final RegisteredListener listener: HandlerList.getRegisteredListeners(player.getServer()
                 .getPluginManager().getPlugin("Scrollie"))) {
-            final String wizardInstanceClassName = wizard.toString().split("@")[0];
             if (listener.getListener().toString().contains(wizardInstanceClassName)) {
                 needToRegisterEvent = false;
                 break;
@@ -58,8 +58,15 @@ public abstract class Wizard implements Listener {
         if (!Wizard.hasEditor(player)) {
             return;
         }
+        boolean needToUnregisterEvent = true;
         final Wizard wizard = Wizard.inWizardMode.remove(player.getName());
-        if (Wizard.inWizardMode.size() == 0) {
+        for (final Entry<String, Wizard> entry: Wizard.inWizardMode.entrySet()) {
+            if (entry.getValue().toString().split("@")[0].equals(wizard.toString().split("@")[0])) {
+                needToUnregisterEvent = false;
+                break;
+            }
+        }
+        if (needToUnregisterEvent) {
             HandlerList.unregisterAll(wizard);
         }
         wizard.end();
