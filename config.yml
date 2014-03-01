@@ -49,11 +49,12 @@ variable:
             # Expected string
             Default: "My scroll"
             # https://en.wikipedia.org/wiki/Regular_expression
-            Regex: "^.{0,64}$"
-            BannedRegex:
-            - "[fF][uU][cC][kK]"
-            - "[sS][hH][iI][tT]"
-            - "[bB][iI][tT][cC][hH]"
+            Regex: "^.{0,32}$"
+            BannedRegexs:
+            - ".*fuck.*"
+            - ".*shit.*"
+            - ".*bitch.*"
+            - ".*damn.*"
     make:
         BanCreative: Yes
         # Default: paper

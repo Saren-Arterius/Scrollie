@@ -1,5 +1,6 @@
 package net.wtako.Scrollie.Methods.scrollie.create;
 
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,10 +27,10 @@ public class CreateWizard extends Wizard {
 
     @Override
     public void begin() {
-        final Scroll wizardScroll = new Scroll(this.player);
+        final Scroll wizardScroll = new Scroll(player);
         CreateWizard.playerToScroll.put(player.getName(), wizardScroll);
         player.sendMessage(Lang.WIZARD_ENTER.toString());
-        setDefaultValue();
+        sendNextMessage(wizardScroll, player);
     }
 
     @Override
@@ -50,56 +51,29 @@ public class CreateWizard extends Wizard {
             Wizard.leave(chatPlayer);
         } else if (wizardScroll.getDestinationType() == null) {
             chatPlayer.sendMessage(wizardScroll.setDestinationType(input));
-            if (wizardScroll.getDestinationType() == null) {
-                chatPlayer.sendMessage(getDestinationMessage());
-            } else {
-                chatPlayer.sendMessage(Lang.WHAT_WOULD_THE_WARM_UP_TIME_BE.toString());
-                chatPlayer.sendMessage(Lang.SHORTER_TIME_MORE_EXP.toString());
-            }
+            sendNextMessage(wizardScroll, chatPlayer);
         } else if (wizardScroll.getWarmUpTime() == null) {
             chatPlayer.sendMessage(wizardScroll.setWarmUpTime(input));
-            if (wizardScroll.getWarmUpTime() == null) {
-                chatPlayer.sendMessage(Lang.WHAT_WOULD_THE_WARM_UP_TIME_BE.toString());
-                chatPlayer.sendMessage(Lang.SHORTER_TIME_MORE_EXP.toString());
-            } else {
-                chatPlayer.sendMessage(Lang.WHAT_WOULD_THE_COOL_DOWN_TIME_BE.toString());
-                chatPlayer.sendMessage(Lang.SHORTER_TIME_MORE_EXP.toString());
-            }
+            sendNextMessage(wizardScroll, chatPlayer);
         } else if (wizardScroll.getCoolDownTime() == null) {
             chatPlayer.sendMessage(wizardScroll.setCoolDownTime(input));
-            if (wizardScroll.getCoolDownTime() == null) {
-                chatPlayer.sendMessage(Lang.WHAT_WOULD_THE_COOL_DOWN_TIME_BE.toString());
-                chatPlayer.sendMessage(Lang.SHORTER_TIME_MORE_EXP.toString());
-            } else {
-                if (wizardScroll.getAllowCrossWorldTP() == null) {
-                    chatPlayer.sendMessage(Lang.ALLOW_CROSS_WORLD_TP_OR_NOT.toString());
-                    chatPlayer.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), Main
-                            .getInstance().getConfig().getInt("variable.make.CrossWorldTPExpFactor")));
-                } else {
-                    chatPlayer.sendMessage(Lang.HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED.toString());
-                    chatPlayer.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), "*TIMES*"));
-                }
-            }
+            sendNextMessage(wizardScroll, chatPlayer);
         } else if (wizardScroll.getAllowCrossWorldTP() == null) {
             chatPlayer.sendMessage(wizardScroll.setAllowCrossWorldTP(input));
-            if (wizardScroll.getAllowCrossWorldTP() == null) {
-                chatPlayer.sendMessage(Lang.ALLOW_CROSS_WORLD_TP_OR_NOT.toString());
-                chatPlayer.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), Main.getInstance()
-                        .getConfig().getInt("variable.make.CrossWorldTPExpFactor")));
-            } else {
-                chatPlayer.sendMessage(Lang.HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED.toString());
-                chatPlayer.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), "*TIMES*"));
-            }
+            sendNextMessage(wizardScroll, chatPlayer);
         } else if (wizardScroll.getTimesBeUsed() == null) {
             chatPlayer.sendMessage(wizardScroll.setTimesBeUsed(input));
-            if (wizardScroll.getTimesBeUsed() == null) {
-                chatPlayer.sendMessage(Lang.HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED.toString());
-                chatPlayer.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), "*TIMES*"));
-            } else {
-                chatPlayer.sendMessage(Lang.FINISHED_CREATING.toString());
-                chatPlayer.sendMessage(Lang.MAKE_THIS_SCROLL.toString());
-                chatPlayer.sendMessage(Lang.VIEW_SCROLL_LIST.toString());
-                chatPlayer.sendMessage(Lang.DELETE_THIS_SCROLL.toString());
+            sendNextMessage(wizardScroll, chatPlayer);
+        } else if (wizardScroll.getScrollName() == null) {
+            chatPlayer.sendMessage(wizardScroll.setScrollName(input));
+            sendNextMessage(wizardScroll, chatPlayer);
+            if (wizardScroll.getScrollName() != null) {
+                try {
+                    wizardScroll.save();
+                } catch (SQLException e) {
+                    chatPlayer.sendMessage(Lang.DB_NEW_SCROLL_EXCEPTION.toString());
+                    e.printStackTrace();
+                }
                 Wizard.leave(chatPlayer);
             }
         }
@@ -107,7 +81,7 @@ public class CreateWizard extends Wizard {
     }
 
     public String[] getDestinationMessage() {
-        List<String> messageList = new ArrayList<String>();
+        final List<String> messageList = new ArrayList<String>();
         messageList.add(Lang.WHAT_DESTINATION.toString());
         final List<String> enabledDestinationTypes = Main.getInstance().getConfig()
                 .getStringList("variable.create.ScrollDestination.Enabled");
@@ -119,11 +93,34 @@ public class CreateWizard extends Wizard {
                     Lang.TO_TEXT.toString(), humanText);
             messageList.add(humanMessage);
         }
-        String[] messageSimpleArray = new String[messageList.size()];
+        final String[] messageSimpleArray = messageList.toArray(new String[messageList.size()]);
         return messageSimpleArray;
     }
 
-    private void setDefaultValue() {
-        // TODO Auto-generated method stub
+    public void sendNextMessage(Scroll scroll, Player player) {
+        if (scroll.getDestinationType() == null) {
+            player.sendMessage(getDestinationMessage());
+        } else if (scroll.getWarmUpTime() == null) {
+            player.sendMessage(Lang.WHAT_WOULD_THE_WARM_UP_TIME_BE.toString());
+            player.sendMessage(Lang.SHORTER_TIME_MORE_EXP.toString());
+        } else if (scroll.getCoolDownTime() == null) {
+            player.sendMessage(Lang.WHAT_WOULD_THE_COOL_DOWN_TIME_BE.toString());
+            player.sendMessage(Lang.SHORTER_TIME_MORE_EXP.toString());
+        } else if (scroll.getAllowCrossWorldTP() == null) {
+            player.sendMessage(Lang.ALLOW_CROSS_WORLD_TP_OR_NOT.toString());
+            player.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), Main.getInstance()
+                    .getConfig().getInt("variable.make.CrossWorldTPExpFactor")));
+        } else if (scroll.getTimesBeUsed() == null) {
+            player.sendMessage(Lang.HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED.toString());
+            player.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), "*TIMES*"));
+        } else if (scroll.getScrollName() == null) {
+            player.sendMessage(Lang.ENTER_NAME.toString());
+        } else {
+            player.sendMessage(Lang.FINISHED_CREATING.toString());
+            player.sendMessage(Lang.MAKE_THIS_SCROLL.toString());
+            player.sendMessage(Lang.VIEW_SCROLL_LIST.toString());
+            player.sendMessage(Lang.DELETE_THIS_SCROLL.toString());
+        }
+        return;
     }
 }

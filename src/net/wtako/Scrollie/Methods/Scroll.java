@@ -1,24 +1,56 @@
 package net.wtako.Scrollie.Methods;
 
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.bukkit.entity.Player;
-
 import net.wtako.Scrollie.Main;
+import net.wtako.Scrollie.Utils.Database;
 import net.wtako.Scrollie.Utils.Lang;
+
+import org.bukkit.entity.Player;
 
 public class Scroll {
 
-    private Integer destinationType;
-    private Integer warmUpTime;
-    private Integer coolDownTime;
-    private Integer timesBeUsed;
-    private Boolean allowCrossWorldTP;
-    private Player  owner;
+    private final Player owner;
+    private Integer      destinationType;
+    private Integer      warmUpTime;
+    private Integer      coolDownTime;
+    private Integer      timesBeUsed;
+    private Boolean      allowCrossWorldTP;
+    private String       name;
 
     public Scroll(Player player) {
-        this.owner = player;
+        owner = player;
+        setDefaultValue();
+    }
+
+    private void setDefaultValue() {
+        if (!Main.getInstance().getConfig().getBoolean("variable.create.ScrollDestination.CanCustomize")
+                && !owner.hasPermission("Scrollie.overrideCanCustomize.ScrollDestination")) {
+            setDestinationType(Main.getInstance().getConfig().getString("variable.create.ScrollDestination.Default"));
+        }
+        if (!Main.getInstance().getConfig().getBoolean("variable.create.WarmUpTime.CanCustomize")
+                && !owner.hasPermission("Scrollie.overrideCanCustomize.WarmUpTime")) {
+            setWarmUpTime(Main.getInstance().getConfig().getString("variable.create.WarmUpTime.Default"));
+        }
+        if (!Main.getInstance().getConfig().getBoolean("variable.create.CoolDownTime.CanCustomize")
+                && !owner.hasPermission("Scrollie.overrideCanCustomize.CoolDownTime")) {
+            setCoolDownTime(Main.getInstance().getConfig().getString("variable.create.CoolDownTime.Default"));
+        }
+        if (!Main.getInstance().getConfig().getBoolean("variable.create.CrossWorldTP.CanCustomize")
+                && !owner.hasPermission("Scrollie.overrideCanCustomize.CrossWorldTP")) {
+            setAllowCrossWorldTP(Main.getInstance().getConfig().getString("variable.create.CrossWorldTP.Default"));
+        }
+        if (!Main.getInstance().getConfig().getBoolean("variable.create.TimesBeUsed.CanCustomize")
+                && !owner.hasPermission("Scrollie.overrideCanCustomize.TimesBeUsed")) {
+            setTimesBeUsed(Main.getInstance().getConfig().getString("variable.create.TimesBeUsed.Default"));
+        }
+        if (!Main.getInstance().getConfig().getBoolean("variable.create.EnterName.CanCustomize")
+                && !owner.hasPermission("Scrollie.overrideCanCustomize.EnterName")) {
+            setScrollName(Main.getInstance().getConfig().getString("variable.create.EnterName.Default"));
+        }
+        return;
     }
 
     public String[] wrongConfigValue(String node, String expected, Integer got, Integer fallback) {
@@ -42,7 +74,12 @@ public class Scroll {
         final String[] finalMessage = {msg1, msg2};
         return finalMessage;
     }
-
+    
+    public void save() throws SQLException {
+        Database db = new Database();
+        db.addScroll(owner.getName(), name, destinationType, warmUpTime, coolDownTime, allowCrossWorldTP, timesBeUsed);
+    }
+    
     public Integer getDestinationType() {
         return destinationType;
     }
@@ -51,7 +88,7 @@ public class Scroll {
         try {
             return checkDestinationType(Integer.parseInt(input));
         } catch (final Exception ex) {
-            return checkDestinationType(destinationTypeStringToInteger(input));
+            return checkDestinationType(Scroll.destinationTypeStringToInteger(input));
         }
     }
 
@@ -96,18 +133,18 @@ public class Scroll {
                 .getStringList("variable.create.ScrollDestination.Enabled");
         String humanEnabledDestinationTypes = "";
         for (final String enabledDestinationType: enabledDestinationTypes) {
-            final Integer enabledDestinationInteger = destinationTypeStringToInteger(enabledDestinationType);
-            humanEnabledDestinationTypes += destinationTypeIntegerToString(enabledDestinationInteger) + ", ";
+            final Integer enabledDestinationInteger = Scroll.destinationTypeStringToInteger(enabledDestinationType);
+            humanEnabledDestinationTypes += Scroll.destinationTypeIntegerToString(enabledDestinationInteger) + ", ";
             if ((enabledDestinationInteger == destinationType) && (enabledDestinationInteger != -1)) {
                 this.destinationType = destinationType;
                 if (destinationType == 5) {
-                    this.allowCrossWorldTP = false; // Random location in a
-                                                    // world
+                    allowCrossWorldTP = false; // Random location in a
+                                               // world
                 }
-                return success(Lang.DESTINATION_TYPE.toString(), destinationTypeIntegerToString(destinationType));
+                return success(Lang.DESTINATION_TYPE.toString(), Scroll.destinationTypeIntegerToString(destinationType));
             }
         }
-        return enterAgain(humanEnabledDestinationTypes, destinationTypeIntegerToString(destinationType));
+        return enterAgain(humanEnabledDestinationTypes, Scroll.destinationTypeIntegerToString(destinationType));
     }
 
     public Integer getWarmUpTime() {
@@ -131,7 +168,7 @@ public class Scroll {
         if ((warmUpTime >= min) && (warmUpTime <= max) && (warmUpTime >= 0)) {
             this.warmUpTime = warmUpTime;
             return success(Lang.WARM_UP_TIME.toString(), warmUpTime.toString());
-        } else if (this.owner.hasPermission("Scrollie.overrideLimit.WarmUpTime") && (warmUpTime >= 0)) {
+        } else if (owner.hasPermission("Scrollie.overrideLimit.WarmUpTime") && (warmUpTime >= 0)) {
             this.warmUpTime = warmUpTime;
             return success(Lang.WARM_UP_TIME.toString(), warmUpTime.toString());
         } else if (min < 0) {
@@ -182,7 +219,7 @@ public class Scroll {
         if ((coolDownTime >= min) && (coolDownTime <= max) && (coolDownTime >= 0)) {
             this.coolDownTime = coolDownTime;
             return success(Lang.COOL_DOWN_TIME.toString(), coolDownTime.toString());
-        } else if (this.owner.hasPermission("Scrollie.overrideLimit.CoolDownTime") && (coolDownTime >= 0)) {
+        } else if (owner.hasPermission("Scrollie.overrideLimit.CoolDownTime") && (coolDownTime >= 0)) {
             this.coolDownTime = coolDownTime;
             return success(Lang.COOL_DOWN_TIME.toString(), coolDownTime.toString());
         } else if (min < 0) {
@@ -217,17 +254,17 @@ public class Scroll {
     }
 
     public String[] setAllowCrossWorldTP(String input) {
-        String[] yesList = {"1", "true", "t", "yes", "y"};
-        String[] noList = {"0", "false", "f", "no", "n"};
-        for (String yes: yesList) {
+        final String[] yesList = {"1", "true", "t", "yes", "y"};
+        final String[] noList = {"0", "false", "f", "no", "n"};
+        for (final String yes: yesList) {
             if (input.equalsIgnoreCase(yes)) {
-                this.allowCrossWorldTP = true;
+                allowCrossWorldTP = true;
                 return success(Lang.CROSS_WORLD_TP.toString(), "Yes");
             }
         }
-        for (String no: noList) {
+        for (final String no: noList) {
             if (input.equalsIgnoreCase(no)) {
-                this.allowCrossWorldTP = false;
+                allowCrossWorldTP = false;
                 return success(Lang.CROSS_WORLD_TP.toString(), "No");
             }
         }
@@ -255,7 +292,7 @@ public class Scroll {
         if ((timesBeUsed >= min) && (timesBeUsed <= max) && (timesBeUsed >= 1)) {
             this.timesBeUsed = timesBeUsed;
             return success(Lang.TIMES_BE_USED.toString(), timesBeUsed.toString());
-        } else if (this.owner.hasPermission("Scrollie.overrideLimit.TimesBeUsed") && (timesBeUsed >= 1)) {
+        } else if (owner.hasPermission("Scrollie.overrideLimit.TimesBeUsed") && (timesBeUsed >= 1)) {
             this.timesBeUsed = timesBeUsed;
             return success(Lang.TIMES_BE_USED.toString(), timesBeUsed.toString());
         } else if (min < 1) {
@@ -282,6 +319,32 @@ public class Scroll {
         } else {
             final String expected = MessageFormat.format("{0} - {1} {2}", min, max, Lang.TIMES_MEASURE_WORD.toString());
             return enterAgain(expected, timesBeUsed.toString());
+        }
+    }
+
+    public String getScrollName() {
+        return name;
+    }
+
+    public String[] setScrollName(String input) {
+        final String regex = Main.getInstance().getConfig().getString("variable.create.EnterName.Regex");
+        if (input.matches(regex)) {
+            final List<String> bannedRegexs = Main.getInstance().getConfig()
+                    .getStringList("variable.create.EnterName.BannedRegexs");
+            for (final String bannedRegex: bannedRegexs) {
+                if (input.toLowerCase().matches(bannedRegex)) {
+                    final String expected = MessageFormat.format(Lang.NOT_MATCHING_REGEX.toString(), bannedRegex)
+                            + ". " + Lang.IS_SCROLL_NAME_CONTAINING_BAD_WORD.toString();
+                    final String got = MessageFormat.format(Lang.MATCHING_REGEX.toString(), bannedRegex);
+                    return enterAgain(expected, got);
+                }
+            }
+            name = input;
+            return success(Lang.SCROLL_NAME.toString(), input);
+        } else {
+            final String expected = MessageFormat.format(Lang.MATCHING_REGEX.toString(), regex);
+            final String got = MessageFormat.format(Lang.NOT_MATCHING_REGEX.toString(), regex);
+            return enterAgain(expected, got);
         }
     }
 

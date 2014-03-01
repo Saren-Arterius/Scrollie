@@ -7,6 +7,7 @@ website: https://gitlab.wtako.net/Saren/Scrollie
 main: net.wtako.Scrollie.Main
 # No, shit.
 database: false 
+depend: [SQLibrary]
 
 commands:
     Scrollie:
