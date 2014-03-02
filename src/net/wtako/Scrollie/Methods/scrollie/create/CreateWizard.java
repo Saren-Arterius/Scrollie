@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.wtako.Scrollie.Main;
-import net.wtako.Scrollie.Methods.Scroll;
+import net.wtako.Scrollie.Methods.ScrollDatabase;
 import net.wtako.Scrollie.Methods.Wizard;
 import net.wtako.Scrollie.Utils.Lang;
 
@@ -19,7 +19,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class CreateWizard extends Wizard {
 
     private final Player                     player;
-    private static final Map<String, Scroll> playerToScroll = new HashMap<String, Scroll>();
+    private static final Map<String, ScrollDatabase> playerToScroll = new HashMap<String, ScrollDatabase>();
 
     public CreateWizard(Player player) {
         this.player = player;
@@ -27,7 +27,14 @@ public class CreateWizard extends Wizard {
 
     @Override
     public void begin() {
-        final Scroll wizardScroll = new Scroll(player);
+        ScrollDatabase wizardScroll = null;
+        try {
+            wizardScroll = new ScrollDatabase(player);
+        } catch (SQLException e) {
+            player.sendMessage(Lang.DB_EXCEPTION.toString());
+            e.printStackTrace();
+            Wizard.leave(player);
+        }
         CreateWizard.playerToScroll.put(player.getName(), wizardScroll);
         player.sendMessage(Lang.WIZARD_ENTER.toString());
         sendNextMessage(wizardScroll, player);
@@ -42,7 +49,7 @@ public class CreateWizard extends Wizard {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         final Player chatPlayer = event.getPlayer();
-        final Scroll wizardScroll = CreateWizard.playerToScroll.get(chatPlayer.getName());
+        final ScrollDatabase wizardScroll = CreateWizard.playerToScroll.get(chatPlayer.getName());
         if (wizardScroll == null) {
             return;
         }
@@ -69,12 +76,13 @@ public class CreateWizard extends Wizard {
             sendNextMessage(wizardScroll, chatPlayer);
             if (wizardScroll.getScrollName() != null) {
                 try {
-                    wizardScroll.save();
+                    chatPlayer.sendMessage(wizardScroll.save());
                 } catch (SQLException e) {
-                    chatPlayer.sendMessage(Lang.DB_NEW_SCROLL_EXCEPTION.toString());
+                    chatPlayer.sendMessage(Lang.DB_EXCEPTION.toString());
                     e.printStackTrace();
+                } finally {
+                    Wizard.leave(chatPlayer);
                 }
-                Wizard.leave(chatPlayer);
             }
         }
         event.setCancelled(true);
@@ -87,8 +95,8 @@ public class CreateWizard extends Wizard {
                 .getStringList("variable.create.ScrollDestination.Enabled");
         final String messageTemplate = Lang.ALL_DESTINATIONS.toString();
         for (final String enabledDestinationType: enabledDestinationTypes) {
-            final Integer destinationTypeInteger = Scroll.destinationTypeStringToInteger(enabledDestinationType);
-            final String humanText = Scroll.destinationTypeIntegerToString(destinationTypeInteger);
+            final Integer destinationTypeInteger = ScrollDatabase.destinationTypeStringToInteger(enabledDestinationType);
+            final String humanText = ScrollDatabase.destinationTypeIntegerToString(destinationTypeInteger);
             final String humanMessage = MessageFormat.format(messageTemplate, destinationTypeInteger,
                     Lang.TO_TEXT.toString(), humanText);
             messageList.add(humanMessage);
@@ -97,7 +105,7 @@ public class CreateWizard extends Wizard {
         return messageSimpleArray;
     }
 
-    public void sendNextMessage(Scroll scroll, Player player) {
+    public void sendNextMessage(ScrollDatabase scroll, Player player) {
         if (scroll.getDestinationType() == null) {
             player.sendMessage(getDestinationMessage());
         } else if (scroll.getWarmUpTime() == null) {
@@ -115,11 +123,6 @@ public class CreateWizard extends Wizard {
             player.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), "*TIMES*"));
         } else if (scroll.getScrollName() == null) {
             player.sendMessage(Lang.ENTER_NAME.toString());
-        } else {
-            player.sendMessage(Lang.FINISHED_CREATING.toString());
-            player.sendMessage(Lang.MAKE_THIS_SCROLL.toString());
-            player.sendMessage(Lang.VIEW_SCROLL_LIST.toString());
-            player.sendMessage(Lang.DELETE_THIS_SCROLL.toString());
         }
         return;
     }

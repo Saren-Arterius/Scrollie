@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * @author gomeow
  */
 public enum Lang {
+
     TITLE("title", "&4[&fScrollie&4]:"),
     WIZARD_ENTER("wizard-enter", "Enter wizard mode. Type 'exit' to exit."),
     WIZARD_EXIT("wizard-exit", "Exiting wizard mode."),
@@ -36,6 +37,8 @@ public enum Lang {
     WARMING_UP("warming-up", "Warming up for {0} seconds."),
     COOLING_DOWN("cooling-down", "Cooling down is in process. You have to wait for {0} seconds before using teleportation scrolls again."),
     SCROLL_DISAPPEARED("scroll-disappeared", "Your scroll <{0}> is faded away."),
+    SCROLL_MAGIC_GETTING_WEAKER("scroll-magic-getting-weaker", "Your scroll <{0}>'s magic is getting weaker."),
+    SCROLL_MAGIC_DISAPPEARED("scroll-magic-disappeared", "Your scroll <{0}>'s magic is disappeared."),
     FINISHED_USING("finished-using", "You used the scroll <{0}>. You are teleported to {1}. >X:{2} Y:{3} Z:{4}<"),
 
     FINISHED_DELETING("finished-deleting", "You deleted the scroll <{0}>."),
@@ -44,8 +47,9 @@ public enum Lang {
     NO_SUCH_SCROLL("no-such-scroll", "Could not find scroll ID {0}."),
     WRONG_VALUE("wrong-value", "Value {0} in config.yml is invalid. Falling back to hard-coded default."),
     FALLING_BACK_TO("falling-back-to", "Falling back to: {0}"),
-    DB_NEW_SCROLL_EXCEPTION("db-new-scroll-exception", "Failed to add new scroll due to database problem! Please contact server administrators."),
+    DB_EXCEPTION("db-exception", "A database error occured! Please contact server administrators."),
 
+    TOO_MANY_SCROLLS("too-many-scrolls", "You have created too many scrolls."),
     ENTER_AGAIN("enter-again", "Sorry, please enter again."),
     EXPECTED_GOT("expected-got", "Expected: {0}. Got: {1}"),
     NOT_MATCHING_REGEX("not-matching-regex", "Not matching regex <{0}>"),
@@ -58,15 +62,22 @@ public enum Lang {
     CANT_TP_FROM_ENEMY_TERRITORY("cant-tp-from-enemy-territory", "Your scroll isn't going to work! Are you in enemy's territory?"),
     CANT_TP_FROM_TO_TERRITORY("cant-tp-to-enemy-territory", "Your scroll isn't going to work! Are you teleporting to enemy's territory."),
 
-    HELP_TEXT1("help-text1", "Type '/scrollie create' to create a new scroll."),
-    HELP_TEXT2("help-text2", "Type '/scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional' to make a predefined scroll."),
-    HELP_TEXT3("help-text3", "Type '/scrollie list' to the scrolls you have created."),
-    HELP_TEXT4("help-text4", "Type '/scrollie delete <Scroll ID>' to delete the specific scroll you have created. (Use '/scrollie list' first)"),
-    HELP_TEXT5("help-text5", "Type '/scrollie reload' to reload the plugin."),
+    HELP_CREATE("help-create", "Type '/scrollie create' to create a new scroll."),
+    HELP_MAKE("help-make", "Type '/scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional' to make a predefined scroll."),
+    HELP_LIST("help-list", "Type '/scrollie list' to view the scrolls you have created."),
+    HELP_DELETE("help-delete", "Type '/scrollie delete <Scroll ID>' to delete a specific scroll."),
+    HELP_RESTRICT("help-restrict", "Type '/scrollie restrict' to get help of restricted area settings. (OP only)"),
+    HELP_RELOAD("help-reload", "Type '/scrollie reload' to reload the plugin. (OP only)"),
     
-    MAKE_THIS_SCROLL("make-this-scroll", "Type '/scrollie make {0}' to make this scroll."),
-    VIEW_SCROLL_LIST("view-scroll-list", "Type '/scrollie list' to view all scrolls."),
-    DELETE_THIS_SCROLL("delete-this-scroll", "Type '/scrollie delete {0}' to delete this scroll."),
+    RESTRICT_HELP_LIST_1("restrict-help-list-1", "Type '/scrollie restrict list' to list all restricted worlds and regions."),
+    RESTRICT_HELP_LIST_2("restrict-help-list-2", "Rows with no region value are restricted world rows."),
+    RESTRICT_HELP_SET_WORLD_NAME("restrict-help-set-world-name", "Type '/scrollie restrict world <World name>' to invert the restrict rule of whole world."),
+    RESTRICT_HELP_SET_REGION("restrict-help-set-region", "Type '/scrollie restrict region' to invert the restrict rule in a region. Perform WorldEdit selection first."),
+    RESTRICT_HELP_DELETE("restrict-help-delete", "Type '/scrollie restrict delete <Row ID>' to delete that restrict rule."),
+
+    MAKE_THIS_SCROLL("make-this-scroll", "Type </scrollie make {0}> to make this scroll."),
+    VIEW_SCROLL_LIST("view-scroll-list", "Type </scrollie list> to view all scrolls."),
+    DELETE_THIS_SCROLL("delete-this-scroll", "Type </scrollie delete {0}> to delete this scroll."),
     MAKE_USAGE("make-usage", "Usage: /scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional"),
     DELETE_USAGE("delete-usage", "Usage: /scrollie delete <Scroll ID>"),
     
@@ -92,10 +103,13 @@ public enum Lang {
     DESTINATION_PLAYER("destination-player", "Player's location"),
     DESTINATION_CURRENT_LOCATION("destination-current-location", "Current location"),
     DESTINATION_RANDOM("destination-random", "Random location"),
-    DESTINATION_NOT_SET("destination-not-set", "Not a location");
+    DESTINATION_SELF_RESCUE("destination-self-rescue", "Self rescue"),
+    DESTINATION_NOT_SET("destination-not-set", "Not a location"),
+    
+    NO_PERMISSION_COMMAND("no-permission-command", "You are not allowed to use this command.");
 
-    private String path;
-    private String def;
+    private String                   path;
+    private String                   def;
     private static YamlConfiguration LANG;
 
     /**
@@ -108,7 +122,7 @@ public enum Lang {
      */
     Lang(String path, String start) {
         this.path = path;
-        this.def = start;
+        def = start;
     }
 
     /**
@@ -118,17 +132,15 @@ public enum Lang {
      *            The config to set.
      */
     public static void setFile(YamlConfiguration config) {
-        LANG = config;
+        Lang.LANG = config;
     }
 
     @Override
     public String toString() {
-        if (this == TITLE)
-            return ChatColor.translateAlternateColorCodes('&',
-                    LANG.getString(this.path, def))
-                    + " ";
-        return ChatColor.translateAlternateColorCodes('&',
-                LANG.getString(this.path, def));
+        if (this == TITLE) {
+            return ChatColor.translateAlternateColorCodes('&', Lang.LANG.getString(path, def)) + " ";
+        }
+        return ChatColor.translateAlternateColorCodes('&', Lang.LANG.getString(path, def));
     }
 
     /**
@@ -137,7 +149,7 @@ public enum Lang {
      * @return The default value of the path.
      */
     public String getDefault() {
-        return this.def;
+        return def;
     }
 
     /**
@@ -146,6 +158,6 @@ public enum Lang {
      * @return The path to the string.
      */
     public String getPath() {
-        return this.path;
+        return path;
     }
 }

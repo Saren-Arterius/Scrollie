@@ -1,5 +1,6 @@
 variable:
     create:
+        # Scrollie.overrideLimit.MaxScrolls
         MaxScrolls: 20
         ScrollDestination:
             # If players wanted to make a scroll, 
@@ -13,6 +14,7 @@ variable:
             # - "Player"
             # - "CurrentLocation"
             # - "Random"
+            # - "SelfRescue"
             Default: "Spawn"
             Enabled:
             - "Spawn"
@@ -20,18 +22,22 @@ variable:
             - "FactionHome"
             - "Player"
             - "CurrentLocation"
+            # CrossWorldTP is forced set to no on random scroll.
             - "Random"
-            # If players cannot customize the variable, default value will be applied.
+            # Self rescue scroll requires no exp and paper, but only scroll name is customizable, and CrossWorldTP is forced set to yes.
+            # Will teleport players to Essential spawn.
+            - "SelfRescue"
             CanCustomize: Yes
+            # If players cannot customize the variable, default value will be applied.
         WarmUpTime:
             # Expected >= 0
-            Default: 10
+            Default: 30
             Min: 0
             Max: 60
             CanCustomize: Yes
         CoolDownTime:
             # Expected >= 0
-            Default: 600
+            Default: 900
             Min: 0
             Max: 3600
             CanCustomize: Yes
@@ -46,6 +52,7 @@ variable:
             Max: 9999
             CanCustomize: Yes
         EnterName:
+            # Apply only when a scroll name in DB matches at least one of BannedRegexs
             # Expected string
             Default: "My scroll"
             # https://en.wikipedia.org/wiki/Regular_expression
@@ -55,6 +62,7 @@ variable:
             - ".*shit.*"
             - ".*bitch.*"
             - ".*damn.*"
+            
     make:
         BanCreative: Yes
         # Default: paper
@@ -62,17 +70,18 @@ variable:
         ScrollItem: 339
         UseEconInsteadOfEXP: No
         
-        # Basic EXP = BaseEXPRequired*ScrollDestinationExpFactor
         # Expected >= 0
         BaseEXPRequired: 50
+        # Multiplies the whole equation.
         ScrollDestinationExpFactor:
-            # Expected >= 0
             Spawn: 1
-            Home: 1
+            Home: 1.5
             FactionHome: 1
             Player: 2
             CurrentLocation: 2
-            Random: 1.5
+            Random: 1
+            # Should be always 0
+            SelfRescue: 0
             
         # Extra EXP (warm up): WarmUpEXPBase / (WarmUpTime + WarmUpEXPDenominatorSum) <WarmUpTime is set by player>
         # Case 1: WarmUpEXPBase = 50, WarmUpEXPDenominatorSum = 1, WarmUpTime = 15
@@ -96,7 +105,7 @@ variable:
         # Permission node: Scrollie.VIP
         VIPExpFactor: 0.5
         
-        # Total EXP required = (Basic EXP + Extra EXP (warm up) + Extra EXP(cool down) ) * CrossWorldTPExpFactor * VIPExpFactor * Times available
+        # Total EXP required = (Base EXP + Extra EXP (warm up) + Extra EXP(cool down) ) * CrossWorldTPExpFactor * VIPExpFactor * Times available * ScrollDestinationExpFactor
     use:
         BanCreative: Yes
         # If set to Yes, remaining count will get decreased by 1 on teleportation success/fail.
@@ -113,7 +122,18 @@ variable:
             # If set to No, the scroll can't be used until the target player online.
             # Expected Yes/No
             AllowOfflineTP: Yes
-
+        Random:
+            world:
+                MinX: -1000
+                MaxX: 1000
+                MinY: 64
+                MaxY: 80
+                MinZ: -1000
+                MaxZ: 1000
+            # YourWorldHere:
+        RestrictedAreas:
+            # Set this to yes to enable global white list, where restricted areas are places where players are allowed to use scrolls.
+            WhiteList: No
 system:
     # Change this to get you and this plugin eaten by Ender Dragon, not really, seriously.
     PluginVersion: 0.0.1

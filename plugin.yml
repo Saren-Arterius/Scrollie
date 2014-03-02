@@ -5,9 +5,7 @@ author: Saren
 website: https://gitlab.wtako.net/Saren/Scrollie
  
 main: net.wtako.Scrollie.Main
-# No, shit.
-database: false 
-depend: [SQLibrary]
+database: true
 
 commands:
     Scrollie:
@@ -32,7 +30,10 @@ permissions:
             Scrollie.reload: true
         default: op
     Scrollie.use:
-        description: Gives access to basic command.
+        description: Gives access to basic command and using scrolls.
+        default: true
+    Scrollie.make:
+        description: People without this permission cannot create nor make any scrolls.
         default: true
     Scrollie.VIP:
         description: Player with this permission need less experience to make scrolls.
@@ -42,6 +43,9 @@ permissions:
         default: op
     Scrollie.overrideCanCustomize.*:
         description: Gives access to override all CanCustomize in config.yml.
+        default: op
+    Scrollie.canUseScrollInRestrictedAreas:
+        description: Gives access to use scrolls in restricted areas.
         default: op
     Scrollie.noExpRequiredToMake:
         description: Player with this permission doesn't need experience to make scrolls.
