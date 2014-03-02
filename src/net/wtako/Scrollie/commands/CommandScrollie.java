@@ -1,6 +1,7 @@
 package net.wtako.Scrollie.Commands;
 
 import net.wtako.Scrollie.Commands.scrollie.ArgCreate;
+import net.wtako.Scrollie.Commands.scrollie.ArgMake;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,6 +14,9 @@ public class CommandScrollie implements CommandExecutor {
         if (args.length >= 1) {
             if (args[0].equalsIgnoreCase("create")) {
                 new ArgCreate(sender).goToWizard();
+                return true;
+            } else if (args[0].equalsIgnoreCase("make")) {
+                new ArgMake(sender, args).goToWizard();
                 return true;
             }
         }

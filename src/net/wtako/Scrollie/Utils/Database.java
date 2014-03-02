@@ -49,7 +49,7 @@ public class Database {
 
     private void check() throws SQLException {
         if (!areTablesExist()) {
-            Main.log.info("Creating database files...");
+            Main.log.info("Creating databases...");
             createTables();
         }
     }

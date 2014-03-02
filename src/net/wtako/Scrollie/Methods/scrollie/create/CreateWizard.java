@@ -57,22 +57,22 @@ public class CreateWizard extends Wizard {
         if (input.equalsIgnoreCase("exit")) {
             Wizard.leave(chatPlayer);
         } else if (wizardScroll.getDestinationType() == null) {
-            chatPlayer.sendMessage(wizardScroll.setDestinationType(input));
+            chatPlayer.sendMessage(wizardScroll.setDestinationType(input, false));
             sendNextMessage(wizardScroll, chatPlayer);
         } else if (wizardScroll.getWarmUpTime() == null) {
-            chatPlayer.sendMessage(wizardScroll.setWarmUpTime(input));
+            chatPlayer.sendMessage(wizardScroll.setWarmUpTime(input, false));
             sendNextMessage(wizardScroll, chatPlayer);
         } else if (wizardScroll.getCoolDownTime() == null) {
-            chatPlayer.sendMessage(wizardScroll.setCoolDownTime(input));
+            chatPlayer.sendMessage(wizardScroll.setCoolDownTime(input, false));
             sendNextMessage(wizardScroll, chatPlayer);
         } else if (wizardScroll.getAllowCrossWorldTP() == null) {
-            chatPlayer.sendMessage(wizardScroll.setAllowCrossWorldTP(input));
+            chatPlayer.sendMessage(wizardScroll.setAllowCrossWorldTP(input, false));
             sendNextMessage(wizardScroll, chatPlayer);
         } else if (wizardScroll.getTimesBeUsed() == null) {
-            chatPlayer.sendMessage(wizardScroll.setTimesBeUsed(input));
+            chatPlayer.sendMessage(wizardScroll.setTimesBeUsed(input, false));
             sendNextMessage(wizardScroll, chatPlayer);
         } else if (wizardScroll.getScrollName() == null) {
-            chatPlayer.sendMessage(wizardScroll.setScrollName(input));
+            chatPlayer.sendMessage(wizardScroll.setScrollName(input, false));
             sendNextMessage(wizardScroll, chatPlayer);
             if (wizardScroll.getScrollName() != null) {
                 try {

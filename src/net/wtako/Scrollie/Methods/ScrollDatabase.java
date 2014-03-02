@@ -29,23 +29,25 @@ public class ScrollDatabase extends Database {
     private void setDefaultValue() {
         if (!Main.getInstance().getConfig().getBoolean("variable.create.ScrollDestination.CanCustomize")
                 && !owner.hasPermission("Scrollie.overrideCanCustomize.ScrollDestination")) {
-            setDestinationType(Main.getInstance().getConfig().getString("variable.create.ScrollDestination.Default"));
+            setDestinationType(Main.getInstance().getConfig().getString("variable.create.ScrollDestination.Default"),
+                    false);
         }
         if (!Main.getInstance().getConfig().getBoolean("variable.create.WarmUpTime.CanCustomize")
                 && !owner.hasPermission("Scrollie.overrideCanCustomize.WarmUpTime")) {
-            setWarmUpTime(Main.getInstance().getConfig().getString("variable.create.WarmUpTime.Default"));
+            setWarmUpTime(Main.getInstance().getConfig().getString("variable.create.WarmUpTime.Default"), false);
         }
         if (!Main.getInstance().getConfig().getBoolean("variable.create.CoolDownTime.CanCustomize")
                 && !owner.hasPermission("Scrollie.overrideCanCustomize.CoolDownTime")) {
-            setCoolDownTime(Main.getInstance().getConfig().getString("variable.create.CoolDownTime.Default"));
+            setCoolDownTime(Main.getInstance().getConfig().getString("variable.create.CoolDownTime.Default"), false);
         }
         if (!Main.getInstance().getConfig().getBoolean("variable.create.CrossWorldTP.CanCustomize")
                 && !owner.hasPermission("Scrollie.overrideCanCustomize.CrossWorldTP")) {
-            setAllowCrossWorldTP(Main.getInstance().getConfig().getString("variable.create.CrossWorldTP.Default"));
+            setAllowCrossWorldTP(Main.getInstance().getConfig().getString("variable.create.CrossWorldTP.Default"),
+                    false);
         }
         if (!Main.getInstance().getConfig().getBoolean("variable.create.TimesBeUsed.CanCustomize")
                 && !owner.hasPermission("Scrollie.overrideCanCustomize.TimesBeUsed")) {
-            setTimesBeUsed(Main.getInstance().getConfig().getString("variable.create.TimesBeUsed.Default"));
+            setTimesBeUsed(Main.getInstance().getConfig().getString("variable.create.TimesBeUsed.Default"), false);
         }
         return;
     }
@@ -107,11 +109,11 @@ public class ScrollDatabase extends Database {
         return destinationType;
     }
 
-    public String[] setDestinationType(String input) {
+    public String[] setDestinationType(String input, boolean useDefaultOnFail) {
         try {
-            return checkDestinationType(Integer.parseInt(input));
+            return checkDestinationType(Integer.parseInt(input), useDefaultOnFail);
         } catch (final Exception ex) {
-            return checkDestinationType(ScrollDatabase.destinationTypeStringToInteger(input));
+            return checkDestinationType(ScrollDatabase.destinationTypeStringToInteger(input), useDefaultOnFail);
         }
     }
 
@@ -155,7 +157,7 @@ public class ScrollDatabase extends Database {
         return Lang.DESTINATION_NOT_SET.toString();
     }
 
-    private String[] checkDestinationType(Integer destinationType) {
+    private String[] checkDestinationType(Integer destinationType, boolean useDefaultOnFail) {
         final List<String> enabledDestinationTypes = Main.getInstance().getConfig()
                 .getStringList("variable.create.ScrollDestination.Enabled");
         String humanEnabledDestinationTypes = "";
@@ -170,13 +172,20 @@ public class ScrollDatabase extends Database {
                     allowCrossWorldTP = false;
                 } else if (destinationType == 6) { // Self rescue scroll
                     allowCrossWorldTP = true;
-                    setWarmUpTime(Main.getInstance().getConfig().getString("variable.create.WarmUpTime.Default"));
-                    setCoolDownTime(Main.getInstance().getConfig().getString("variable.create.CoolDownTime.Default"));
-                    setTimesBeUsed(Main.getInstance().getConfig().getString("variable.create.TimesBeUsed.Default"));
+                    setWarmUpTime(Main.getInstance().getConfig().getString("variable.create.WarmUpTime.Default"), false);
+                    setCoolDownTime(Main.getInstance().getConfig().getString("variable.create.CoolDownTime.Default"),
+                            false);
+                    setTimesBeUsed(Main.getInstance().getConfig().getString("variable.create.TimesBeUsed.Default"),
+                            false);
                 }
                 return success(Lang.DESTINATION_TYPE.toString(),
                         ScrollDatabase.destinationTypeIntegerToString(destinationType));
             }
+        }
+        if (useDefaultOnFail) {
+            final String defaultVal = Main.getInstance().getConfig()
+                    .getString("variable.create.ScrollDestination.Default");
+            return setDestinationType(defaultVal, false);
         }
         return enterAgain(humanEnabledDestinationTypes, ScrollDatabase.destinationTypeIntegerToString(destinationType));
     }
@@ -185,15 +194,15 @@ public class ScrollDatabase extends Database {
         return warmUpTime;
     }
 
-    public String[] setWarmUpTime(String input) {
+    public String[] setWarmUpTime(String input, boolean useDefaultOnFail) {
         try {
-            return checkWarmUpTime(Integer.parseInt(input));
+            return checkWarmUpTime(Integer.parseInt(input), useDefaultOnFail);
         } catch (final Exception ex) {
             return enterAgain(Lang.INTEGER.toString(), Lang.NOT_AN_INTEGER.toString());
         }
     }
 
-    public String[] checkWarmUpTime(Integer warmUpTime) {
+    public String[] checkWarmUpTime(Integer warmUpTime, boolean useDefaultOnFail) {
         final Integer min = Main.getInstance().getConfig().getInt("variable.create.WarmUpTime.Min");
         final Integer max = Main.getInstance().getConfig().getInt("variable.create.WarmUpTime.Max");
         final Integer defaultVal = Main.getInstance().getConfig().getInt("variable.create.WarmUpTime.Default");
@@ -227,6 +236,9 @@ public class ScrollDatabase extends Database {
                 return wrongConfigValue("variable.create.WarmUpTime.Default", expected, defaultVal, fallback);
             }
         } else {
+            if (useDefaultOnFail) {
+                return checkWarmUpTime(defaultVal, false);
+            }
             final String expected = MessageFormat.format("{0} - {1} {2}", min, max, Lang.SECONDS.toString());
             return enterAgain(expected, warmUpTime.toString());
         }
@@ -236,15 +248,15 @@ public class ScrollDatabase extends Database {
         return coolDownTime;
     }
 
-    public String[] setCoolDownTime(String input) {
+    public String[] setCoolDownTime(String input, boolean useDefaultOnFail) {
         try {
-            return checkCoolDownTime(Integer.parseInt(input));
+            return checkCoolDownTime(Integer.parseInt(input), useDefaultOnFail);
         } catch (final Exception ex) {
             return enterAgain(Lang.INTEGER.toString(), Lang.NOT_AN_INTEGER.toString());
         }
     }
 
-    public String[] checkCoolDownTime(Integer coolDownTime) {
+    public String[] checkCoolDownTime(Integer coolDownTime, boolean useDefaultOnFail) {
         final Integer min = Main.getInstance().getConfig().getInt("variable.create.CoolDownTime.Min");
         final Integer max = Main.getInstance().getConfig().getInt("variable.create.CoolDownTime.Max");
         final Integer defaultVal = Main.getInstance().getConfig().getInt("variable.create.CoolDownTime.Default");
@@ -278,6 +290,9 @@ public class ScrollDatabase extends Database {
                 return wrongConfigValue("variable.create.CoolDownTime.Default", expected, defaultVal, fallback);
             }
         } else {
+            if (useDefaultOnFail) {
+                return checkCoolDownTime(defaultVal, false);
+            }
             final String expected = MessageFormat.format("{0} - {1} {2}", min, max, Lang.SECONDS.toString());
             return enterAgain(expected, coolDownTime.toString());
         }
@@ -287,7 +302,7 @@ public class ScrollDatabase extends Database {
         return allowCrossWorldTP;
     }
 
-    public String[] setAllowCrossWorldTP(String input) {
+    public String[] setAllowCrossWorldTP(String input, boolean useDefaultOnFail) {
         final String[] yesList = {"1", "true", "t", "yes", "y"};
         final String[] noList = {"0", "false", "f", "no", "n"};
         for (final String yes: yesList) {
@@ -302,6 +317,11 @@ public class ScrollDatabase extends Database {
                 return success(Lang.CROSS_WORLD_TP.toString(), "No");
             }
         }
+        if (useDefaultOnFail) {
+            final boolean defaultVal = Main.getInstance().getConfig()
+                    .getBoolean("variable.create.CrossWorldTP.Default");
+            allowCrossWorldTP = defaultVal;
+        }
         return enterAgain("<Yes/No>", "Not <Yes/No>");
     }
 
@@ -309,15 +329,15 @@ public class ScrollDatabase extends Database {
         return timesBeUsed;
     }
 
-    public String[] setTimesBeUsed(String input) {
+    public String[] setTimesBeUsed(String input, boolean useDefaultOnFail) {
         try {
-            return checkTimesBeUsed(Integer.parseInt(input));
+            return checkTimesBeUsed(Integer.parseInt(input), useDefaultOnFail);
         } catch (final Exception ex) {
             return enterAgain(Lang.INTEGER.toString(), Lang.NOT_AN_INTEGER.toString());
         }
     }
 
-    public String[] checkTimesBeUsed(Integer timesBeUsed) {
+    public String[] checkTimesBeUsed(Integer timesBeUsed, boolean useDefaultOnFail) {
         final Integer min = Main.getInstance().getConfig().getInt("variable.create.TimesBeUsed.Min");
         final Integer max = Main.getInstance().getConfig().getInt("variable.create.TimesBeUsed.Max");
         final Integer defaultVal = Main.getInstance().getConfig().getInt("variable.create.TimesBeUsed.Default");
@@ -351,6 +371,9 @@ public class ScrollDatabase extends Database {
                 return wrongConfigValue("variable.create.TimesBeUsed.Default", expected, defaultVal, fallback);
             }
         } else {
+            if (useDefaultOnFail) {
+                return checkTimesBeUsed(defaultVal, false);
+            }
             final String expected = MessageFormat.format("{0} - {1} {2}", min, max, Lang.TIMES_MEASURE_WORD.toString());
             return enterAgain(expected, timesBeUsed.toString());
         }
@@ -360,7 +383,7 @@ public class ScrollDatabase extends Database {
         return name;
     }
 
-    public String[] setScrollName(String input) {
+    public String[] setScrollName(String input, boolean useDefaultOnFail) {
         final String regex = Main.getInstance().getConfig().getString("variable.create.EnterName.Regex");
         if (input.matches(regex)) {
             final List<String> bannedRegexs = Main.getInstance().getConfig()
@@ -370,6 +393,11 @@ public class ScrollDatabase extends Database {
                     final String expected = MessageFormat.format(Lang.NOT_MATCHING_REGEX.toString(), bannedRegex)
                             + ". " + Lang.IS_SCROLL_NAME_CONTAINING_BAD_WORD.toString();
                     final String got = MessageFormat.format(Lang.MATCHING_REGEX.toString(), bannedRegex);
+                    if (useDefaultOnFail) {
+                        final String defaultVal = Main.getInstance().getConfig()
+                                .getString("variable.create.EnterName.Default");
+                        name = defaultVal;
+                    }
                     return enterAgain(expected, got);
                 }
             }
@@ -378,6 +406,10 @@ public class ScrollDatabase extends Database {
         } else {
             final String expected = MessageFormat.format(Lang.MATCHING_REGEX.toString(), regex);
             final String got = MessageFormat.format(Lang.NOT_MATCHING_REGEX.toString(), regex);
+            if (useDefaultOnFail) {
+                final String defaultVal = Main.getInstance().getConfig().getString("variable.create.EnterName.Default");
+                name = defaultVal;
+            }
             return enterAgain(expected, got);
         }
     }

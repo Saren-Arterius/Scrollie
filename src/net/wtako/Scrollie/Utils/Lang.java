@@ -28,9 +28,9 @@ public enum Lang {
     VALUE_SET("value-set", "Value set."),
     KEY_VALUE("key-value", "{0}: {1}"),
 
-    PLEASE_CLICK_ON_A_PLAYER("please-click-on-a-player", "Please right click on a player so that you can teleport to him/her using the scroll."),
-    LEFT_CLICK_TO_CANCEL("left-click-to-cancel", "Left click to cancel."),
-    NOT_PREMITTED_TO_TELEPORT_TO_THAT_PLAYER("not-permitted-to-teleport-to-that-player", "You are too weak to teleport to that player."),
+    PLEASE_CLICK_ON_A_PLAYER("please-click-on-a-player", "Please left click on a player so that you can teleport to him/her using the scroll."),
+    HOW_TO_CANCEL("how-to-cancel", "Right click any block or type 'exit' to cancel."),
+    NOT_PREMITTED_TO_TELEPORT_TO_THAT_PLAYER("not-permitted-to-teleport-to-that-player", "You are not powerful enough to teleport to that player."),
     EXIT_MAKING("exit-making", "Cancelled making a scroll."),
     FINISHED_MAKING("finished-making", "You made the scroll <{0}>. Right click on the paper to use it."),
     
@@ -63,7 +63,7 @@ public enum Lang {
     CANT_TP_FROM_TO_TERRITORY("cant-tp-to-enemy-territory", "Your scroll isn't going to work! Are you teleporting to enemy's territory."),
 
     HELP_CREATE("help-create", "Type '/scrollie create' to create a new scroll."),
-    HELP_MAKE("help-make", "Type '/scrollie make <Scroll ID> [<Max use times> (overrides)], [] = Optional' to make a predefined scroll."),
+    HELP_MAKE("help-make", "Type '/scrollie make <Scroll ID> [Max use times]' to make a predefined scroll."),
     HELP_LIST("help-list", "Type '/scrollie list' to view the scrolls you have created."),
     HELP_DELETE("help-delete", "Type '/scrollie delete <Scroll ID>' to delete a specific scroll."),
     HELP_RESTRICT("help-restrict", "Type '/scrollie restrict' to get help of restricted area settings. (OP only)"),
