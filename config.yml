@@ -66,8 +66,8 @@ variable:
     make:
         BanCreative: Yes
         # Default: paper
-        # Expected Minecraft item ID in Dec data format
-        ScrollItem: 339
+        # Expected Minecraft item name
+        ScrollItem: "paper"
         UseEconInsteadOfEXP: No
         
         # Expected >= 0

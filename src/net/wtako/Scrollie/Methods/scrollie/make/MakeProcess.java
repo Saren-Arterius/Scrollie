@@ -5,12 +5,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 
+import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.Methods.ScrollDatabase;
 import net.wtako.Scrollie.Methods.Wizard;
 import net.wtako.Scrollie.Methods.scrollie.make.Locations.PlayerClickWizard;
 import net.wtako.Scrollie.Utils.Lang;
 
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class MakeProcess extends ScrollDatabase {
 
@@ -56,10 +60,18 @@ public class MakeProcess extends ScrollDatabase {
 
     public void makeScroll() throws SQLException {
         if (readValueFromDB()) {
-            if (getDestinationType() == 3) {
+            String itemTypeRequiredString = Main.getInstance().getConfig().getString("variable.make.ScrollItem");
+            Material itemTypeRequired = Material.getMaterial(itemTypeRequiredString.toUpperCase());
+            ItemStack itemStackRequired = new ItemStack(itemTypeRequired, 1);
+            if (!player.getItemInHand().equals(itemStackRequired)) {
+                String msg = Lang.PLEASE_HOLD_ITEM.toString();
+                player.sendMessage(MessageFormat.format(msg, itemTypeRequiredString));
+                return;
+            } else if (getDestinationType() == 3) {
                 Wizard.enterOrLeave(player, new PlayerClickWizard(player, this));
+            } else {
+                player.getItemInHand().addUnsafeEnchantment(Enchantment.LUCK, 1);
             }
         }
     }
-
 }

@@ -32,7 +32,7 @@ public class ArgMake {
                         sender.sendMessage(Lang.DB_EXCEPTION.toString());
                         e.printStackTrace();
                     }
-                } catch (Exception e) {
+                } catch (NumberFormatException e) {
                     sender.sendMessage(Lang.HELP_MAKE.toString());
                 }
             } else {
@@ -44,7 +44,7 @@ public class ArgMake {
                         sender.sendMessage(Lang.DB_EXCEPTION.toString());
                         e.printStackTrace();
                     }
-                } catch (Exception e) {
+                } catch (NumberFormatException e) {
                     sender.sendMessage(Lang.HELP_MAKE.toString());
                 }
             }

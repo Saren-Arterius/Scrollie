@@ -32,7 +32,7 @@ public enum Lang {
     HOW_TO_CANCEL("how-to-cancel", "Right click any block or type 'exit' to cancel."),
     NOT_PREMITTED_TO_TELEPORT_TO_THAT_PLAYER("not-permitted-to-teleport-to-that-player", "You are not powerful enough to teleport to that player."),
     EXIT_MAKING("exit-making", "Cancelled making a scroll."),
-    FINISHED_MAKING("finished-making", "You made the scroll <{0}>. Right click on the paper to use it."),
+    FINISHED_MAKING("finished-making", "You made the scroll <{0}>. Right click on the {1} to use it."),
     
     WARMING_UP("warming-up", "Warming up for {0} seconds."),
     COOLING_DOWN("cooling-down", "Cooling down is in process. You have to wait for {0} seconds before using teleportation scrolls again."),
@@ -55,7 +55,7 @@ public enum Lang {
     NOT_MATCHING_REGEX("not-matching-regex", "Not matching regex <{0}>"),
     MATCHING_REGEX("matching-regex", "Matching regex <{0}>"),
     IS_SCROLL_NAME_CONTAINING_BAD_WORD("is-scroll-name-contains-bad-word", "Is your scroll name containing bad words?"),
-    PLEASE_HOLD_A_PAPER("please-hold-a-paper", "Please hold a paper with no effect in your hand."),
+    PLEASE_HOLD_ITEM("please-hold-item", "Please hold an unenchanted {0} in your hand."),
     YOU_DONT_HAVE_ENOUGH_EXP("you-dont-have-enough-exp", "You are too weak to make that scroll. >Required: {0}xp. You have: {1}xp<"),
     WARM_UP_FAIL("warm-up-fail", "Warming up process has been interrupted."),
     NOT_POWERFUL_ENOUGH("not-powerful-enough", "Your scroll <{0}> is not powerful enough to perform cross-world teleportation."),
