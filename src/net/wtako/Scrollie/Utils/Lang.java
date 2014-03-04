@@ -10,7 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public enum Lang {
 
-    TITLE("title", "&4[&fScrollie&4]:"),
+    TITLE("title", "[Scrollie]"),
     WIZARD_ENTER("wizard-enter", "Enter wizard mode. Type 'exit' to exit."),
     WIZARD_EXIT("wizard-exit", "Exiting wizard mode."),
     WHAT_DESTINATION("what-destination", "What is the destination of the new scroll?"),
@@ -55,10 +55,12 @@ public enum Lang {
     NOT_MATCHING_REGEX("not-matching-regex", "Not matching regex <{0}>"),
     MATCHING_REGEX("matching-regex", "Matching regex <{0}>"),
     IS_SCROLL_NAME_CONTAINING_BAD_WORD("is-scroll-name-contains-bad-word", "Is your scroll name containing bad words?"),
-    PLEASE_HOLD_ITEM("please-hold-item", "Please hold an unenchanted {0} in your hand."),
+    PLEASE_HOLD_ITEM("please-hold-item", "Please hold at least 1 unenchanted {0} in your hand."),
+    YOUR_INVENTORY_IS_FULL("your-inventory-is-full", "Your inventory is full."),
+    YOU_ALREADY_OWN_RESCUE_SCROLL("you-already-own-rescue-scroll", "You are already owning at least 1 rescue scroll in your inventory."),
     YOU_DONT_HAVE_ENOUGH_EXP("you-dont-have-enough-exp", "You are too weak to make that scroll. >Required: {0}xp. You have: {1}xp<"),
     WARM_UP_FAIL("warm-up-fail", "Warming up process has been interrupted."),
-    NOT_POWERFUL_ENOUGH("not-powerful-enough", "Your scroll <{0}> is not powerful enough to perform cross-world teleportation."),
+    NOT_POWERFUL_ENOUGH_CROSS_WORLD_TP("not-powerful-enough", "Your scroll <{0}> is not powerful enough to perform cross-world teleportation."),
     CANT_TP_FROM_ENEMY_TERRITORY("cant-tp-from-enemy-territory", "Your scroll isn't going to work! Are you in enemy's territory?"),
     CANT_TP_FROM_TO_TERRITORY("cant-tp-to-enemy-territory", "Your scroll isn't going to work! Are you teleporting to enemy's territory."),
 
@@ -86,8 +88,11 @@ public enum Lang {
     MAX_VALUE("max-value", "Max"),
     INTEGER("integer", "Integer"),
     NOT_AN_INTEGER("not-an-integer", "Not an integer"),
-    TIMES_MEASURE_WORD("times-measure-word", "times"),
+    TIMES_MEASURE_WORD("times-measure-word", "time(s)"),
     SECONDS("seconds", "second(s)"),
+    WORLD("world", "World"),
+    ALLOWED("allowed", "Allowed"),
+    NOT_ALLOWED("not-allowed", "Not allowed"),
     
     DESTINATION_TYPE("destination-type", "Destination type"),
     WARM_UP_TIME("warm-up-time", "Warm up time"),
@@ -96,11 +101,14 @@ public enum Lang {
     TIMES_BE_USED("times-be-used", "Times available"),
     TIMES_REMAINING("times-remaining", "Times remaining"),
     SCROLL_NAME("scroll-name", "Scroll name"),
+    TARGET_PLAYER("target-player", "Target player"),
+    TARGET_LOCATION("target-location", "Target location"),
     
     DESTINATION_SPAWN("destination-spawn", "Spawn"),
     DESTINATION_HOME("destination-home", "Home"),
     DESTINATION_FACTION_HOME("destination-faction-home", "Faction home"),
     DESTINATION_PLAYER("destination-player", "Player's location"),
+    
     DESTINATION_CURRENT_LOCATION("destination-current-location", "Current location"),
     DESTINATION_RANDOM("destination-random", "Random location"),
     DESTINATION_SELF_RESCUE("destination-self-rescue", "Self rescue"),

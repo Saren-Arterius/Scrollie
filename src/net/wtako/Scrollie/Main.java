@@ -3,10 +3,13 @@ package net.wtako.Scrollie;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.wtako.Scrollie.Commands.CommandScrollie;
+import net.wtako.Scrollie.EventHandlers.ScrollUseListener;
+import net.wtako.Scrollie.Utils.Database;
 import net.wtako.Scrollie.Utils.Lang;
 
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,12 +28,14 @@ public final class Main extends JavaPlugin {
         saveDefaultConfig();
         getConfig().options().copyDefaults(true);
         getCommand("scrollie").setExecutor(new CommandScrollie());
+        getServer().getPluginManager().registerEvents(new ScrollUseListener(), this);
         loadLang();
-    }
-
-    @Override
-    public void onDisable() {
-        getLogger().info("Good-bye bloody chalon!");
+        try {
+            new Database().check();
+        } catch (SQLException e) {
+            log.severe("When you see this, that means this plugin is screwed.");
+            e.printStackTrace();
+        }
     }
 
     public void loadLang() {
@@ -66,7 +71,6 @@ public final class Main extends JavaPlugin {
         try {
             conf.save(getLangFile());
         } catch (final IOException e) {
-
             Main.log.log(Level.WARNING, "PluginName: Failed to save messages.yml.");
             Main.log.log(Level.WARNING, "PluginName: Report this stack trace to Saren.");
             e.printStackTrace();

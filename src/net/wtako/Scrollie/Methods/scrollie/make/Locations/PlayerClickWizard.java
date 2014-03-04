@@ -1,18 +1,22 @@
 package net.wtako.Scrollie.Methods.scrollie.make.Locations;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.Methods.Wizard;
 import net.wtako.Scrollie.Methods.scrollie.make.MakeProcess;
 import net.wtako.Scrollie.Utils.Lang;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class PlayerClickWizard extends Wizard {
 
@@ -30,12 +34,11 @@ public class PlayerClickWizard extends Wizard {
         PlayerClickWizard.inProcess.put(player.getName(), process);
         player.sendMessage(Lang.PLEASE_CLICK_ON_A_PLAYER.toString());
         player.sendMessage(Lang.HOW_TO_CANCEL.toString());
-
     }
 
     @Override
     public void end() {
-        player.sendMessage(Lang.EXIT_MAKING.toString());
+        player.sendMessage(Lang.WIZARD_EXIT.toString());
         PlayerClickWizard.inProcess.remove(player.getName());
     }
 
@@ -48,6 +51,7 @@ public class PlayerClickWizard extends Wizard {
         }
         final String input = event.getMessage();
         if (input.equalsIgnoreCase("exit")) {
+            player.sendMessage(Lang.EXIT_MAKING.toString());
             Wizard.leave(player);
             event.setCancelled(true);
         }
@@ -60,22 +64,37 @@ public class PlayerClickWizard extends Wizard {
         if (process == null) {
             return;
         }
-        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK) || (event.getAction() == Action.RIGHT_CLICK_AIR))  {
+        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK) || (event.getAction() == Action.RIGHT_CLICK_AIR)) {
+            player.sendMessage(Lang.EXIT_MAKING.toString());
             Wizard.leave(event.getPlayer());
         }
     }
-    
+
     @EventHandler
-    public void onPlayerInteract(EntityDamageByEntityEvent event) {
+    public void onPlayerLeftClick(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player) {
-            final Player player = (Player)event.getDamager();
+            final Player player = (Player) event.getDamager();
             final MakeProcess process = PlayerClickWizard.inProcess.get(player.getName());
-            if (process != null) {
-                if (event.getEntity() instanceof Player) {
-                    final Player target = (Player)event.getEntity();
-                    player.sendMessage(target.getName());
-                    event.setCancelled(true);
+            if ((process != null) && (event.getEntity() instanceof Player)) {
+                event.setCancelled(true);
+                final Player target = (Player) event.getEntity();
+                final String itemTypeRequiredString = Main.getInstance().getConfig()
+                        .getString("variable.make.ScrollItem");
+                final Material itemTypeRequired = Material.getMaterial(itemTypeRequiredString.toUpperCase());
+                if (!player.getItemInHand().isSimilar(new ItemStack(itemTypeRequired, 1))) {
+                    final String msg = Lang.PLEASE_HOLD_ITEM.toString();
+                    player.sendMessage(MessageFormat.format(msg, itemTypeRequiredString));
+                    return;
                 }
+                if (target.hasPermission("Scrollie.cantBeTeleportTarget")) {
+                    player.sendMessage(Lang.NOT_PREMITTED_TO_TELEPORT_TO_THAT_PLAYER.toString());
+                    return;
+                }
+                process.targetName = target.getName();
+                if (process.magickScroll(true)) {
+                    Wizard.leave((Player) event.getDamager());
+                }
+                return;
             }
         }
     }

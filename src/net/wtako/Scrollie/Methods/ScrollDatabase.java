@@ -75,13 +75,14 @@ public class ScrollDatabase extends Database {
     }
 
     public String[] save() throws SQLException {
-        final PreparedStatement selStmt = conn.prepareStatement("SELECT max(scroll_id) FROM 'scrolls' WHERE owner = ?");
+        final PreparedStatement selStmt = conn
+                .prepareStatement("SELECT max(scroll_id) FROM 'scroll_creations' WHERE owner = ?");
         selStmt.setString(1, owner.getName().toLowerCase());
         final int scrollID = selStmt.executeQuery().getInt(1) + 1;
         selStmt.close();
 
         final PreparedStatement insStmt = conn
-                .prepareStatement("INSERT INTO `scrolls` (`owner`, `scroll_id`, `name`, `scroll_destination`, `warm_up_time`, `cool_down_time`, `allow_cross_world_tp`, `times_be_used`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                .prepareStatement("INSERT INTO `scroll_creations` (`owner`, `scroll_id`, `name`, `scroll_destination`, `warm_up_time`, `cool_down_time`, `allow_cross_world_tp`, `times_be_used`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         insStmt.setString(1, owner.getName().toLowerCase());
         insStmt.setInt(2, scrollID);
         insStmt.setString(3, name);

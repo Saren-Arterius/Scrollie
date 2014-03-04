@@ -6,15 +6,7 @@ variable:
             # If players wanted to make a scroll, 
             # and some of the variables are no longer valid due to config.yml changes,
             # default value will be applied.
-            # Expected string
-            # Must be one of those:
-            # - "Spawn"
-            # - "Home"
-            # - "FactionHome"
-            # - "Player"
-            # - "CurrentLocation"
-            # - "Random"
-            # - "SelfRescue"
+            # Expected string, must be one of Enabled destinations.
             Default: "Spawn"
             Enabled:
             - "Spawn"
@@ -24,7 +16,8 @@ variable:
             - "CurrentLocation"
             # CrossWorldTP is forced set to no on random scroll.
             - "Random"
-            # Self rescue scroll requires no exp and paper, but only scroll name is customizable, and CrossWorldTP is forced set to yes.
+            # Self rescue (For noobs) scroll requires no exp nor scroll item, only scroll name is customizable, and CrossWorldTP is forced set to yes.
+            # The cool down time is stored in another column. Players are allowed to have only 1 Self rescue scroll in their inventories to prevent command spam.
             # Will teleport players to Essential spawn.
             - "SelfRescue"
             CanCustomize: Yes
@@ -37,7 +30,7 @@ variable:
             CanCustomize: Yes
         CoolDownTime:
             # Expected >= 0
-            Default: 900
+            Default: 1800
             Min: 0
             Max: 3600
             CanCustomize: Yes
@@ -56,7 +49,7 @@ variable:
             # Expected string
             Default: "My scroll"
             # https://en.wikipedia.org/wiki/Regular_expression
-            Regex: "^.{0,32}$"
+            Regex: "^.{1,20}$"
             BannedRegexs:
             - ".*fuck.*"
             - ".*shit.*"
@@ -123,7 +116,7 @@ variable:
             # Expected Yes/No
             AllowOfflineTP: Yes
         Random:
-            world:
+            Default:
                 MinX: -1000
                 MaxX: 1000
                 MinY: 64

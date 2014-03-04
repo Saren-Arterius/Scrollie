@@ -18,7 +18,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class CreateWizard extends Wizard {
 
-    private final Player                     player;
+    private final Player                             player;
     private static final Map<String, ScrollDatabase> playerToScroll = new HashMap<String, ScrollDatabase>();
 
     public CreateWizard(Player player) {
@@ -30,7 +30,7 @@ public class CreateWizard extends Wizard {
         ScrollDatabase wizardScroll = null;
         try {
             wizardScroll = new ScrollDatabase(player);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             player.sendMessage(Lang.DB_EXCEPTION.toString());
             e.printStackTrace();
             Wizard.leave(player);
@@ -77,7 +77,7 @@ public class CreateWizard extends Wizard {
             if (wizardScroll.getScrollName() != null) {
                 try {
                     chatPlayer.sendMessage(wizardScroll.save());
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                     chatPlayer.sendMessage(Lang.DB_EXCEPTION.toString());
                     e.printStackTrace();
                 } finally {
@@ -95,7 +95,8 @@ public class CreateWizard extends Wizard {
                 .getStringList("variable.create.ScrollDestination.Enabled");
         final String messageTemplate = Lang.ALL_DESTINATIONS.toString();
         for (final String enabledDestinationType: enabledDestinationTypes) {
-            final Integer destinationTypeInteger = ScrollDatabase.destinationTypeStringToInteger(enabledDestinationType);
+            final Integer destinationTypeInteger = ScrollDatabase
+                    .destinationTypeStringToInteger(enabledDestinationType);
             final String humanText = ScrollDatabase.destinationTypeIntegerToString(destinationTypeInteger);
             final String humanMessage = MessageFormat.format(messageTemplate, destinationTypeInteger,
                     Lang.TO_TEXT.toString(), humanText);
@@ -124,6 +125,5 @@ public class CreateWizard extends Wizard {
         } else if (scroll.getScrollName() == null) {
             player.sendMessage(Lang.ENTER_NAME.toString());
         }
-        return;
     }
 }

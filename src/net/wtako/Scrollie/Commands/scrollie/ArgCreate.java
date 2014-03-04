@@ -39,9 +39,8 @@ public class ArgCreate {
             return true;
         } else {
             final int scrollsLimit = Main.getInstance().getConfig().getInt("variable.create.MaxScrolls");
-            final Database db = new Database();
-            final PreparedStatement selStmt = db.conn
-                    .prepareStatement("SELECT count(rowid) FROM 'scrolls' WHERE owner = ?");
+            final PreparedStatement selStmt = Database.getInstance().conn
+                    .prepareStatement("SELECT count(rowid) FROM 'scroll_creations' WHERE owner = ?");
             selStmt.setString(1, sender.getName().toLowerCase());
             final int scrollsCount = selStmt.executeQuery().getInt(1);
             selStmt.close();
