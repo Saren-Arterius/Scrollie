@@ -53,6 +53,7 @@ public class CreateWizard extends Wizard {
         if (wizardScroll == null) {
             return;
         }
+        event.setCancelled(true);
         final String input = event.getMessage();
         if (input.equalsIgnoreCase("exit")) {
             Wizard.leave(chatPlayer);
@@ -74,18 +75,17 @@ public class CreateWizard extends Wizard {
         } else if (wizardScroll.getScrollName() == null) {
             chatPlayer.sendMessage(wizardScroll.setScrollName(input, false));
             sendNextMessage(wizardScroll, chatPlayer);
-            if (wizardScroll.getScrollName() != null) {
-                try {
-                    chatPlayer.sendMessage(wizardScroll.save());
-                } catch (final SQLException e) {
-                    chatPlayer.sendMessage(Lang.DB_EXCEPTION.toString());
-                    e.printStackTrace();
-                } finally {
-                    Wizard.leave(chatPlayer);
-                }
+        }
+        if (wizardScroll.scrollIsReady()) {
+            try {
+                chatPlayer.sendMessage(wizardScroll.save());
+            } catch (final SQLException e) {
+                chatPlayer.sendMessage(Lang.DB_EXCEPTION.toString());
+                e.printStackTrace();
+            } finally {
+                Wizard.leave(chatPlayer);
             }
         }
-        event.setCancelled(true);
     }
 
     public String[] getDestinationMessage() {
@@ -106,7 +106,7 @@ public class CreateWizard extends Wizard {
         return messageSimpleArray;
     }
 
-    public void sendNextMessage(ScrollDatabase scroll, Player player) {
+    private void sendNextMessage(ScrollDatabase scroll, Player player) {
         if (scroll.getDestinationType() == null) {
             player.sendMessage(getDestinationMessage());
         } else if (scroll.getWarmUpTime() == null) {
@@ -118,7 +118,7 @@ public class CreateWizard extends Wizard {
         } else if (scroll.getAllowCrossWorldTP() == null) {
             player.sendMessage(Lang.ALLOW_CROSS_WORLD_TP_OR_NOT.toString());
             player.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), Main.getInstance()
-                    .getConfig().getInt("variable.make.CrossWorldTPExpFactor")));
+                    .getConfig().getDouble("variable.make.CrossWorldTPExpFactor")));
         } else if (scroll.getTimesBeUsed() == null) {
             player.sendMessage(Lang.HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED.toString());
             player.sendMessage(MessageFormat.format(Lang.WILL_BE_MULTIPLIED_BY.toString(), "*TIMES*"));
@@ -126,4 +126,5 @@ public class CreateWizard extends Wizard {
             player.sendMessage(Lang.ENTER_NAME.toString());
         }
     }
+
 }

@@ -55,11 +55,11 @@ public class MakeProcess extends ScrollDatabase {
             selStmt.setInt(2, scrollID);
 
             final ResultSet result = selStmt.executeQuery();
-            setScrollName(result.getString(4), true);
             setDestinationType(result.getString(5), true);
             setWarmUpTime(result.getString(6), true);
             setCoolDownTime(result.getString(7), true);
             setAllowCrossWorldTP(result.getString(8), true);
+            setScrollName(result.getString(4), true);
             if (getTimesBeUsed() == null) {
                 setTimesBeUsed(result.getString(9), true);
             }
@@ -168,7 +168,7 @@ public class MakeProcess extends ScrollDatabase {
                 for (final Entry<Integer, ? extends ItemStack> entry: existingScrolls.entrySet()) {
                     try {
                         final ScrollInstance scroll = new ScrollInstance(entry.getValue());
-                        if (scroll.destinationType == 6) {
+                        if (scroll.getDestinationType() != null && scroll.getDestinationType() == 6) {
                             player.sendMessage(Lang.YOU_ALREADY_OWN_RESCUE_SCROLL.toString());
                             return;
                         }

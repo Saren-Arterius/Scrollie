@@ -21,6 +21,10 @@ public class ArgCreate {
     }
 
     public void goToWizard() {
+        if (!sender.hasPermission("Scrollie.make")) {
+            sender.sendMessage(Lang.NO_PERMISSION_COMMAND.toString());
+            return;
+        }
         try {
             if (canGoToWizard()) {
                 Wizard.enterOrLeave((Player) sender, new CreateWizard((Player) sender));
@@ -32,10 +36,7 @@ public class ArgCreate {
     }
 
     public boolean canGoToWizard() throws SQLException {
-        if (!sender.hasPermission("Scrollie.make")) {
-            sender.sendMessage(Lang.NO_PERMISSION_COMMAND.toString());
-            return false;
-        } else if (sender.hasPermission("Scrollie.overrideLimit.MaxScrolls")) {
+        if (sender.hasPermission("Scrollie.overrideLimit.MaxScrolls")) {
             return true;
         } else {
             final int scrollsLimit = Main.getInstance().getConfig().getInt("variable.create.MaxScrolls");

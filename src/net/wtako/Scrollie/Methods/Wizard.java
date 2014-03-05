@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.wtako.Scrollie.Main;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -22,16 +24,14 @@ public abstract class Wizard implements Listener {
         /* The following code should cease to exist in my memory. */
         boolean needToRegisterEvent = true;
         final String wizardInstanceClassName = wizard.toString().split("@")[0];
-        for (final RegisteredListener listener: HandlerList.getRegisteredListeners(player.getServer()
-                .getPluginManager().getPlugin("Scrollie"))) {
+        for (final RegisteredListener listener: HandlerList.getRegisteredListeners(Main.getInstance())) {
             if (listener.getListener().toString().contains(wizardInstanceClassName)) {
                 needToRegisterEvent = false;
                 break;
             }
         }
         if (needToRegisterEvent) {
-            player.getServer().getPluginManager()
-                    .registerEvents(wizard, player.getServer().getPluginManager().getPlugin("Scrollie"));
+            player.getServer().getPluginManager().registerEvents(wizard, Main.getInstance());
         }
         Wizard.inWizardMode.put(player.getName(), wizard);
     }

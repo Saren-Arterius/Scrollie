@@ -1,8 +1,10 @@
 package net.wtako.Scrollie.Methods;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.wtako.Scrollie.Main;
@@ -68,10 +70,59 @@ public class ScrollDatabase extends Database {
     }
 
     public String[] success(String key, String value) {
-        final String msg1 = Lang.VALUE_SET.toString();
+        final String msg1 = MessageFormat.format(Lang.VALUE_SET.toString(), getEXPRequired());
         final String msg2 = MessageFormat.format(Lang.KEY_VALUE.toString(), key, value);
         final String[] finalMessage = {msg1, msg2};
         return finalMessage;
+    }
+
+    public static String[] listAll(Player player) throws SQLException {
+        final String pattern = Lang.LIST_PATTERN.toString();
+        boolean playerHasNoScrolls = true;
+        final PreparedStatement selStmt = Database.getInstance().conn
+                .prepareStatement("SELECT * FROM 'scroll_creations' WHERE owner = ?");
+        selStmt.setString(1, player.getName().toLowerCase());
+        final ResultSet result = selStmt.executeQuery();
+        final List<String> tableArrayList = new ArrayList<String>();
+        tableArrayList.add(Lang.SCROLL_LIST.toString());
+        while (result.next()) {
+            playerHasNoScrolls = false;
+            tableArrayList.add(MessageFormat.format(pattern, result.getInt(3), result.getString(4),
+                    ScrollDatabase.destinationTypeIntegerToString(result.getInt(5)), result.getInt(6),
+                    result.getInt(7), ScrollDatabase.getAllowCrossWorldTPRepr(result.getInt(8)), result.getInt(9)));
+        }
+        result.close();
+        selStmt.close();
+        if (playerHasNoScrolls) {
+            tableArrayList.add(Lang.YOU_DONT_HAVE_ANY_CREATIONS.toString());
+            tableArrayList.add(Lang.HELP_CREATE.toString());
+            tableArrayList.remove(0);
+        }
+        final String[] finalMessage = new String[tableArrayList.size()];
+        return tableArrayList.toArray(finalMessage);
+    }
+
+    public static String delete(int rowID, Player player) throws SQLException {
+        final PreparedStatement selStmt = Database.getInstance().conn
+                .prepareStatement("SELECT name FROM 'scroll_creations' WHERE owner = ? AND scroll_id = ?");
+        selStmt.setString(1, player.getName().toLowerCase());
+        selStmt.setInt(2, rowID);
+        ResultSet result = selStmt.executeQuery();
+        if (!result.next()) {
+            result.close();
+            selStmt.close();
+            return MessageFormat.format(Lang.NO_SUCH_SCROLL.toString(), rowID);
+        }
+        String scrollName = result.getString(1);
+        result.close();
+        selStmt.close();
+        final PreparedStatement delStmt = Database.getInstance().conn
+                .prepareStatement("DELETE FROM 'scroll_creations' WHERE owner = ? AND scroll_id = ?");
+        delStmt.setString(1, player.getName().toLowerCase());
+        delStmt.setInt(2, rowID);
+        delStmt.execute();
+        delStmt.close();
+        return MessageFormat.format(Lang.FINISHED_DELETING.toString(), scrollName);
     }
 
     public String[] save() throws SQLException {
@@ -99,11 +150,86 @@ public class ScrollDatabase extends Database {
         insStmt.close();
 
         final String msg1 = Lang.FINISHED_CREATING.toString();
-        final String msg2 = MessageFormat.format(Lang.MAKE_THIS_SCROLL.toString(), scrollID);
-        final String msg3 = Lang.VIEW_SCROLL_LIST.toString();
-        final String msg4 = MessageFormat.format(Lang.DELETE_THIS_SCROLL.toString(), scrollID);
-        final String[] finalMessage = {msg1, msg2, msg3, msg4};
+        final String msg2 = MessageFormat.format(Lang.EXP_REQUIRED.toString(), getEXPRequired());
+        final String msg3 = MessageFormat.format(Lang.MAKE_THIS_SCROLL.toString(), scrollID);
+        final String msg4 = Lang.VIEW_SCROLL_LIST.toString();
+        final String msg5 = MessageFormat.format(Lang.DELETE_THIS_SCROLL.toString(), scrollID);
+        final String[] finalMessage = {msg1, msg2, msg3, msg4, msg5};
         return finalMessage;
+    }
+
+    public boolean scrollIsReady() {
+        if (getDestinationType() == null) {
+            return false;
+        } else if (getWarmUpTime() == null) {
+            return false;
+        } else if (getCoolDownTime() == null) {
+            return false;
+        } else if (getAllowCrossWorldTP() == null) {
+            return false;
+        } else if (getTimesBeUsed() == null) {
+            return false;
+        } else if (getScrollName() == null) {
+            return false;
+        }
+        return true;
+    }
+
+    public double getEXPRequired() {
+        double EXPRequired = Main.getInstance().getConfig().getDouble("variable.make.BaseEXPRequired");
+
+        if (owner.hasPermission("Scrollie.VIP")) {
+            EXPRequired *= Main.getInstance().getConfig().getDouble("variable.make.VIPExpFactor");
+        }
+
+        if (warmUpTime != null) {
+            EXPRequired += Main.getInstance().getConfig().getDouble("variable.make.WarmUpEXPBase")
+                    / (warmUpTime + Main.getInstance().getConfig().getDouble("variable.make.WarmUpEXPDenominatorSum"));
+        }
+        if (coolDownTime != null) {
+            EXPRequired += Main.getInstance().getConfig().getDouble("variable.make.CoolDownExpBase")
+                    / (coolDownTime + Main.getInstance().getConfig()
+                            .getDouble("variable.make.CoolDownEXPDenominatorSum"));
+        }
+        if (timesBeUsed != null) {
+            EXPRequired *= timesBeUsed;
+        }
+        if (allowCrossWorldTP != null && allowCrossWorldTP) {
+            EXPRequired *= Main.getInstance().getConfig().getDouble("variable.make.CrossWorldTPExpFactor");
+        }
+
+        switch (destinationType) {
+            case 0:
+                EXPRequired *= Main.getInstance().getConfig()
+                        .getDouble("variable.make.ScrollDestinationExpFactor.Spawn");
+                break;
+            case 1:
+                EXPRequired *= Main.getInstance().getConfig()
+                        .getDouble("variable.make.ScrollDestinationExpFactor.Home");
+                break;
+            case 2:
+                EXPRequired *= Main.getInstance().getConfig()
+                        .getDouble("variable.make.ScrollDestinationExpFactor.FactionHome");
+                break;
+            case 3:
+                EXPRequired *= Main.getInstance().getConfig()
+                        .getDouble("variable.make.ScrollDestinationExpFactor.Player");
+                break;
+            case 4:
+                EXPRequired *= Main.getInstance().getConfig()
+                        .getDouble("variable.make.ScrollDestinationExpFactor.CurrentLocation");
+                break;
+            case 5:
+                EXPRequired *= Main.getInstance().getConfig()
+                        .getDouble("variable.make.ScrollDestinationExpFactor.Random");
+                break;
+            case 6:
+                EXPRequired *= Main.getInstance().getConfig()
+                        .getDouble("variable.make.ScrollDestinationExpFactor.SelfRescue");
+                break;
+        }
+
+        return EXPRequired;
     }
 
     public Integer getDestinationType() {
@@ -178,6 +304,8 @@ public class ScrollDatabase extends Database {
                             false);
                     setTimesBeUsed(Main.getInstance().getConfig().getString("variable.create.TimesBeUsed.Default"),
                             false);
+                } else if (destinationType == 4) { // Specify location
+                    setScrollName(Lang.NOT_SET.toString(), false);
                 }
                 return success(Lang.DESTINATION_TYPE.toString(),
                         ScrollDatabase.destinationTypeIntegerToString(destinationType));
@@ -301,6 +429,26 @@ public class ScrollDatabase extends Database {
 
     public Boolean getAllowCrossWorldTP() {
         return allowCrossWorldTP;
+    }
+
+    public static String getAllowCrossWorldTPRepr(Integer allowCrossWorldTP) {
+        if (allowCrossWorldTP == null) {
+            return Lang.NOT_SET.toString();
+        }
+        if (allowCrossWorldTP == 1) {
+            return Lang.ALLOWED.toString();
+        }
+        return Lang.NOT_ALLOWED.toString();
+    }
+
+    public static String getAllowCrossWorldTPRepr(Boolean allowCrossWorldTP) {
+        if (allowCrossWorldTP == null) {
+            return Lang.NOT_SET.toString();
+        }
+        if (allowCrossWorldTP) {
+            return Lang.ALLOWED.toString();
+        }
+        return Lang.NOT_ALLOWED.toString();
     }
 
     public String[] setAllowCrossWorldTP(String input, boolean useDefaultOnFail) {

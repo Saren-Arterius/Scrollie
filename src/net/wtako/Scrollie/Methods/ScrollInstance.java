@@ -12,26 +12,29 @@ import java.util.regex.Pattern;
 import net.wtako.Scrollie.Utils.Database;
 import net.wtako.Scrollie.Utils.Lang;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class ScrollInstance extends Database {
 
     public static String  lorePattern = "{0}: {1}";
     private final Integer instanceID;
-    public Integer        destinationType;
+    private Integer       destinationType;
+    private Integer       timesRemaining;
     private Integer       warmUpTime;
     private Integer       coolDownTime;
-    private Integer       timesRemaining;
     private Integer       destX;
     private Integer       destY;
     private Integer       destZ;
     private Boolean       allowCrossWorldTP;
     private String        destWorld;
     private String        targetName;
+    private ItemStack     item;
 
     public ScrollInstance(ItemStack item) throws SQLException {
         super();
-        instanceID = ScrollInstance.getScrollInstanceID(item);
+        this.instanceID = ScrollInstance.getScrollInstanceID(item);
+        this.item = item;
         if (instanceID != null) {
             loadInfoFromDB();
         }
@@ -48,7 +51,7 @@ public class ScrollInstance extends Database {
 
         lore.add(MessageFormat.format(ScrollInstance.lorePattern, "Scrollie ID", instanceID));
         lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.DESTINATION_TYPE,
-                ScrollDatabase.destinationTypeIntegerToString(destinationType)));
+                ScrollDatabase.destinationTypeIntegerToString(getDestinationType())));
         if (targetName != null) {
             lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.TARGET_PLAYER.toString(), targetName));
         }
@@ -67,7 +70,7 @@ public class ScrollInstance extends Database {
         } else {
             lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.CROSS_WORLD_TP.toString(), Lang.NOT_ALLOWED));
         }
-        lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.TIMES_REMAINING.toString(), timesRemaining));
+        lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.TIMES_REMAINING.toString(), getTimesRemaining()));
         return lore;
     }
 
@@ -109,5 +112,51 @@ public class ScrollInstance extends Database {
         timesRemaining = result.getInt(11);
         result.close();
         selStmt.close();
+    }
+
+    public boolean doPreActions(Player player) {
+        if (instanceID == null) {
+            return false;
+        }
+        return true;
+        // TODO Auto-generated method stub
+
+    }
+
+    public void doPostActions(Player player) throws SQLException {
+
+        /*
+         * if (getTimesRemaining() == 1) {
+         * final PreparedStatement delStmt = Database.getInstance().conn
+         * .prepareStatement("DELETE FROM 'scrolls' WHERE rowid = ?");
+         * delStmt.setInt(1, instanceID);
+         * delStmt.execute();
+         * delStmt.close();
+         * } else {
+         * final PreparedStatement updateStmt = Database.getInstance().conn
+         * .prepareStatement(
+         * "UPDATE 'scrolls' SET times_remaining = ? WHERE rowid = ?");
+         * updateStmt.setInt(1, getTimesRemaining() - 1);
+         * updateStmt.setInt(2, instanceID);
+         * updateStmt.execute();
+         * updateStmt.close();
+         * }
+         */
+    }
+
+    public Integer getDestinationType() {
+        return destinationType;
+    }
+
+    public Integer getTimesRemaining() {
+        return timesRemaining;
+    }
+
+    public Integer getWarmUpTime() {
+        return warmUpTime;
+    }
+    
+    public ItemStack getItem() {
+        return item;
     }
 }
