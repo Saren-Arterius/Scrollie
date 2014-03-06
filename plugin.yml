@@ -26,9 +26,10 @@ permissions:
         children:
             Scrollie.overrideLimit.*: true
             Scrollie.overrideCanCustomize.*: true
-            Scrollie.canUseScrollInRestrictedAreas: true
+            Scrollie.overrideWUCD: true
             Scrollie.noCostRequiredToMake: true
             Scrollie.cantBeTeleportTarget: true
+            Scrollie.canUseScrollInRestrictedAreas: true
             Scrollie.reload: true
         default: op
     Scrollie.use:
@@ -46,14 +47,17 @@ permissions:
     Scrollie.overrideCanCustomize.*:
         description: Gives access to override all CanCustomize in config.yml.
         default: op
-    Scrollie.canUseScrollInRestrictedAreas:
-        description: Gives access to use scrolls in restricted areas.
+    Scrollie.overrideWUCDCWTP:
+        description: Gives access to override Warm up, Cool down and CWTP.
         default: op
     Scrollie.noCostRequiredToMake:
         description: Player with this permission doesn't need experience and item to make scrolls.
         default: op
     Scrollie.cantBeTeleportTarget:
         description: Player with this permission will not be teleportation target.
+        default: op
+    Scrollie.canUseScrollInRestrictedAreas:
+        description: Gives access to use scrolls in restricted areas.
         default: op
     Scrollie.reload:
         description: Reloads the plugin.

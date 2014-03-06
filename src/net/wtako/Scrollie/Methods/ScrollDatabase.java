@@ -221,37 +221,38 @@ public class ScrollDatabase extends Database {
             EXPRequired *= Main.getInstance().getConfig().getDouble("variable.make.CrossWorldTPExpFactor");
         }
 
-        switch (destinationType) {
-            case 0:
-                EXPRequired *= Main.getInstance().getConfig()
-                        .getDouble("variable.make.ScrollDestinationExpFactor.Spawn");
-                break;
-            case 1:
-                EXPRequired *= Main.getInstance().getConfig()
-                        .getDouble("variable.make.ScrollDestinationExpFactor.Home");
-                break;
-            case 2:
-                EXPRequired *= Main.getInstance().getConfig()
-                        .getDouble("variable.make.ScrollDestinationExpFactor.FactionHome");
-                break;
-            case 3:
-                EXPRequired *= Main.getInstance().getConfig()
-                        .getDouble("variable.make.ScrollDestinationExpFactor.Player");
-                break;
-            case 4:
-                EXPRequired *= Main.getInstance().getConfig()
-                        .getDouble("variable.make.ScrollDestinationExpFactor.CurrentLocation");
-                break;
-            case 5:
-                EXPRequired *= Main.getInstance().getConfig()
-                        .getDouble("variable.make.ScrollDestinationExpFactor.Random");
-                break;
-            case 6:
-                EXPRequired *= Main.getInstance().getConfig()
-                        .getDouble("variable.make.ScrollDestinationExpFactor.SelfRescue");
-                break;
+        if (destinationType != null) {
+            switch (destinationType) {
+                case 0:
+                    EXPRequired *= Main.getInstance().getConfig()
+                            .getDouble("variable.make.ScrollDestinationExpFactor.Spawn");
+                    break;
+                case 1:
+                    EXPRequired *= Main.getInstance().getConfig()
+                            .getDouble("variable.make.ScrollDestinationExpFactor.Home");
+                    break;
+                case 2:
+                    EXPRequired *= Main.getInstance().getConfig()
+                            .getDouble("variable.make.ScrollDestinationExpFactor.FactionHome");
+                    break;
+                case 3:
+                    EXPRequired *= Main.getInstance().getConfig()
+                            .getDouble("variable.make.ScrollDestinationExpFactor.Player");
+                    break;
+                case 4:
+                    EXPRequired *= Main.getInstance().getConfig()
+                            .getDouble("variable.make.ScrollDestinationExpFactor.CurrentLocation");
+                    break;
+                case 5:
+                    EXPRequired *= Main.getInstance().getConfig()
+                            .getDouble("variable.make.ScrollDestinationExpFactor.Random");
+                    break;
+                case 6:
+                    EXPRequired *= Main.getInstance().getConfig()
+                            .getDouble("variable.make.ScrollDestinationExpFactor.SelfRescue");
+                    break;
+            }
         }
-
         return EXPRequired;
     }
 
@@ -502,11 +503,12 @@ public class ScrollDatabase extends Database {
     }
 
     public String[] setTimesBeUsed(String input, boolean useDefaultOnFail) {
-        try {
-            return checkTimesBeUsed(Integer.parseInt(input), useDefaultOnFail);
-        } catch (final Exception ex) {
-            return enterAgain(Lang.INTEGER.toString(), Lang.NOT_AN_INTEGER.toString());
-        }
+        // try {
+        return checkTimesBeUsed(Integer.parseInt(input), useDefaultOnFail);
+        // } catch (final Exception ex) {
+        // return enterAgain(Lang.INTEGER.toString(),
+        // Lang.NOT_AN_INTEGER.toString());
+        // }
     }
 
     public String[] checkTimesBeUsed(Integer timesBeUsed, boolean useDefaultOnFail) {

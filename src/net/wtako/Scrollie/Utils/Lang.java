@@ -18,7 +18,7 @@ public enum Lang {
     TO_TEXT("to-text", "To"),
     WHAT_WOULD_THE_WARM_UP_TIME_BE("what-would-the-warm-up-time-be", "How about the warm up time?"),
     WHAT_WOULD_THE_COOL_DOWN_TIME_BE("what-would-the-cool-down-time-be", "How about the cool down time?"),   
-    SHORTER_TIME_MORE_EXP("shorter-time-more-exp", "(The shorter time the more exp required)"),
+    SHORTER_TIME_MORE_EXP("shorter-time-more-exp", "(The shorter time the more EXP required)"),
     ALLOW_CROSS_WORLD_TP_OR_NOT("allow-cross-world-tp-or-not", "Allow cross-world teleportation? <Yes/No>"),
     HOW_MANY_TIMES_COULD_THIS_SCROLL_BE_USED("how-many-times-could-this-scroll-be-used", "How many times could this scroll be used?"),
     WILL_BE_MULTIPLIED_BY("will-multiply-by", "(Total experience required to make this scroll will be multiplied by {0})"),
@@ -26,7 +26,7 @@ public enum Lang {
     EXP_REQUIRED("exp-required", "EXP required to make this scroll: {0} exp"),
     FINISHED_CREATING("finished-creating", "Finished creating a new scroll."),
     
-    VALUE_SET("value-set", "Value set. EXP Required: {0} exp"),
+    VALUE_SET("value-set", "Value set. Total EXP required: {0} exp"),
     KEY_VALUE("key-value", "{0}: {1}"),
 
     LIST_PATTERN1("list-pattern1", "{0}. <{1}>"),
@@ -37,7 +37,7 @@ public enum Lang {
     PLEASE_CLICK_ON_A_PLAYER("please-click-on-a-player", "Please left click on a player so that you can teleport to him/her using the scroll."),
     HOW_TO_CANCEL("how-to-cancel", "Right click any block or type 'exit' to cancel."),
     NOT_PREMITTED_TO_TELEPORT_TO_THAT_PLAYER("not-permitted-to-teleport-to-that-player", "You are not powerful enough to teleport to that player."),
-    COST_CHARGED("cost-charged", "Charged: {0}{1}"),
+    COST_CHARGED("cost-charged", "Charged: {0} {1}."),
     EXIT_MAKING("exit-making", "Cancelled making a scroll."),
     FINISHED_MAKING("finished-making", "You made the scroll <{0}>. Right click on the scroll to use it."),
     
@@ -45,8 +45,8 @@ public enum Lang {
     WARMING_UP_SECONDS_LEFT("warming-up-seconds left", "{0} seconds left..."),
     COOLING_DOWN("cooling-down", "Cooling down is in process. You have to wait for {0} seconds before using teleportation scrolls again."),
     SCROLL_DISAPPEARED("scroll-disappeared", "Your scroll <{0}> is faded away."),
-    SCROLL_MAGIC_GETTING_WEAKER("scroll-magic-getting-weaker", "Your scroll <{0}>'s magic is getting weaker."),
-    SCROLL_MAGIC_DISAPPEARED("scroll-magic-disappeared", "Your scroll <{0}>'s magic is disappeared."),
+    SCROLL_MAGIC_GETTING_WEAKER("scroll-magic-getting-weaker", "The magic of your scroll <{0}> is getting weaker."),
+    SCROLL_MAGIC_DISAPPEARED("scroll-magic-disappeared", "The magic of your scroll <{0}> is disappeared."),
     FINISHED_USING("finished-using", "You are teleported to {0}. <X:{1} Y:{2} Z:{3}>"),
 
     FINISHED_DELETING("finished-deleting", "You deleted the scroll <{0}>."),
@@ -68,7 +68,7 @@ public enum Lang {
     PLEASE_HOLD_ITEM("please-hold-item", "Please hold at least 1 unenchanted {0} in your hand."),
     YOUR_INVENTORY_IS_FULL("your-inventory-is-full", "Your inventory is full."),
     YOU_ALREADY_OWN_RESCUE_SCROLL("you-already-own-rescue-scroll", "You are already owning at least 1 rescue scroll in your inventory."),
-    YOU_DONT_HAVE_ENOUGH_EXP("you-dont-have-enough-exp", "You are too weak to make that scroll. <Required: {0}{2}. You have: {1}{2}>"),
+    YOU_DONT_HAVE_ENOUGH_EXP("you-dont-have-enough-exp", "You are too weak to make that scroll. <Required: {0} {2}. You have: {1} {2}>"),
     YOU_DONT_HAVE_ENOUGH_MONEY("you-dont-have-enough-money", "You are too poor to make that scroll. <Required: ${0}. You have: ${1}>"),
     
     WARM_UP_FAIL("warm-up-fail", "Warming up process has been interrupted."),
@@ -78,9 +78,9 @@ public enum Lang {
     YOUR_FACTION_DOES_NOT_HAVE_HOME("your-faction-does-not-have-home", "Your faction does not have home!"),
     CANT_TP_FROM_ENEMY_TERRITORY("cant-tp-from-enemy-territory", "Your scroll isn't going to work! Are you in enemy's territory?"),
     CANT_TP_FROM_TO_TERRITORY("cant-tp-to-enemy-territory", "Your scroll isn't going to work! Are you teleporting to enemy's territory?"),
-    TARGET_PLAYER_IS_OFFLINE("target-player-is-offline", "Target player is offline."),
-    WILL_TP_TO_OFFLINE_PLAYER_LOCATION("will-tp-to-offline-player-location", "Will teleport to target player's offline location."),
-    CANT_FIND_OFFLINE_PLAYER_LOCATION("cant-find-offline-player-location", "Cannot find target player's offline location."),
+    TARGET_PLAYER_IS_OFFLINE("target-player-is-offline", "{0} is offline."),
+    WILL_TP_TO_OFFLINE_PLAYER_LOCATION("will-tp-to-offline-player-location", "Will teleport to {0}'s offline location."),
+    CANT_FIND_OFFLINE_PLAYER_LOCATION("cant-find-offline-player-location", "Cannot find {0}'s offline location."),
     CANT_START_TP("cant-start-tp", "Cannot start teleportation process."),
     
     HELP_CREATE("help-create", "Type '/scrollie create' to create a new scroll."),

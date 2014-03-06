@@ -36,18 +36,25 @@ public class MakeProcess extends ScrollDatabase {
     private Integer       scrollInstanceID;
     private String        destWorld;
     public String         targetName;
+    private boolean       readSuccess;
 
     public MakeProcess(Player player, Integer scrollID) throws SQLException {
         super(player);
         this.player = player;
         this.scrollID = scrollID;
+        if (readValueFromDB()) {
+            this.readSuccess = true;
+        }
     }
 
     public MakeProcess(Player player, Integer scrollID, Integer timesBeUsed) throws SQLException {
         super(player);
         this.player = player;
         this.scrollID = scrollID;
-        player.sendMessage(setTimesBeUsed(timesBeUsed.toString(), true));
+        if (readValueFromDB()) {
+            player.sendMessage(setTimesBeUsed(timesBeUsed.toString(), true));
+            this.readSuccess = true;
+        }
     }
 
     private boolean readValueFromDB() {
@@ -73,43 +80,6 @@ public class MakeProcess extends ScrollDatabase {
             player.sendMessage(MessageFormat.format(Lang.NO_SUCH_SCROLL.toString(), scrollID));
             return false;
         }
-    }
-
-    public int saveScrollInstance() throws SQLException {
-        final PreparedStatement selStmt = conn.prepareStatement("SELECT max(rowid) FROM 'scrolls'");
-        final int rowid = selStmt.executeQuery().getInt(1) + 1;
-        selStmt.close();
-
-        final PreparedStatement insStmt = conn
-                .prepareStatement("INSERT INTO `scrolls` (`rowid`, `scroll_destination`, `target_player`, `destination_x`, `destination_y`, `destination_z`, `destination_world`, `warm_up_time`, `cool_down_time`, `allow_cross_world_tp`, `times_remaining`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        insStmt.setInt(1, rowid);
-        insStmt.setInt(2, getDestinationType());
-        insStmt.setInt(8, getWarmUpTime());
-        insStmt.setInt(9, getCoolDownTime());
-        insStmt.setInt(11, getTimesBeUsed());
-        if (getAllowCrossWorldTP()) {
-            insStmt.setInt(10, 1);
-        } else {
-            insStmt.setInt(10, 0);
-        }
-        if (targetName != null) {
-            insStmt.setString(3, targetName);
-        }
-        if (destX != null) {
-            insStmt.setInt(4, destX);
-        }
-        if (destY != null) {
-            insStmt.setInt(5, destY);
-        }
-        if (destZ != null) {
-            insStmt.setInt(6, destZ);
-        }
-        if (destWorld != null) {
-            insStmt.setString(7, destWorld);
-        }
-        insStmt.execute();
-        insStmt.close();
-        return rowid;
     }
 
     private boolean costPlayer() {
@@ -160,7 +130,7 @@ public class MakeProcess extends ScrollDatabase {
                 return false;
             }
             try {
-                scrollInstanceID = saveScrollInstance();
+                scrollInstanceID = ScrollInstance.saveScrollInstance(this);
                 lores = new ScrollInstance(scrollInstanceID).getLores();
             } catch (final SQLException e) {
                 player.sendMessage(Lang.DB_EXCEPTION.toString());
@@ -179,7 +149,7 @@ public class MakeProcess extends ScrollDatabase {
                 return false;
             }
             try {
-                scrollInstanceID = saveScrollInstance();
+                scrollInstanceID = ScrollInstance.saveScrollInstance(this);
                 lores = new ScrollInstance(scrollInstanceID).getLores();
             } catch (final SQLException e) {
                 player.sendMessage(Lang.DB_EXCEPTION.toString());
@@ -204,7 +174,7 @@ public class MakeProcess extends ScrollDatabase {
     }
 
     public void makeScroll() {
-        if (readValueFromDB()) {
+        if (readSuccess) {
             final String itemTypeRequiredString = Main.getInstance().getConfig().getString("variable.make.ScrollItem");
             final Material itemTypeRequired = Material.getMaterial(itemTypeRequiredString.toUpperCase());
             if (getDestinationType() == 6) {
@@ -241,5 +211,21 @@ public class MakeProcess extends ScrollDatabase {
                 magickScroll(true);
             }
         }
+    }
+
+    public Integer getDestX() {
+        return destX;
+    }
+
+    public Integer getDestY() {
+        return destY;
+    }
+
+    public Integer getDestZ() {
+        return destZ;
+    }
+
+    public String getDestWorld() {
+        return destWorld;
     }
 }

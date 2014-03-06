@@ -6,10 +6,13 @@ import java.util.Map.Entry;
 
 import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.Schedulers.TeleportationTask;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.RegisteredListener;
 
@@ -39,6 +42,25 @@ public class PlayerActionsListener implements Listener {
             TeleportationTask.interrupt(player);
         }
     }
+    
+    @EventHandler
+    public void onPlayerInventoryOpen(InventoryOpenEvent event) {
+        Player player = (Player) event.getPlayer();
+        if (ScrollUseListener.getTPTask().get(player.getName()) == null) {
+            return;
+        }
+        TeleportationTask.interrupt(player);
+    }
+    
+    @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        Player player = event.getPlayer();
+        if (ScrollUseListener.getTPTask().get(player.getName()) == null) {
+            return;
+        }
+        event.setCancelled(true);
+        TeleportationTask.interrupt(player);
+    }
 
     public static void unregisterEvents(Player player) {
         boolean needToUnregisterEvent = true;
@@ -51,6 +73,8 @@ public class PlayerActionsListener implements Listener {
         }
         if (needToUnregisterEvent) {
             PlayerMoveEvent.getHandlerList().unregister(Main.getInstance());
+            PlayerDropItemEvent.getHandlerList().unregister(Main.getInstance());
+            InventoryOpenEvent.getHandlerList().unregister(Main.getInstance());
         }
     }
 

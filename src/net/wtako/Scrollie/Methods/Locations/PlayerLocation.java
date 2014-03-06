@@ -1,6 +1,7 @@
 package net.wtako.Scrollie.Methods.Locations;
 
 import java.io.File;
+import java.text.MessageFormat;
 
 import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.Methods.LocationSource;
@@ -33,7 +34,7 @@ public class PlayerLocation implements LocationSource {
             }
             return target.getLocation();
         }
-        player.sendMessage(Lang.TARGET_PLAYER_IS_OFFLINE.toString());
+        player.sendMessage(MessageFormat.format(Lang.TARGET_PLAYER_IS_OFFLINE.toString(), targetName));
         if (Main.getInstance().getConfig().getBoolean("variable.use.Player.AllowOfflineTP")) {
             final File configFile = FileTool.getChildFile(
                     FileTool.getChildFile(FileTool.getChildFile(Main.getInstance().getDataFolder().getParentFile()
@@ -42,10 +43,10 @@ public class PlayerLocation implements LocationSource {
                 final YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
                 final World world = Main.getInstance().getServer().getWorld(config.getString("logoutlocation.world"));
                 if (world == null) {
-                    player.sendMessage(Lang.CANT_FIND_OFFLINE_PLAYER_LOCATION.toString());
+                    player.sendMessage(MessageFormat.format(Lang.CANT_FIND_OFFLINE_PLAYER_LOCATION.toString(), targetName));
                     return null;
                 }
-                player.sendMessage(Lang.WILL_TP_TO_OFFLINE_PLAYER_LOCATION.toString());
+                player.sendMessage(MessageFormat.format(Lang.WILL_TP_TO_OFFLINE_PLAYER_LOCATION.toString(), targetName));
                 destLoc = new Location(world, config.getDouble("logoutlocation.x"),
                         config.getDouble("logoutlocation.y"), config.getDouble("logoutlocation.z"),
                         (float) config.getDouble("logoutlocation.z"), (float) config.getDouble("logoutlocation.pitch"));
