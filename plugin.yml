@@ -26,7 +26,9 @@ permissions:
         children:
             Scrollie.overrideLimit.*: true
             Scrollie.overrideCanCustomize.*: true
-            Scrollie.noExpRequiredToMake: true
+            Scrollie.canUseScrollInRestrictedAreas: true
+            Scrollie.noCostRequiredToMake: true
+            Scrollie.cantBeTeleportTarget: true
             Scrollie.reload: true
         default: op
     Scrollie.use:
@@ -47,8 +49,8 @@ permissions:
     Scrollie.canUseScrollInRestrictedAreas:
         description: Gives access to use scrolls in restricted areas.
         default: op
-    Scrollie.noExpRequiredToMake:
-        description: Player with this permission doesn't need experience to make scrolls.
+    Scrollie.noCostRequiredToMake:
+        description: Player with this permission doesn't need experience and item to make scrolls.
         default: op
     Scrollie.cantBeTeleportTarget:
         description: Player with this permission will not be teleportation target.

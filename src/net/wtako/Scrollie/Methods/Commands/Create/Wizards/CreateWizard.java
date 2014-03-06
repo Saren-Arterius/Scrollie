@@ -1,4 +1,4 @@
-package net.wtako.Scrollie.Methods.scrollie.create;
+package net.wtako.Scrollie.Methods.Commands.Create.Wizards;
 
 import java.sql.SQLException;
 import java.text.MessageFormat;

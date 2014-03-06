@@ -5,8 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.wtako.Scrollie.Main;
-import net.wtako.Scrollie.Utils.Lang;
-
+import net.wtako.Scrollie.Schedulers.TeleportationTask;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -34,14 +33,10 @@ public class PlayerActionsListener implements Listener {
         }
         Integer newVal = oldVal + 1;
         ScrollUseListener.getMovedCount().put(player.getName(), newVal);
-        if (newVal >= 10
+        if (newVal >= Main.getInstance().getConfig().getInt("variable.use.WarmUpInterruptValue")
                 && ScrollUseListener.getTPTask().get(player.getName()).getWarmUpTime() != ScrollUseListener.getTPTask()
                         .get(player.getName()).getWarmUpTimeLeft()) {
-            player.sendMessage(Lang.WARM_UP_FAIL.toString());
-            ScrollUseListener.getTPTask().get(player.getName()).cancel();
-            ScrollUseListener.getTPTask().remove(player.getName());
-            ScrollUseListener.getMovedCount().remove(player.getName());
-            PlayerActionsListener.unregisterEvents(player);
+            TeleportationTask.interrupt(player);
         }
     }
 

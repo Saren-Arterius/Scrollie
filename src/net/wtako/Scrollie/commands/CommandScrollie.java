@@ -1,9 +1,9 @@
 package net.wtako.Scrollie.Commands;
 
-import net.wtako.Scrollie.Commands.scrollie.ArgCreate;
-import net.wtako.Scrollie.Commands.scrollie.ArgDelete;
-import net.wtako.Scrollie.Commands.scrollie.ArgList;
-import net.wtako.Scrollie.Commands.scrollie.ArgMake;
+import net.wtako.Scrollie.Commands.Scrollie.ArgCreate;
+import net.wtako.Scrollie.Commands.Scrollie.ArgDelete;
+import net.wtako.Scrollie.Commands.Scrollie.ArgList;
+import net.wtako.Scrollie.Commands.Scrollie.ArgMake;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

@@ -25,10 +25,7 @@ public final class ScrollUseListener implements Listener {
         final TeleportationTask currentTPTask = ScrollUseListener.TPTask.get(player.getName());
         if (currentTPTask != null) {
             if (currentTPTask.getWarmUpTime() != currentTPTask.getWarmUpTimeLeft()) {
-                player.sendMessage(Lang.WARM_UP_FAIL.toString());
-                currentTPTask.cancel();
-                ScrollUseListener.TPTask.remove(player.getName());
-                PlayerActionsListener.unregisterEvents(player);
+                TeleportationTask.interrupt(player);
             }
             return;
         }
@@ -37,13 +34,17 @@ public final class ScrollUseListener implements Listener {
         }
         try {
             final ScrollInstance scroll = new ScrollInstance(event.getItem());
+            if (scroll.getScrollInstanceID() == null) {
+                return;
+            }
             if (scroll.doPreActions(player)) {
                 try {
-                    PlayerActionsListener.registerEvents(player);
                     ScrollUseListener.TPTask.put(player.getName(), new TeleportationTask(player, scroll));
                 } catch (final Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+                player.sendMessage(Lang.CANT_START_TP.toString());
             }
         } catch (final SQLException e) {
             player.sendMessage(Lang.DB_EXCEPTION.toString());

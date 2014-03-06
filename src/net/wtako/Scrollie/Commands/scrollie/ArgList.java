@@ -1,4 +1,4 @@
-package net.wtako.Scrollie.Commands.scrollie;
+package net.wtako.Scrollie.Commands.Scrollie;
 
 import java.sql.SQLException;
 

@@ -1,5 +1,9 @@
 package net.wtako.Scrollie.Methods;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,12 +13,23 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.wtako.Scrollie.Main;
+import net.wtako.Scrollie.Methods.Locations.FactionHomeLocation;
+import net.wtako.Scrollie.Methods.Locations.HomeLocation;
+import net.wtako.Scrollie.Methods.Locations.PlayerLocation;
+import net.wtako.Scrollie.Methods.Locations.RandomLocation;
+import net.wtako.Scrollie.Methods.Locations.SpawnLocation;
 import net.wtako.Scrollie.Utils.Database;
+import net.wtako.Scrollie.Utils.FileTool;
 import net.wtako.Scrollie.Utils.Lang;
 
+import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+@SuppressWarnings("unused")
 public class ScrollInstance extends Database {
 
     public static String  lorePattern = "{0}: {1}";
@@ -30,6 +45,7 @@ public class ScrollInstance extends Database {
     private String        destWorld;
     private String        targetName;
     private ItemStack     item;
+    private Location      destLoc;
 
     public ScrollInstance(ItemStack item) throws SQLException {
         super();
@@ -114,13 +130,45 @@ public class ScrollInstance extends Database {
         selStmt.close();
     }
 
+    private Location getLocation(Player player) {
+        Location destLoc = null;
+        switch (destinationType) {
+            case 0:
+                destLoc = new SpawnLocation(player).get();
+                break;
+            case 1:
+                destLoc = new HomeLocation(player).get();
+                break;
+            case 2:
+                destLoc = new FactionHomeLocation(player).get();
+                break;
+            case 3:
+                destLoc = new PlayerLocation(targetName, player).get();
+                break;
+            case 4:
+                destLoc = new Location(Main.getInstance().getServer().getWorld(destWorld), destX, destY, destZ);
+                break;
+            case 5:
+                destLoc = new RandomLocation(player.getWorld()).get();
+                break;
+            case 6:
+                destLoc = new SpawnLocation(player).get();
+                break;
+        }
+        return destLoc;
+    }
+
     public boolean doPreActions(Player player) {
-        if (instanceID == null) {
+        if ((destLoc = getLocation(player)) == null) {
+            return false;
+        }
+        if (!allowCrossWorldTP && !destLoc.getWorld().equals(player.getWorld())) {
+            player.sendMessage(MessageFormat.format(Lang.NOT_POWERFUL_ENOUGH_CROSS_WORLD_TP.toString(), item
+                    .getItemMeta().getDisplayName()));
             return false;
         }
         return true;
         // TODO Auto-generated method stub
-
     }
 
     public void doPostActions(Player player) throws SQLException {
@@ -155,8 +203,24 @@ public class ScrollInstance extends Database {
     public Integer getWarmUpTime() {
         return warmUpTime;
     }
-    
+
     public ItemStack getItem() {
         return item;
+    }
+
+    public Location getPublicLocation() {
+        return destLoc;
+    }
+
+    public Integer getScrollInstanceID() {
+        return instanceID;
+    }
+
+    public String getTargetName() {
+        return targetName;
+    }
+
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
     }
 }

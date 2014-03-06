@@ -25,10 +25,13 @@ public class TeleportationTask extends BukkitRunnable {
     public TeleportationTask(Player player, ScrollInstance scroll) {
         this.player = player;
         this.scroll = scroll;
-        this.location = player.getLocation();
+        this.location = scroll.getPublicLocation();
         this.warmUpTime = scroll.getWarmUpTime();
         this.warmUpTimeLeft = scroll.getWarmUpTime();
-        player.sendMessage(MessageFormat.format(Lang.WARMING_UP.toString(), warmUpTimeLeft));
+        if (warmUpTime > 0) {
+            player.sendMessage(MessageFormat.format(Lang.WARMING_UP.toString(), warmUpTimeLeft));
+        }
+        PlayerActionsListener.registerEvents(player);
         this.runTaskTimer(Main.getInstance(), 0, 20);
     }
 
@@ -50,16 +53,29 @@ public class TeleportationTask extends BukkitRunnable {
             PlayerActionsListener.unregisterEvents(player);
             player.teleport(location);
             ScrollUseListener.getTPTask().remove(player.getName());
-            player.sendMessage(MessageFormat.format(Lang.FINISHED_USING.toString(), scroll.getItem().getItemMeta()
-                    .getDisplayName(), ScrollDatabase.destinationTypeIntegerToString(scroll.getDestinationType()),
-                    location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+            if (scroll.getTargetName() != null) {
+                player.sendMessage(MessageFormat.format(Lang.FINISHED_USING.toString(), scroll.getTargetName(),
+                        location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+            } else {
+                player.sendMessage(MessageFormat.format(Lang.FINISHED_USING.toString(),
+                        ScrollDatabase.destinationTypeIntegerToString(scroll.getDestinationType()),
+                        location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+            }
         }
+    }
+
+    public static void interrupt(Player player) {
+        player.sendMessage(Lang.WARM_UP_FAIL.toString());
+        ScrollUseListener.getTPTask().get(player.getName()).cancel();
+        ScrollUseListener.getTPTask().remove(player.getName());
+        ScrollUseListener.getMovedCount().remove(player.getName());
+        PlayerActionsListener.unregisterEvents(player);
     }
 
     public Integer getWarmUpTime() {
         return warmUpTime;
     }
-    
+
     public Integer getWarmUpTimeLeft() {
         return warmUpTimeLeft;
     }

@@ -19,13 +19,24 @@ public class ScrollDatabase extends Database {
     private Integer      destinationType;
     private Integer      warmUpTime;
     private Integer      coolDownTime;
-    private Integer      timesBeUsed;
     private Boolean      allowCrossWorldTP;
+    private Integer      timesBeUsed;
     private String       name;
 
     public ScrollDatabase(Player player) throws SQLException {
-        owner = player;
+        this.owner = player;
         setDefaultValue();
+    }
+
+    public ScrollDatabase(Player player, Integer destinationType, Integer warmUpTime, Integer coolDownTime,
+            Boolean allowCrossWorldTP, Integer timesBeUsed, String name) throws SQLException {
+        this.owner = player;
+        this.destinationType = destinationType;
+        this.warmUpTime = warmUpTime;
+        this.coolDownTime = coolDownTime;
+        this.allowCrossWorldTP = allowCrossWorldTP;
+        this.timesBeUsed = timesBeUsed;
+        this.name = name;
     }
 
     private void setDefaultValue() {
@@ -77,7 +88,8 @@ public class ScrollDatabase extends Database {
     }
 
     public static String[] listAll(Player player) throws SQLException {
-        final String pattern = Lang.LIST_PATTERN.toString();
+        final String pattern1 = Lang.LIST_PATTERN1.toString();
+        final String pattern2 = Lang.LIST_PATTERN2.toString();
         boolean playerHasNoScrolls = true;
         final PreparedStatement selStmt = Database.getInstance().conn
                 .prepareStatement("SELECT * FROM 'scroll_creations' WHERE owner = ?");
@@ -87,9 +99,20 @@ public class ScrollDatabase extends Database {
         tableArrayList.add(Lang.SCROLL_LIST.toString());
         while (result.next()) {
             playerHasNoScrolls = false;
-            tableArrayList.add(MessageFormat.format(pattern, result.getInt(3), result.getString(4),
+            Boolean crossWorldTP;
+            if (result.getInt(8) == 1) {
+                crossWorldTP = true;
+            } else {
+                crossWorldTP = false;
+            }
+            ScrollDatabase scrollInTable = new ScrollDatabase(Main.getInstance().getServer()
+                    .getPlayer(result.getString(2)), result.getInt(5), result.getInt(6), result.getInt(7),
+                    crossWorldTP, result.getInt(9), result.getString(4));
+            tableArrayList.add(MessageFormat.format(pattern1, result.getInt(3), result.getString(4)));
+            tableArrayList.add(MessageFormat.format(pattern2,
                     ScrollDatabase.destinationTypeIntegerToString(result.getInt(5)), result.getInt(6),
-                    result.getInt(7), ScrollDatabase.getAllowCrossWorldTPRepr(result.getInt(8)), result.getInt(9)));
+                    result.getInt(7), ScrollDatabase.getAllowCrossWorldTPRepr(result.getInt(8)), result.getInt(9),
+                    scrollInTable.getEXPRequired()));
         }
         result.close();
         selStmt.close();

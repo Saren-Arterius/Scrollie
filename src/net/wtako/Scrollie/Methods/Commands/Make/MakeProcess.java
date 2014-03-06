@@ -1,4 +1,4 @@
-package net.wtako.Scrollie.Methods.scrollie.make;
+package net.wtako.Scrollie.Methods.Commands.Make;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,12 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import me.desht.dhutils.ExperienceManager;
+import net.milkbowl.vault.economy.Economy;
 import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.Methods.ScrollDatabase;
 import net.wtako.Scrollie.Methods.ScrollInstance;
 import net.wtako.Scrollie.Methods.Wizard;
-import net.wtako.Scrollie.Methods.scrollie.make.Locations.PlayerClickWizard;
-import net.wtako.Scrollie.Methods.scrollie.make.Locations.SetScrollNameWizard;
+import net.wtako.Scrollie.Methods.Commands.Make.Wizards.PlayerClickWizard;
+import net.wtako.Scrollie.Methods.Commands.Make.Wizards.SetScrollNameWizard;
 import net.wtako.Scrollie.Utils.Lang;
 
 import org.bukkit.Location;
@@ -22,6 +24,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class MakeProcess extends ScrollDatabase {
 
@@ -109,11 +112,47 @@ public class MakeProcess extends ScrollDatabase {
         return rowid;
     }
 
-    public boolean magickScroll(boolean cost) {
+    private boolean costPlayer() {
+        if (Main.getInstance().getConfig().getBoolean("variable.make.UseEconInsteadOfEXP")) {
+            final RegisteredServiceProvider<Economy> provider = Main.getInstance().getServer().getServicesManager()
+                    .getRegistration(net.milkbowl.vault.economy.Economy.class);
+            if (provider != null) {
+                final Economy economy = provider.getProvider();
+                final double moneyRequired = getEXPRequired();
+                if (economy.has(player.getName(), moneyRequired)) {
+                    economy.withdrawPlayer(player.getName(), moneyRequired);
+                    player.sendMessage(MessageFormat.format(Lang.COST_CHARGED.toString(), "$", moneyRequired));
+                    return true;
+                }
+                player.sendMessage(MessageFormat.format(Lang.YOU_DONT_HAVE_ENOUGH_MONEY.toString(), moneyRequired,
+                        economy.getBalance(player.getName())));
+                return false;
+            }
+            player.sendMessage(Lang.VAULT_EXCEPTION.toString());
+            return false;
+        } else {
+            final ExperienceManager man = new ExperienceManager(player);
+            final double EXPRequied = getEXPRequired();
+            if (!man.hasExp(EXPRequied)) {
+                player.sendMessage(MessageFormat.format(Lang.YOU_DONT_HAVE_ENOUGH_EXP.toString(), EXPRequied,
+                        man.getCurrentExp(), Lang.EXP.toString()));
+                return false;
+            }
+            man.changeExp(-EXPRequied);
+            player.sendMessage(MessageFormat.format(Lang.COST_CHARGED.toString(), EXPRequied, Lang.EXP.toString()));
+            return true;
+        }
+    }
+
+    public boolean magickScroll(boolean hasCost) {
         final String itemTypeRequiredString = Main.getInstance().getConfig().getString("variable.make.ScrollItem");
         final Material itemTypeRequired = Material.getMaterial(itemTypeRequiredString.toUpperCase());
         final ItemStack magicItem = new ItemStack(itemTypeRequired, 1);
         List<String> lores;
+
+        if (player.hasPermission("Scrollie.noCostRequiredToMake")) {
+            hasCost = false;
+        }
 
         if (player.getItemInHand().getAmount() > 1) {
             if (player.getInventory().firstEmpty() == -1) {
@@ -128,11 +167,14 @@ public class MakeProcess extends ScrollDatabase {
                 e.printStackTrace();
                 return false;
             }
-            if (cost) {
+            if (hasCost) {
+                if (!costPlayer()) {
+                    return false;
+                }
                 player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
             }
         } else {
-            if (!cost && player.getInventory().firstEmpty() == -1) {
+            if (!hasCost && player.getInventory().firstEmpty() == -1) {
                 player.sendMessage(Lang.YOUR_INVENTORY_IS_FULL.toString());
                 return false;
             }
@@ -144,17 +186,20 @@ public class MakeProcess extends ScrollDatabase {
                 e.printStackTrace();
                 return false;
             }
-            if (cost) {
+            if (hasCost) {
+                if (!costPlayer()) {
+                    return false;
+                }
                 player.getInventory().removeItem(player.getItemInHand());
             }
         }
-
         final ItemMeta magicItemMeta = magicItem.getItemMeta();
         magicItemMeta.setLore(lores);
         magicItemMeta.setDisplayName(getScrollName());
         magicItem.setItemMeta(magicItemMeta);
         magicItem.addUnsafeEnchantment(Enchantment.LUCK, 1);
         player.getInventory().addItem(magicItem);
+        player.sendMessage(MessageFormat.format(Lang.FINISHED_MAKING.toString(), magicItemMeta.getDisplayName()));
         return true;
     }
 
@@ -179,7 +224,8 @@ public class MakeProcess extends ScrollDatabase {
                     }
                 }
                 magickScroll(false);
-            } else if (!player.getItemInHand().isSimilar(new ItemStack(itemTypeRequired, 1))) {
+            } else if (!player.getItemInHand().isSimilar(new ItemStack(itemTypeRequired, 1))
+                    && !player.hasPermission("Scrollie.noCostRequiredToMake")) {
                 final String msg = Lang.PLEASE_HOLD_ITEM.toString();
                 player.sendMessage(MessageFormat.format(msg, itemTypeRequiredString));
             } else if (getDestinationType() == 3) {

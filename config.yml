@@ -9,7 +9,9 @@ variable:
             # Expected string, must be one of Enabled destinations.
             Default: "Spawn"
             Enabled:
+            # EssentialSpawn, then fall back to world spawn.
             - "Spawn"
+            # Bed home only
             - "Home"
             # Requires Faction 2.3.x or up. It's time to update to new versions folks!
             - "FactionHome"
@@ -36,7 +38,6 @@ variable:
             Max: 3600
             CanCustomize: Yes
         CrossWorldTP:
-            # Expected Yes/No
             Default: No
             CanCustomize: Yes
         TimesBeUsed:
@@ -62,8 +63,9 @@ variable:
         # Default: paper
         # Expected Minecraft item name
         ScrollItem: "paper"
-        UseEconInsteadOfEXP: No
         
+        UseEconInsteadOfEXP: No
+
         # Expected >= 0
         BaseEXPRequired: 50
         # Multiplies the whole equation.
@@ -112,6 +114,11 @@ variable:
         # If set to No, an unenchanted item will be returned to player.
         DestroyItemOnNoRemainingTimes: Yes
         
+        # The lower the value, the player's warm up process will more be likely to get interrupted.
+        # Expected >= 0
+        WarmUpInterruptValue: 5
+        
+        # Requires Factions support
         Factions:
             CantTeleportToEnemyTerritories: Yes
             CantTeleportFromEnemyTerritories: Yes
@@ -120,14 +127,18 @@ variable:
         Player:
             # If set to Yes, plugin will get target player's offline location as destination.
             # If set to No, the scroll can't be used until the target player online.
-            # Expected Yes/No
-            AllowOfflineTP: Yes
+            # Requires Essentials support
+            AllowOfflineTP: No
         Random:
+            # If set to Yes, plugin will choose a random location until at least a 3x1 air block is found, (Much slower and have a internal limit of finding 100 times maximum)
+            # that means teleporting a player to cavern is possible. (But dangerous because of lava and network latency)
+            # If set to No, plugin will choose a random location, teleport player to the highest block. (MinY, MaxY will be ignored)
+            UseAlternativeMethod: No
             Default:
                 MinX: -1000
                 MaxX: 1000
                 MinY: 64
-                MaxY: 80
+                MaxY: 72
                 MinZ: -1000
                 MaxZ: 1000
             # YourWorldHere:

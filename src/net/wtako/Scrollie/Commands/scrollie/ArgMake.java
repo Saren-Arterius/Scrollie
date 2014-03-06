@@ -1,8 +1,8 @@
-package net.wtako.Scrollie.Commands.scrollie;
+package net.wtako.Scrollie.Commands.Scrollie;
 
 import java.sql.SQLException;
 
-import net.wtako.Scrollie.Methods.scrollie.make.MakeProcess;
+import net.wtako.Scrollie.Methods.Commands.Make.MakeProcess;
 import net.wtako.Scrollie.Utils.Lang;
 
 import org.bukkit.command.CommandSender;

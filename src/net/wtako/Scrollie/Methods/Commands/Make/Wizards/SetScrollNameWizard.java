@@ -1,4 +1,4 @@
-package net.wtako.Scrollie.Methods.scrollie.make.Locations;
+package net.wtako.Scrollie.Methods.Commands.Make.Wizards;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.Map;
 
 import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.Methods.Wizard;
-import net.wtako.Scrollie.Methods.scrollie.make.MakeProcess;
+import net.wtako.Scrollie.Methods.Commands.Make.MakeProcess;
 import net.wtako.Scrollie.Utils.Lang;
 
 import org.bukkit.Material;
@@ -49,7 +49,8 @@ public class SetScrollNameWizard extends Wizard {
         event.setCancelled(true);
         final String itemTypeRequiredString = Main.getInstance().getConfig().getString("variable.make.ScrollItem");
         final Material itemTypeRequired = Material.getMaterial(itemTypeRequiredString.toUpperCase());
-        if (!player.getItemInHand().isSimilar(new ItemStack(itemTypeRequired, 1))) {
+        if (!player.getItemInHand().isSimilar(new ItemStack(itemTypeRequired, 1))
+                && !player.hasPermission("Scrollie.noCostRequiredToMake")) {
             final String msg = Lang.PLEASE_HOLD_ITEM.toString();
             player.sendMessage(MessageFormat.format(msg, itemTypeRequiredString));
             return;
