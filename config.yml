@@ -172,11 +172,11 @@ variable:
             WhiteList: No
 
 system:
-    FactionsSupport: Yes
-    EssentialsSupport: Yes
-    VaultSupport: Yes
+    FactionsSupport: No
+    EssentialsSupport: No
+    VaultSupport: No
     # Needs WorldEdit Too
-    WorldGuardSupport: Yes
+    WorldGuardSupport: No
     
     # Change this to get you and this plugin eaten by Ender Dragon, not really, seriously.
     PluginVersion: 0.0.1
