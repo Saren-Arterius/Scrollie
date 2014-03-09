@@ -11,9 +11,11 @@ import java.util.Map.Entry;
 import me.desht.dhutils.ExperienceManager;
 import net.milkbowl.vault.economy.Economy;
 import net.wtako.Scrollie.Main;
+import net.wtako.Scrollie.Methods.FactionLocationChecker;
 import net.wtako.Scrollie.Methods.ScrollDatabase;
 import net.wtako.Scrollie.Methods.ScrollInstance;
 import net.wtako.Scrollie.Methods.Wizard;
+import net.wtako.Scrollie.Methods.WorldGuardLocationChecker;
 import net.wtako.Scrollie.Methods.Commands.Make.Wizards.PlayerClickWizard;
 import net.wtako.Scrollie.Methods.Commands.Make.Wizards.SetScrollNameWizard;
 import net.wtako.Scrollie.Utils.Lang;
@@ -43,7 +45,7 @@ public class MakeProcess extends ScrollDatabase {
         this.player = player;
         this.scrollID = scrollID;
         if (readValueFromDB()) {
-            this.readSuccess = true;
+            readSuccess = true;
         }
     }
 
@@ -53,7 +55,7 @@ public class MakeProcess extends ScrollDatabase {
         this.scrollID = scrollID;
         if (readValueFromDB()) {
             player.sendMessage(setTimesBeUsed(timesBeUsed.toString(), true));
-            this.readSuccess = true;
+            readSuccess = true;
         }
     }
 
@@ -83,10 +85,11 @@ public class MakeProcess extends ScrollDatabase {
     }
 
     private boolean costPlayer() {
-        if (Main.getInstance().getConfig().getBoolean("variable.make.UseEconInsteadOfEXP")) {
-            final RegisteredServiceProvider<Economy> provider = Main.getInstance().getServer().getServicesManager()
-                    .getRegistration(net.milkbowl.vault.economy.Economy.class);
-            if (provider != null) {
+        if (Main.getInstance().getConfig().getBoolean("variable.make.UseEconInsteadOfEXP")
+                && Main.getInstance().getConfig().getBoolean("system.VaultSupport")) {
+            try {
+                final RegisteredServiceProvider<Economy> provider = Main.getInstance().getServer().getServicesManager()
+                        .getRegistration(net.milkbowl.vault.economy.Economy.class);
                 final Economy economy = provider.getProvider();
                 final double moneyRequired = getEXPRequired();
                 if (economy.has(player.getName(), moneyRequired)) {
@@ -97,9 +100,10 @@ public class MakeProcess extends ScrollDatabase {
                 player.sendMessage(MessageFormat.format(Lang.YOU_DONT_HAVE_ENOUGH_MONEY.toString(), moneyRequired,
                         economy.getBalance(player.getName())));
                 return false;
+            } catch (final Error e) {
+                player.sendMessage(MessageFormat.format(Lang.ERROR_HOOKING.toString(), "Vault"));
+                return false;
             }
-            player.sendMessage(Lang.VAULT_EXCEPTION.toString());
-            return false;
         } else {
             final ExperienceManager man = new ExperienceManager(player);
             final double EXPRequied = getEXPRequired();
@@ -201,11 +205,21 @@ public class MakeProcess extends ScrollDatabase {
             } else if (getDestinationType() == 3) {
                 Wizard.enterOrLeave(player, new PlayerClickWizard(player, this));
             } else if (getDestinationType() == 4) {
+                if (Main.getInstance().getConfig().getBoolean("system.FactionsSupport")
+                        && !FactionLocationChecker.checkIfCanTeleportFrom(player)) {
+                    return;
+                }
                 destWorld = player.getWorld().getName();
-                final Location loc = player.getLocation();
-                destX = loc.getBlockX();
-                destY = loc.getBlockY();
-                destZ = loc.getBlockZ();
+                final Location destLoc = player.getLocation();
+                if (Main.getInstance().getConfig().getBoolean("system.WorldGuardSupport")) {
+                    if (!WorldGuardLocationChecker.checkWorldGuard(player, destLoc)) {
+                        player.sendMessage(Lang.TARGET_LOCATION_NOT_ALLOWED.toString());
+                        return;
+                    }
+                }
+                destX = destLoc.getBlockX();
+                destY = destLoc.getBlockY();
+                destZ = destLoc.getBlockZ();
                 Wizard.enterOrLeave(player, new SetScrollNameWizard(player, this));
             } else {
                 magickScroll(true);

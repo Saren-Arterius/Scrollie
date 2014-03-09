@@ -1,0 +1,41 @@
+Default settings
+Player1 in Faction1
+Player2 in Faction1
+Player3 in Faction2
+Player4 not in any faction
+Faction1 is Faction2's enemy
+Faction2 is Faction1's enemy
+Faction1's power > Faction2's power
+
+Tests:
+
+Player1 make scroll to teleport to player2, Expected to see OK
+Player1 make scroll to teleport to player3, Expected to see OK, show NOT SUPPOSED
+Player1 make scroll to teleport to player4, Expected to see FAIL
+
+Player3 make scroll to teleport to player1, player2, Expected to see FAIL
+Player3 make scroll to teleport to player4, Expected to see FAIL
+
+Player4 make scroll to teleport to player1, player2, player3, Expected to see FAIL
+
+
+
+Player1, Player2 use scroll to teleport to faction1, Expected to see OK
+Player1, Player2 use scroll to teleport to faction2, Expected to FAIL
+Player1, Player2, Player3, Player4 use scroll to teleport to not faction, Expected to see OK
+
+Player3 use scroll to teleport to faction1, Expected to see FAIL
+Player3 use scroll to teleport to faction2, Expected to see OK
+
+Player4 use scroll to teleport to faction1, faction2, Expected to see FAIL
+
+
+
+Player1, Player2 use scroll to teleport from faction1, Expected to see OK
+Player1, Player2 use scroll to teleport from faction2, Expected to see OK, show POWER HIGHER
+Player1, Player2, Player3, Player4 use scroll to teleport from not faction, Expected to see OK
+
+Player3 use scroll to teleport from faction1, Expected to see FAIL
+Player3 use scroll to teleport from faction2, Expected to see OK
+
+Player4 use scroll to teleport from faction1, faction2, Expected to see OK

@@ -6,6 +6,7 @@ website: https://gitlab.wtako.net/Saren/Scrollie
  
 main: net.wtako.Scrollie.Main
 database: true
+softdepend: [mcore, Factions, Essentials, Vault, WorldGuard, WorldEdit]
 
 commands:
     Scrollie:
@@ -17,9 +18,6 @@ commands:
 permissions:
     Scrollie.*:
         description: Gives access to all Scrollie commands.
-        children:
-            Scrollie.Use: true
-            Scrollie.OP: true
         default: op
     Scrollie.admin:
         description: Gives access to all Scrollie administrative commands.
@@ -41,6 +39,9 @@ permissions:
     Scrollie.VIP:
         description: Player with this permission need less experience to make scrolls.
         default: no
+    Scrollie.canToggleTP:
+        description: Gives access to prevent others from teleporting to you.
+        default: op
     Scrollie.overrideLimit.*:
         description: Gives access to override all min/max limit set in config.yml.
         default: op
@@ -57,7 +58,7 @@ permissions:
         description: Player with this permission will not be teleportation target.
         default: op
     Scrollie.canUseScrollInRestrictedAreas:
-        description: Gives access to use scrolls in restricted areas.
+        description: Gives access to use scrolls in restricted areas and all factions.
         default: op
     Scrollie.reload:
         description: Reloads the plugin.

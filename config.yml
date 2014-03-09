@@ -103,6 +103,16 @@ variable:
         VIPExpFactor: 0.5
         
         # Total EXP required = (Base EXP + Extra EXP (warm up) + Extra EXP(cool down) ) * CrossWorldTPExpFactor * VIPExpFactor * Times available * ScrollDestinationExpFactor
+
+        # Requires Factions support
+        IfSelfFactionPowerIsHigherThenOverrideTPTo: Yes
+        CanTeleportToFactionPlayer:
+            ENEMY: No
+            NEUTRAL: No
+            TRUCE: No
+            ALLY: Yes
+            SELF: Yes
+
     use:
         BanCreative: Yes
         
@@ -120,15 +130,29 @@ variable:
         
         # Requires Factions support
         Factions:
-            CantTeleportToEnemyTerritories: Yes
-            CantTeleportFromEnemyTerritories: Yes
-            OverrideTPToIfSelfFactionPowerIsHigher: Yes
-            OverrideTPFromIfSelfFactionPowerIsHigher: Yes
+            IfSelfFactionPowerIsHigherThenOverrideTPTo: No
+            IfSelfFactionPowerIsHigherThenOverrideTPFrom: Yes
+            ENEMY:
+                CanTeleportToTerritories: No
+                CanTeleportFromTerritories: No
+            NEUTRAL:
+                CanTeleportToTerritories: No
+                CanTeleportFromTerritories: Yes
+            TRUCE:
+                CanTeleportToTerritories: No
+                CanTeleportFromTerritories: Yes
+            ALLY:
+                CanTeleportToTerritories: Yes
+                CanTeleportFromTerritories: Yes
+            SELF:
+                CanTeleportToTerritories: Yes
+                CanTeleportFromTerritories: Yes
+
         Player:
             # If set to Yes, plugin will get target player's offline location as destination.
             # If set to No, the scroll can't be used until the target player online.
             # Requires Essentials support
-            AllowOfflineTP: No
+            AllowOfflineTP: Yes
         Random:
             # If set to Yes, plugin will choose a random location until at least a 3x1 air block is found, (Much slower and have a internal limit of finding 100 times maximum)
             # that means teleporting a player to cavern is possible. (But dangerous because of lava and network latency)
@@ -143,8 +167,16 @@ variable:
                 MaxZ: 1000
             # YourWorldHere:
         RestrictedAreas:
-            # Set this to yes to enable global white list, where restricted areas are places where players are allowed to use scrolls.
+            # To set restricted areas, enable worldguard support, define a region and set 'grass-growth' to deny.
+            # Set this to yes to enable global white list, that players are restricted to use scrolls only in WG regions with 'grass-growth' flag set to deny.
             WhiteList: No
+
 system:
+    FactionsSupport: Yes
+    EssentialsSupport: Yes
+    VaultSupport: Yes
+    # Needs WorldEdit Too
+    WorldGuardSupport: Yes
+    
     # Change this to get you and this plugin eaten by Ender Dragon, not really, seriously.
     PluginVersion: 0.0.1

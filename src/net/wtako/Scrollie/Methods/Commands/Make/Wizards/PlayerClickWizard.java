@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.wtako.Scrollie.Main;
+import net.wtako.Scrollie.Methods.FactionLocationChecker;
 import net.wtako.Scrollie.Methods.Wizard;
 import net.wtako.Scrollie.Methods.Commands.Make.MakeProcess;
+import net.wtako.Scrollie.Methods.Locations.PlayerLocation;
 import net.wtako.Scrollie.Utils.Lang;
 
 import org.bukkit.Material;
@@ -89,6 +91,14 @@ public class PlayerClickWizard extends Wizard {
                 }
                 if (target.hasPermission("Scrollie.cantBeTeleportTarget")) {
                     player.sendMessage(Lang.NOT_PREMITTED_TO_TELEPORT_TO_THAT_PLAYER.toString());
+                    return;
+                }
+                if (PlayerLocation.hasTargetTurnedOffTP(target.getName())) {
+                    player.sendMessage(MessageFormat.format(Lang.TARGET_HAS_TURNED_TP_OFF.toString(), target.getName()));
+                    return;
+                }
+                if (Main.getInstance().getConfig().getBoolean("system.FactionsSupport")
+                        && !FactionLocationChecker.checkIfCanTeleportPlayer(player, target)) {
                     return;
                 }
                 process.targetName = target.getName();

@@ -22,19 +22,23 @@ public class SpawnLocation implements LocationSource {
 
     @Override
     public Location get() {
-        final File spawnConfigFile = FileTool.getChildFile(FileTool.getChildFile(Main.getInstance().getDataFolder()
-                .getParentFile().getAbsoluteFile(), "Essentials", false), "spawn.yml", false);
-        if (spawnConfigFile != null) {
-            final YamlConfiguration spawnConfig = YamlConfiguration.loadConfiguration(spawnConfigFile);
-            final World world = Main.getInstance().getServer().getWorld(spawnConfig.getString("spawns.default.world"));
-            if (world == null) {
-                return null;
+        if (Main.getInstance().getConfig().getBoolean("system.EssentialsSupport")) {
+            final File spawnConfigFile = FileTool.getChildFile(FileTool.getChildFile(Main.getInstance().getDataFolder()
+                    .getParentFile().getAbsoluteFile(), "Essentials", false), "spawn.yml", false);
+            if (spawnConfigFile != null) {
+                final YamlConfiguration spawnConfig = YamlConfiguration.loadConfiguration(spawnConfigFile);
+                final World world = Main.getInstance().getServer()
+                        .getWorld(spawnConfig.getString("spawns.default.world"));
+                if (world == null) {
+                    return null;
+                }
+                destLoc = new Location(world, spawnConfig.getDouble("spawns.default.x"),
+                        spawnConfig.getDouble("spawns.default.y"), spawnConfig.getDouble("spawns.default.z"),
+                        (float) spawnConfig.getDouble("spawns.default.yaw"),
+                        (float) spawnConfig.getDouble("spawns.default.pitch"));
+                return destLoc;
             }
-            destLoc = new Location(world, spawnConfig.getDouble("spawns.default.x"),
-                    spawnConfig.getDouble("spawns.default.y"), spawnConfig.getDouble("spawns.default.z"),
-                    (float) spawnConfig.getDouble("spawns.default.yaw"),
-                    (float) spawnConfig.getDouble("spawns.default.pitch"));
-            return destLoc;
+            return player.getWorld().getSpawnLocation();
         } else {
             return player.getWorld().getSpawnLocation();
         }

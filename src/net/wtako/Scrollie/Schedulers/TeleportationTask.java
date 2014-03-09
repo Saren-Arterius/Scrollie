@@ -16,28 +16,28 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class TeleportationTask extends BukkitRunnable {
 
-    private Player         player;
-    private Integer        warmUpTimeLeft;
-    private Integer        warmUpTime;
-    private Location       location;
-    private ScrollInstance scroll;
+    private final Player         player;
+    private Integer              warmUpTimeLeft;
+    private Integer              warmUpTime;
+    private final Location       location;
+    private final ScrollInstance scroll;
 
     public TeleportationTask(Player player, ScrollInstance scroll) {
         this.player = player;
         this.scroll = scroll;
-        this.location = scroll.getLocation();
+        location = scroll.getLocation();
         if (player.hasPermission("Scrollie.overrideWUCD")) {
             warmUpTime = 0;
             warmUpTimeLeft = 0;
         } else {
-            this.warmUpTime = scroll.getWarmUpTime();
-            this.warmUpTimeLeft = scroll.getWarmUpTime();
+            warmUpTime = scroll.getWarmUpTime();
+            warmUpTimeLeft = scroll.getWarmUpTime();
         }
         if (warmUpTime > 0) {
             player.sendMessage(MessageFormat.format(Lang.WARMING_UP.toString(), warmUpTimeLeft));
         }
         PlayerActionsListener.registerEvents(player);
-        this.runTaskTimer(Main.getInstance(), 0, 20);
+        runTaskTimer(Main.getInstance(), 0, 20);
     }
 
     @Override
@@ -50,11 +50,11 @@ public class TeleportationTask extends BukkitRunnable {
         } else {
             try {
                 scroll.doPostActions(player);
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 player.sendMessage(Lang.DB_EXCEPTION.toString());
                 e.printStackTrace();
             }
-            this.cancel();
+            cancel();
             PlayerActionsListener.unregisterEvents(player);
             player.teleport(location);
             ScrollUseListener.getTPTask().remove(player.getName());
@@ -78,7 +78,7 @@ public class TeleportationTask extends BukkitRunnable {
         if (Main.getInstance().getConfig().getBoolean("variable.use.WarmUpFailDoesHarmToScroll")) {
             try {
                 ScrollUseListener.getTPTask().get(player.getName()).scroll.updateRemaingTimes(player);
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 player.sendMessage(Lang.DB_EXCEPTION.toString());
                 e.printStackTrace();
             }

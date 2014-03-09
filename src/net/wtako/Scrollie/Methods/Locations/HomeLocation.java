@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 
 public class HomeLocation implements LocationSource {
 
-    private Location destLoc;
-    private Player   player;
+    private Location     destLoc;
+    private final Player player;
 
     public HomeLocation(Player player) {
         this.player = player;

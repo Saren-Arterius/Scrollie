@@ -2,10 +2,13 @@ package net.wtako.Scrollie.Commands.Scrollie;
 
 import java.sql.SQLException;
 
+import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.Methods.Commands.Make.MakeProcess;
 import net.wtako.Scrollie.Utils.Lang;
 
+import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
 public class ArgMake {
@@ -23,6 +26,13 @@ public class ArgMake {
             sender.sendMessage(Lang.NO_PERMISSION_COMMAND.toString());
             return;
         }
+
+        if (Main.getInstance().getConfig().getBoolean("variable.make.BanCreative")
+                && ((HumanEntity) sender).getGameMode() == GameMode.CREATIVE
+                && !sender.hasPermission("Scrollie.noCostRequiredToMake")) {
+            return;
+        }
+
         Integer scrollID = null;
         if (args.length >= 3) {
             Integer timesBeUsed = null;

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.wtako.Scrollie.Main;
+import net.wtako.Scrollie.Utils.Lang;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -46,7 +47,7 @@ public abstract class Wizard implements Listener {
         } else if (wizarding.getClass() == wizard.getClass()) {
             Wizard.leave(player);
         } else {
-            player.sendMessage("Player already in wizard!");
+            player.sendMessage(Lang.ALREADY_IN_WIZARD.toString());
         }
     }
 

@@ -1,27 +1,28 @@
 package net.wtako.Scrollie.Methods.Locations;
 
+import java.text.MessageFormat;
+
+import net.wtako.Scrollie.Methods.LocationSource;
+import net.wtako.Scrollie.Utils.Lang;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.UPlayer;
 
-import net.wtako.Scrollie.Methods.LocationSource;
-import net.wtako.Scrollie.Utils.Lang;
-
 public class FactionHomeLocation implements LocationSource {
 
-    private Location destLoc;
-    private Player   player;
-    private UPlayer  uplayer;
+    private final Player player;
+    private UPlayer      uplayer;
 
     public FactionHomeLocation(Player player) {
         this.player = player;
         try {
-            this.uplayer = UPlayer.get(player);
-        } catch (Error e) {
-            player.sendMessage(Lang.FACTION_EXCEPTION.toString());
-            this.uplayer = null;
+            uplayer = UPlayer.get(player);
+        } catch (final Error e) {
+            player.sendMessage(MessageFormat.format(Lang.ERROR_HOOKING.toString(), "Factions"));
+            uplayer = null;
         }
     }
 
@@ -30,15 +31,16 @@ public class FactionHomeLocation implements LocationSource {
         if (uplayer == null) {
             return null;
         }
-        Faction faction = uplayer.getFaction();
+        final Faction faction = uplayer.getFaction();
         if (faction == null) {
             player.sendMessage(Lang.YOU_ARE_NOT_FACTION_MEMBER.toString());
             return null;
         }
-        if ((destLoc = faction.getHome().asBukkitLocation()) == null) {
+        if (faction.getHome() == null) {
             player.sendMessage(Lang.YOUR_FACTION_DOES_NOT_HAVE_HOME.toString());
+            return null;
         }
-        return destLoc;
+        return faction.getHome().asBukkitLocation();
     }
 
 }

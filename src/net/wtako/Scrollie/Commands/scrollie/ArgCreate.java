@@ -4,9 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import net.wtako.Scrollie.Main;
+import net.wtako.Scrollie.Methods.Database;
 import net.wtako.Scrollie.Methods.Wizard;
 import net.wtako.Scrollie.Methods.Commands.Create.Wizards.CreateWizard;
-import net.wtako.Scrollie.Utils.Database;
 import net.wtako.Scrollie.Utils.Lang;
 
 import org.bukkit.command.CommandSender;

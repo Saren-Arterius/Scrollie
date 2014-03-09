@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 import net.wtako.Scrollie.Commands.CommandScrollie;
 import net.wtako.Scrollie.EventHandlers.ScrollUseListener;
-import net.wtako.Scrollie.Utils.Database;
+import net.wtako.Scrollie.Methods.Database;
 import net.wtako.Scrollie.Utils.Lang;
 
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -32,8 +32,8 @@ public final class Main extends JavaPlugin {
         loadLang();
         try {
             new Database().check();
-        } catch (SQLException e) {
-            log.severe("When you see this, that means this plugin is screwed.");
+        } catch (final SQLException e) {
+            Main.log.severe("When you see this, that means this plugin is screwed.");
             e.printStackTrace();
         }
     }

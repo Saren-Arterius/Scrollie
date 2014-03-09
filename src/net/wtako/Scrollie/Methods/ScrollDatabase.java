@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.wtako.Scrollie.Main;
-import net.wtako.Scrollie.Utils.Database;
 import net.wtako.Scrollie.Utils.Lang;
 
 import org.bukkit.entity.Player;
@@ -24,13 +23,13 @@ public class ScrollDatabase extends Database {
     private String       name;
 
     public ScrollDatabase(Player player) throws SQLException {
-        this.owner = player;
+        owner = player;
         setDefaultValue();
     }
 
     public ScrollDatabase(Player player, Integer destinationType, Integer warmUpTime, Integer coolDownTime,
             Boolean allowCrossWorldTP, Integer timesBeUsed, String name) throws SQLException {
-        this.owner = player;
+        owner = player;
         this.destinationType = destinationType;
         this.warmUpTime = warmUpTime;
         this.coolDownTime = coolDownTime;
@@ -105,7 +104,7 @@ public class ScrollDatabase extends Database {
             } else {
                 crossWorldTP = false;
             }
-            ScrollDatabase scrollInTable = new ScrollDatabase(Main.getInstance().getServer()
+            final ScrollDatabase scrollInTable = new ScrollDatabase(Main.getInstance().getServer()
                     .getPlayer(result.getString(2)), result.getInt(5), result.getInt(6), result.getInt(7),
                     crossWorldTP, result.getInt(9), result.getString(4));
             tableArrayList.add(MessageFormat.format(pattern1, result.getInt(3), result.getString(4)));
@@ -130,13 +129,13 @@ public class ScrollDatabase extends Database {
                 .prepareStatement("SELECT name FROM 'scroll_creations' WHERE owner = ? AND scroll_id = ?");
         selStmt.setString(1, player.getName().toLowerCase());
         selStmt.setInt(2, rowID);
-        ResultSet result = selStmt.executeQuery();
+        final ResultSet result = selStmt.executeQuery();
         if (!result.next()) {
             result.close();
             selStmt.close();
             return MessageFormat.format(Lang.NO_SUCH_SCROLL.toString(), rowID);
         }
-        String scrollName = result.getString(1);
+        final String scrollName = result.getString(1);
         result.close();
         selStmt.close();
         final PreparedStatement delStmt = Database.getInstance().conn
@@ -156,7 +155,7 @@ public class ScrollDatabase extends Database {
         selStmt.close();
 
         final PreparedStatement insStmt = conn
-                .prepareStatement("INSERT INTO `scroll_creations` (`owner`, `scroll_id`, `name`, `scroll_destination`, `warm_up_time`, `cool_down_time`, `allow_cross_world_tp`, `times_be_used`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                .prepareStatement("INSERT INTO `scroll_creations` (`owner`, `scroll_id`, `name`, `scroll_destination`, `warm_up_time`, `cool_down_time`, `allow_cross_world_tp`, `times_be_used`, `timestamp`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         insStmt.setString(1, owner.getName().toLowerCase());
         insStmt.setInt(2, scrollID);
         insStmt.setString(3, name);
@@ -164,6 +163,7 @@ public class ScrollDatabase extends Database {
         insStmt.setInt(5, warmUpTime);
         insStmt.setInt(6, coolDownTime);
         insStmt.setInt(8, timesBeUsed);
+        insStmt.setInt(9, (int) (System.currentTimeMillis() / 1000L));
         if (allowCrossWorldTP) {
             insStmt.setInt(7, 1);
         } else {
@@ -318,19 +318,29 @@ public class ScrollDatabase extends Database {
             humanEnabledDestinationTypes += ScrollDatabase.destinationTypeIntegerToString(enabledDestinationInteger)
                     + ", ";
             if ((enabledDestinationInteger == destinationType) && (enabledDestinationInteger != -1)) {
-                this.destinationType = destinationType;
-                if (destinationType == 5) { // Random location in a world
-                    allowCrossWorldTP = false;
-                } else if (destinationType == 6) { // Self rescue scroll
-                    allowCrossWorldTP = true;
-                    setWarmUpTime(Main.getInstance().getConfig().getString("variable.create.WarmUpTime.Default"), false);
-                    setCoolDownTime(Main.getInstance().getConfig().getString("variable.create.CoolDownTime.Default"),
-                            false);
-                    setTimesBeUsed(Main.getInstance().getConfig().getString("variable.create.TimesBeUsed.Default"),
-                            false);
-                } else if (destinationType == 4) { // Specify location
-                    setScrollName(Lang.NOT_SET.toString(), false);
+                switch (destinationType) {
+                    case 2:
+                        if (!Main.getInstance().getConfig().getBoolean("system.FactionsSupport")) {
+                            return enterAgain("-", Lang.FACTIONS_UNSUPPORTED.toString());
+                        }
+                        break;
+                    case 4:
+                        setScrollName(Lang.NOT_SET.toString(), false);
+                        break;
+                    case 5:
+                        allowCrossWorldTP = false;
+                        break;
+                    case 6:
+                        allowCrossWorldTP = true;
+                        setWarmUpTime(Main.getInstance().getConfig().getString("variable.create.WarmUpTime.Default"),
+                                false);
+                        setCoolDownTime(Main.getInstance().getConfig()
+                                .getString("variable.create.CoolDownTime.Default"), false);
+                        setTimesBeUsed(Main.getInstance().getConfig().getString("variable.create.TimesBeUsed.Default"),
+                                false);
+                        break;
                 }
+                this.destinationType = destinationType;
                 return success(Lang.DESTINATION_TYPE.toString(),
                         ScrollDatabase.destinationTypeIntegerToString(destinationType));
             }

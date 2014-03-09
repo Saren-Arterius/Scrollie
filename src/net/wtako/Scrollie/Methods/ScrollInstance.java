@@ -16,11 +16,12 @@ import net.wtako.Scrollie.Methods.Locations.HomeLocation;
 import net.wtako.Scrollie.Methods.Locations.PlayerLocation;
 import net.wtako.Scrollie.Methods.Locations.RandomLocation;
 import net.wtako.Scrollie.Methods.Locations.SpawnLocation;
-import net.wtako.Scrollie.Utils.Database;
 import net.wtako.Scrollie.Utils.Lang;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -132,12 +133,13 @@ public class ScrollInstance extends Database {
         selStmt.close();
 
         final PreparedStatement insStmt = Database.getInstance().conn
-                .prepareStatement("INSERT INTO `scrolls` (`rowid`, `scroll_destination`, `target_player`, `destination_x`, `destination_y`, `destination_z`, `destination_world`, `warm_up_time`, `cool_down_time`, `allow_cross_world_tp`, `times_remaining`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                .prepareStatement("INSERT INTO `scrolls` (`rowid`, `scroll_destination`, `target_player`, `destination_x`, `destination_y`, `destination_z`, `destination_world`, `warm_up_time`, `cool_down_time`, `allow_cross_world_tp`, `times_remaining`, `timestamp`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         insStmt.setInt(1, rowid);
         insStmt.setInt(2, proc.getDestinationType());
         insStmt.setInt(8, proc.getWarmUpTime());
         insStmt.setInt(9, proc.getCoolDownTime());
         insStmt.setInt(11, proc.getTimesBeUsed());
+        insStmt.setInt(12, (int) (System.currentTimeMillis() / 1000L));
         if (proc.getAllowCrossWorldTP()) {
             insStmt.setInt(10, 1);
         } else {
@@ -214,7 +216,7 @@ public class ScrollInstance extends Database {
                 destLoc = new Location(Main.getInstance().getServer().getWorld(destWorld), destX, destY, destZ);
                 break;
             case 5:
-                destLoc = new RandomLocation(player.getWorld()).get();
+                destLoc = new RandomLocation(player, player.getWorld()).get();
                 break;
             case 6:
                 destLoc = new SpawnLocation(player).get();
@@ -227,6 +229,11 @@ public class ScrollInstance extends Database {
         if (!player.hasPermission("Scrollie.overrideWUCD") && !checkCoolDownTime(player)) {
             return false;
         }
+        if (Main.getInstance().getConfig().getBoolean("variable.make.BanCreative")
+                && ((HumanEntity) player).getGameMode() == GameMode.CREATIVE
+                && !player.hasPermission("Scrollie.noCostRequiredToMake")) {
+            return false;
+        }
         if ((destLoc = getLocation(player)) == null) {
             return false;
         }
@@ -236,8 +243,21 @@ public class ScrollInstance extends Database {
                     .getItemMeta().getDisplayName()));
             return false;
         }
+        if (Main.getInstance().getConfig().getBoolean("system.FactionsSupport")
+                && !FactionLocationChecker.checkFaction(player, destLoc)) {
+            return false;
+        }
+        if (Main.getInstance().getConfig().getBoolean("system.WorldGuardSupport")) {
+            if (!WorldGuardLocationChecker.checkWorldGuard(player, player.getLocation())) {
+                player.sendMessage(Lang.SOURCE_LOCATION_NOT_ALLOWED.toString());
+                return false;
+            }
+            if (!WorldGuardLocationChecker.checkWorldGuard(player, destLoc)) {
+                player.sendMessage(Lang.TARGET_LOCATION_NOT_ALLOWED.toString());
+                return false;
+            }
+        }
         return true;
-        // TODO faction check
     }
 
     private void updateCoolDown(Player player) throws SQLException {
@@ -341,9 +361,5 @@ public class ScrollInstance extends Database {
 
     public String getTargetName() {
         return targetName;
-    }
-
-    public void setTargetName(String targetName) {
-        this.targetName = targetName;
     }
 }
