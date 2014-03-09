@@ -62,7 +62,7 @@ public enum Lang {
     WARMING_UP_SECONDS_LEFT("warming-up-seconds left", "&c{0} &fseconds left..."),
     COOLING_DOWN(
             "cooling-down",
-            "&cCooling down is in process. &eYou have to wait for &c{0} &eseconds before using teleportation scrolls again."),
+            "&eCooling down is in process. You have to wait for &c{0} &eseconds before using teleportation scrolls again."),
     SCROLL_DISAPPEARED("scroll-disappeared", "&eYour scroll &f<&c{0}&f>&e is faded away."),
     SCROLL_MAGIC_GETTING_WEAKER(
             "scroll-magic-getting-weaker",
