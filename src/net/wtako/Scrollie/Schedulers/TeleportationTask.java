@@ -2,6 +2,7 @@ package net.wtako.Scrollie.Schedulers;
 
 import java.sql.SQLException;
 import java.text.MessageFormat;
+
 import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.EventHandlers.PlayerActionsListener;
 import net.wtako.Scrollie.EventHandlers.ScrollUseListener;
@@ -58,7 +59,7 @@ public class TeleportationTask extends BukkitRunnable {
                 player.sendMessage(Lang.DB_EXCEPTION.toString());
                 e.printStackTrace();
             }
-            end(player);
+            TeleportationTask.end(player);
             player.teleport(location);
             if (scroll.getTargetName() != null) {
                 player.sendMessage(MessageFormat.format(Lang.FINISHED_USING.toString(), scroll.getTargetName(),
@@ -72,7 +73,7 @@ public class TeleportationTask extends BukkitRunnable {
     }
 
     public static void interrupt(Player player) {
-        end(player);
+        TeleportationTask.end(player);
         player.sendMessage(Lang.WARM_UP_FAIL.toString());
         if (Main.getInstance().getConfig().getBoolean("variable.use.WarmUpFailDoesHarmToScroll")) {
             try {

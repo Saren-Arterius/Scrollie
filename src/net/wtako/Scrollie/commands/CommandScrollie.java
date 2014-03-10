@@ -33,7 +33,7 @@ public class CommandScrollie implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("toggletp")) {
                 new ArgToggletp(sender);
                 return true;
-            } else if (args[0].equalsIgnoreCase("help")  || args[0].equalsIgnoreCase("?")) {
+            } else if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("?")) {
                 new ArgHelp(sender);
                 return true;
             } else if (args[0].equalsIgnoreCase("reload")) {
