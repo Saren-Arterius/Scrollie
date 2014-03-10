@@ -80,4 +80,8 @@ public abstract class Wizard implements Listener {
         }
         Wizard.inWizardMode.clear();
     }
+
+    public static Map<String, Wizard> getInwizardmode() {
+        return inWizardMode;
+    }
 }

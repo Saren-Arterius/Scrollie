@@ -17,9 +17,6 @@ import com.massivecraft.mcore.ps.PS;
 public class FactionLocationChecker {
 
     public static boolean checkFaction(Player player, Location destLoc) {
-        if (player.hasPermission("Scrollie.canUseScrollInRestrictedAreas")) {
-            return true;
-        }
         if (FactionLocationChecker.checkIfCanTeleportTo(player, destLoc)
                 && FactionLocationChecker.checkIfCanTeleportFrom(player)) {
             return true;
@@ -29,6 +26,9 @@ public class FactionLocationChecker {
     }
 
     private static boolean checkIfCanTeleportTo(Player player, Location destLoc) {
+        if (player.hasPermission("Scrollie.canUseScrollInRestrictedAreas")) {
+            return true;
+        }
         final UPlayer factionPlayer = UPlayer.get(player);
         final Faction playerSelfFaction = factionPlayer.getFaction();
         final Faction destFaction = BoardColls.get().getFactionAt(PS.valueOf(destLoc));
@@ -59,6 +59,9 @@ public class FactionLocationChecker {
     }
 
     public static boolean checkIfCanTeleportFrom(Player player) {
+        if (player.hasPermission("Scrollie.canUseScrollInRestrictedAreas")) {
+            return true;
+        }
         final UPlayer factionPlayer = UPlayer.get(player);
         final Faction playerSelfFaction = factionPlayer.getFaction();
         final Faction sourceLocationFaction = BoardColls.get().getFactionAt(PS.valueOf(player.getLocation()));
@@ -89,6 +92,9 @@ public class FactionLocationChecker {
     }
 
     public static boolean checkIfCanTeleportPlayer(Player teleporter, Player target) {
+        if (teleporter.hasPermission("Scrollie.canUseScrollInRestrictedAreas")) {
+            return true;
+        }
         final UPlayer teleporterFactionPlayer = UPlayer.get(teleporter);
         final UPlayer targetFactionPlayer = UPlayer.get(target);
         final Faction teleporterSelfFaction = teleporterFactionPlayer.getFaction();

@@ -127,4 +127,8 @@ public class CreateWizard extends Wizard {
         }
     }
 
+    public static Map<String, ScrollDatabase> getPlayertoscroll() {
+        return playerToScroll;
+    }
+
 }

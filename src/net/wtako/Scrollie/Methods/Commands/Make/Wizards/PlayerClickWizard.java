@@ -109,4 +109,8 @@ public class PlayerClickWizard extends Wizard {
             }
         }
     }
+
+    public static Map<String, MakeProcess> getInprocess() {
+        return inProcess;
+    }
 }
