@@ -18,7 +18,7 @@ public class Database {
     public Database() throws SQLException {
         Database.instance = this;
         final String path = MessageFormat.format("jdbc:sqlite:{0}/{1}", Main.getInstance().getDataFolder()
-                .getAbsolutePath(), "scrollie.db");
+                .getAbsolutePath(), "Scrollie.db");
         conn = DriverManager.getConnection(path);
     }
 
@@ -70,5 +70,5 @@ public class Database {
     public static Database getInstance() {
         return Database.instance;
     }
-    // private void updateDatabase() {}
+
 }

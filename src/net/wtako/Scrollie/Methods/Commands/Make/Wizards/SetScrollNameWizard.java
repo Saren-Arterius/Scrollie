@@ -70,6 +70,6 @@ public class SetScrollNameWizard extends Wizard {
     }
 
     public static Map<String, MakeProcess> getInprocess() {
-        return inProcess;
+        return SetScrollNameWizard.inProcess;
     }
 }

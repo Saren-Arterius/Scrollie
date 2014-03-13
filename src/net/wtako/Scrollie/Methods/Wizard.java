@@ -82,6 +82,6 @@ public abstract class Wizard implements Listener {
     }
 
     public static Map<String, Wizard> getInwizardmode() {
-        return inWizardMode;
+        return Wizard.inWizardMode;
     }
 }

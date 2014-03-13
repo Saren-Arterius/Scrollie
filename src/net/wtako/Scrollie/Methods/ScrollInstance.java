@@ -295,7 +295,7 @@ public class ScrollInstance extends Database {
         selStmt.close();
     }
 
-    public void updateRemaingTimes(Player player) throws SQLException {
+    public void updateRemainingTimes(Player player) throws SQLException {
         timesRemaining--;
         player.getInventory().remove(item);
         if (timesRemaining == 0) {
@@ -332,7 +332,7 @@ public class ScrollInstance extends Database {
 
     public void doPostActions(Player player) throws SQLException {
         updateCoolDown(player);
-        updateRemaingTimes(player);
+        updateRemainingTimes(player);
     }
 
     public Integer getDestinationType() {

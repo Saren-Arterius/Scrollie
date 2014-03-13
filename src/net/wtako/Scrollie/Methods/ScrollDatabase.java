@@ -513,12 +513,11 @@ public class ScrollDatabase extends Database {
     }
 
     public String[] setTimesBeUsed(String input, boolean useDefaultOnFail) {
-        // try {
-        return checkTimesBeUsed(Integer.parseInt(input), useDefaultOnFail);
-        // } catch (final Exception ex) {
-        // return enterAgain(Lang.INTEGER.toString(),
-        // Lang.NOT_AN_INTEGER.toString());
-        // }
+        try {
+            return checkTimesBeUsed(Integer.parseInt(input), useDefaultOnFail);
+        } catch (final Exception ex) {
+            return enterAgain(Lang.INTEGER.toString(), Lang.NOT_AN_INTEGER.toString());
+        }
     }
 
     public String[] checkTimesBeUsed(Integer timesBeUsed, boolean useDefaultOnFail) {
