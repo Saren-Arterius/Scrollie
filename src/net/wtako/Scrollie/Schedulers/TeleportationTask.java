@@ -95,7 +95,7 @@ public class TeleportationTask extends BukkitRunnable {
         }
     }
 
-    public static void end(Player player) {
+    public static void end(final Player player) {
         player.removePotionEffect(PotionEffectType.CONFUSION);
         ScrollUseListener.getTPTask().get(player.getName()).cancel();
         ScrollUseListener.getTPTask().remove(player.getName());
@@ -103,7 +103,13 @@ public class TeleportationTask extends BukkitRunnable {
         PlayerActionsListener.unregisterEvents(player);
         if (Main.getInstance().getConfig().getBoolean("system.NCPSupport")) {
             try {
-                NCPExemptionManager.unexempt(player);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        // What you want to schedule goes here
+                        NCPExemptionManager.unexempt(player);
+                    }
+                }.runTaskLater(Main.getInstance(), 40);
             } catch (final Error e) {
                 player.sendMessage(MessageFormat.format(Lang.ERROR_HOOKING.toString(), "NoCheatPlus"));
             }
