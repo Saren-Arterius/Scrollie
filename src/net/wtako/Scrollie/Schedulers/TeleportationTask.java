@@ -17,6 +17,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import fr.neatmonster.nocheatplus.checks.CheckType;
 import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
 
 public class TeleportationTask extends BukkitRunnable {
@@ -36,7 +37,6 @@ public class TeleportationTask extends BukkitRunnable {
             warmUpTimeLeft = 0;
         } else {
             warmUpTime = scroll.getWarmUpTime();
-
             warmUpTimeLeft = scroll.getWarmUpTime();
         }
         if (warmUpTime > 0) {
@@ -44,7 +44,7 @@ public class TeleportationTask extends BukkitRunnable {
         }
         if (Main.getInstance().getConfig().getBoolean("system.NCPSupport")) {
             try {
-                NCPExemptionManager.registerPlayer(player);
+                NCPExemptionManager.exemptPermanently(player, CheckType.MOVING_SURVIVALFLY);
             } catch (final Error e) {
                 player.sendMessage(MessageFormat.format(Lang.ERROR_HOOKING.toString(), "NoCheatPlus"));
             }
@@ -103,13 +103,7 @@ public class TeleportationTask extends BukkitRunnable {
         PlayerActionsListener.unregisterEvents(player);
         if (Main.getInstance().getConfig().getBoolean("system.NCPSupport")) {
             try {
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        // What you want to schedule goes here
-                        NCPExemptionManager.unexempt(player);
-                    }
-                }.runTaskLater(Main.getInstance(), 40);
+                NCPExemptionManager.unexempt(player);
             } catch (final Error e) {
                 player.sendMessage(MessageFormat.format(Lang.ERROR_HOOKING.toString(), "NoCheatPlus"));
             }
