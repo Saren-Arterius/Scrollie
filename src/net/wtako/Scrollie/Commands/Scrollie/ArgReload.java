@@ -22,6 +22,7 @@ public class ArgReload {
         CreateWizard.getPlayertoscroll().clear();
         Wizard.getInwizardmode().clear();
         Main.getInstance().getServer().getPluginManager().enablePlugin(Main.getInstance());
+        Main.getInstance().reloadConfig();
         sender.sendMessage(Lang.PLUGIN_RELOADED.toString());
     }
 

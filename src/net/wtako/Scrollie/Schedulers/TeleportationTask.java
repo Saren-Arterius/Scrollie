@@ -17,6 +17,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
+
 public class TeleportationTask extends BukkitRunnable {
 
     private final Player         player;
@@ -34,10 +36,18 @@ public class TeleportationTask extends BukkitRunnable {
             warmUpTimeLeft = 0;
         } else {
             warmUpTime = scroll.getWarmUpTime();
+
             warmUpTimeLeft = scroll.getWarmUpTime();
         }
         if (warmUpTime > 0) {
             player.sendMessage(MessageFormat.format(Lang.WARMING_UP.toString(), warmUpTimeLeft));
+        }
+        if (Main.getInstance().getConfig().getBoolean("system.NCPSupport")) {
+            try {
+                NCPExemptionManager.registerPlayer(player);
+            } catch (final Error e) {
+                player.sendMessage(MessageFormat.format(Lang.ERROR_HOOKING.toString(), "NoCheatPlus"));
+            }
         }
         PlayerActionsListener.registerEvents(player);
         player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 1000000, 1));
@@ -91,6 +101,13 @@ public class TeleportationTask extends BukkitRunnable {
         ScrollUseListener.getTPTask().remove(player.getName());
         ScrollUseListener.getMovedCount().remove(player.getName());
         PlayerActionsListener.unregisterEvents(player);
+        if (Main.getInstance().getConfig().getBoolean("system.NCPSupport")) {
+            try {
+                NCPExemptionManager.unexempt(player);
+            } catch (final Error e) {
+                player.sendMessage(MessageFormat.format(Lang.ERROR_HOOKING.toString(), "NoCheatPlus"));
+            }
+        }
     }
 
     public Integer getWarmUpTime() {

@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 public class ArgHelp {
 
     public ArgHelp(CommandSender sender) {
-        sender.sendMessage("Scrollie v0.0.1");
+        sender.sendMessage("Scrollie v0.0.2");
         sender.sendMessage("Author: Saren");
         sender.sendMessage(Lang.HELP_CREATE.toString());
         sender.sendMessage(Lang.HELP_MAKE.toString());
