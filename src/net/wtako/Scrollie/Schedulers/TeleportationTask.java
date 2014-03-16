@@ -103,7 +103,12 @@ public class TeleportationTask extends BukkitRunnable {
         PlayerActionsListener.unregisterEvents(player);
         if (Main.getInstance().getConfig().getBoolean("system.NCPSupport")) {
             try {
-                NCPExemptionManager.unexempt(player);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        NCPExemptionManager.unexempt(player);
+                    }
+                }.runTaskLater(Main.getInstance(), 40);
             } catch (final Error e) {
                 player.sendMessage(MessageFormat.format(Lang.ERROR_HOOKING.toString(), "NoCheatPlus"));
             }
