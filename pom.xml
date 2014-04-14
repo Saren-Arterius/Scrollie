@@ -6,7 +6,6 @@
 	<version>0.0.2-SNAPSHOT</version>
 	<name>Scrollie</name>
 	<description>Yet another useless scroll teleportation Minecraft plugin.</description>
-	<packaging>jar</packaging>
 
 	<repositories>
 		<repository>
@@ -24,19 +23,5 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-				<version>3.1</version>
-			</plugin>
-		</plugins>
-	</build>
 
 </project>
