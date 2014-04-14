@@ -1,5 +1,5 @@
 name: {$PluginName}
-version: {$VersionNumber}
+version: {$version}
 description: Yet another useless Minecraft Craftbukkit plugin.
 author: Saren
 website: https://gitlab.wtako.net/Saren/Scrollie
