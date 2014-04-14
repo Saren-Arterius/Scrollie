@@ -21,7 +21,7 @@ public class ArgCreate {
     }
 
     public void goToWizard() {
-        if (!sender.hasPermission("Scrollie.make")) {
+        if (!sender.hasPermission(Main.getInstance().getProperty("artifactId") + ".make")) {
             sender.sendMessage(Lang.NO_PERMISSION_COMMAND.toString());
             return;
         }
@@ -36,7 +36,7 @@ public class ArgCreate {
     }
 
     public boolean canGoToWizard() throws SQLException {
-        if (sender.hasPermission("Scrollie.overrideLimit.MaxScrolls")) {
+        if (sender.hasPermission(Main.getInstance().getProperty("artifactId") + ".overrideLimit.MaxScrolls")) {
             return true;
         } else {
             final int scrollsLimit = Main.getInstance().getConfig().getInt("variable.create.MaxScrolls");

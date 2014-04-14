@@ -1,5 +1,7 @@
 package net.wtako.Scrollie.Utils;
 
+import net.wtako.Scrollie.Main;
+
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -10,7 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public enum Lang {
 
-    TITLE("title", "[Scrollie]"),
+    TITLE("title", "[" + Main.getInstance().getName() + "]"),
     WIZARD_ENTER("wizard-enter", "&3Enter wizard mode. Type 'exit' to exit."),
     WIZARD_EXIT("wizard-exit", "&3Exiting wizard mode."),
     WHAT_DESTINATION("what-destination", "&6What is the &3destination&6 of the new scroll?"),
@@ -129,19 +131,23 @@ public enum Lang {
     YOU_TURNED_OFF_TP("you-turned-off-tp", "&aYou turned off TP. Others can no longer teleport to you."),
     YOU_TURNED_ON_TP("you-turned-on-tp", "&aYou turned on TP. Others can teleport to you from now."),
 
-    HELP_CREATE("help-create", "Type &a/scrollie create&f to create a new scroll."),
-    HELP_MAKE("help-make", "Type &a/scrollie make &f<&cScroll ID&f> [&3Max use times&f] to make a predefined scroll."),
-    HELP_LIST("help-list", "Type &a/scrollie list&f to view the scrolls you have created."),
-    HELP_DELETE("help-delete", "Type &a/scrollie delete &f<&cScroll ID&f> to delete a specific scroll."),
-    HELP_RELOAD("help-reload", "Type &a/scrollie reload&f to reload the plugin. &c(OP only)"),
+    HELP_CREATE("help-create", "Type &a/" + Main.getInstance().getName() + " create&f to create a new scroll."),
+    HELP_MAKE("help-make", "Type &a/" + Main.getInstance().getName()
+            + " make &f<&cScroll ID&f> [&3Max use times&f] to make a predefined scroll."),
+    HELP_LIST("help-list", "Type &a/" + Main.getInstance().getName() + " list&f to view the scrolls you have created."),
+    HELP_DELETE("help-delete", "Type &a/" + Main.getInstance().getName()
+            + " delete &f<&cScroll ID&f> to delete a specific scroll."),
+    HELP_RELOAD("help-reload", "Type &a/" + Main.getInstance().getName()
+            + " reload&f to reload the plugin. &c(OP only)"),
 
-    MAKE_THIS_SCROLL("make-this-scroll", "Type &a/scrollie make &c{0}&f to make this scroll."),
-    VIEW_SCROLL_LIST("view-scroll-list", "Type &a/scrollie list&f to view all scrolls."),
-    DELETE_THIS_SCROLL("delete-this-scroll", "Type &a/scrollie delete &c{0}&f to delete this scroll."),
-    MAKE_USAGE(
-            "make-usage",
-            "Usage: &a/scrollie make &f<&cScroll ID&f> [<&3Max use times&f> (&coverrides&f)], &a[] = Optional"),
-    DELETE_USAGE("delete-usage", "Usage: &a/scrollie delete &f<&cScroll ID&f>"),
+    MAKE_THIS_SCROLL("make-this-scroll", "Type &a/" + Main.getInstance().getName()
+            + " make &c{0}&f to make this scroll."),
+    VIEW_SCROLL_LIST("view-scroll-list", "Type &a/" + Main.getInstance().getName() + " list&f to view all scrolls."),
+    DELETE_THIS_SCROLL("delete-this-scroll", "Type &a/" + Main.getInstance().getName()
+            + " delete &c{0}&f to delete this scroll."),
+    MAKE_USAGE("make-usage", "Usage: &a/" + Main.getInstance().getName()
+            + " make &f<&cScroll ID&f> [<&3Max use times&f> (&coverrides&f)], &a[] = Optional"),
+    DELETE_USAGE("delete-usage", "Usage: &a/" + Main.getInstance().getName() + " delete &f<&cScroll ID&f>"),
 
     DEFAULT_VALUE("default-value", "Default"),
     MIN_VALUE("min-value", "Min"),

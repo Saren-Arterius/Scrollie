@@ -22,14 +22,14 @@ public class ArgMake {
     }
 
     public void goToWizard() {
-        if (!sender.hasPermission("Scrollie.make")) {
+        if (!sender.hasPermission(Main.getInstance().getProperty("artifactId") + ".make")) {
             sender.sendMessage(Lang.NO_PERMISSION_COMMAND.toString());
             return;
         }
 
         if (Main.getInstance().getConfig().getBoolean("variable.make.BanCreative")
                 && ((HumanEntity) sender).getGameMode() == GameMode.CREATIVE
-                && !sender.hasPermission("Scrollie.noCostRequiredToMake")) {
+                && !sender.hasPermission(Main.getInstance().getProperty("artifactId") + ".noCostRequiredToMake")) {
             return;
         }
 

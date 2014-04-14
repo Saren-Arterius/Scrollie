@@ -36,7 +36,7 @@ public class PlayerLocation implements LocationSource {
         }
         final Player target = Main.getInstance().getServer().getPlayer(targetName);
         if (target != null) {
-            if (target.hasPermission("Scrollie.cantBeTeleportTarget")) {
+            if (target.hasPermission(Main.getInstance().getProperty("artifactId") + ".cantBeTeleportTarget")) {
                 player.sendMessage(Lang.NOT_PREMITTED_TO_TELEPORT_TO_THAT_PLAYER.toString());
                 return null;
             }

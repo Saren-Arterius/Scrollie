@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.Methods.Database;
 import net.wtako.Scrollie.Utils.Lang;
 
@@ -19,7 +20,7 @@ public class ArgToggletp {
     }
 
     private void toggleTP() {
-        if (!sender.hasPermission("Scrollie.canToggleTP")) {
+        if (!sender.hasPermission(Main.getInstance().getProperty("artifactId") + ".canToggleTP")) {
             sender.sendMessage(Lang.NO_PERMISSION_COMMAND.toString());
             return;
         }

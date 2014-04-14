@@ -26,7 +26,7 @@ public class FactionLocationChecker {
     }
 
     private static boolean checkIfCanTeleportTo(Player player, Location destLoc) {
-        if (player.hasPermission("Scrollie.canUseScrollInRestrictedAreas")) {
+        if (player.hasPermission(Main.getInstance().getProperty("artifactId") + ".canUseScrollInRestrictedAreas")) {
             return true;
         }
         final UPlayer factionPlayer = UPlayer.get(player);
@@ -59,7 +59,7 @@ public class FactionLocationChecker {
     }
 
     public static boolean checkIfCanTeleportFrom(Player player) {
-        if (player.hasPermission("Scrollie.canUseScrollInRestrictedAreas")) {
+        if (player.hasPermission(Main.getInstance().getProperty("artifactId") + ".canUseScrollInRestrictedAreas")) {
             return true;
         }
         final UPlayer factionPlayer = UPlayer.get(player);
@@ -92,7 +92,7 @@ public class FactionLocationChecker {
     }
 
     public static boolean checkIfCanTeleportPlayer(Player teleporter, Player target) {
-        if (teleporter.hasPermission("Scrollie.canUseScrollInRestrictedAreas")) {
+        if (teleporter.hasPermission(Main.getInstance().getProperty("artifactId") + ".canUseScrollInRestrictedAreas")) {
             return true;
         }
         final UPlayer teleporterFactionPlayer = UPlayer.get(teleporter);

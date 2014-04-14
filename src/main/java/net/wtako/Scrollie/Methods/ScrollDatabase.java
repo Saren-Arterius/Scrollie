@@ -40,25 +40,30 @@ public class ScrollDatabase extends Database {
 
     private void setDefaultValue() {
         if (!Main.getInstance().getConfig().getBoolean("variable.create.ScrollDestination.CanCustomize")
-                && !owner.hasPermission("Scrollie.overrideCanCustomize.ScrollDestination")) {
+                && !owner.hasPermission(Main.getInstance().getProperty("artifactId")
+                        + ".overrideCanCustomize.ScrollDestination")) {
             setDestinationType(Main.getInstance().getConfig().getString("variable.create.ScrollDestination.Default"),
                     false);
         }
         if (!Main.getInstance().getConfig().getBoolean("variable.create.WarmUpTime.CanCustomize")
-                && !owner.hasPermission("Scrollie.overrideCanCustomize.WarmUpTime")) {
+                && !owner.hasPermission(Main.getInstance().getProperty("artifactId")
+                        + ".overrideCanCustomize.WarmUpTime")) {
             setWarmUpTime(Main.getInstance().getConfig().getString("variable.create.WarmUpTime.Default"), false);
         }
         if (!Main.getInstance().getConfig().getBoolean("variable.create.CoolDownTime.CanCustomize")
-                && !owner.hasPermission("Scrollie.overrideCanCustomize.CoolDownTime")) {
+                && !owner.hasPermission(Main.getInstance().getProperty("artifactId")
+                        + ".overrideCanCustomize.CoolDownTime")) {
             setCoolDownTime(Main.getInstance().getConfig().getString("variable.create.CoolDownTime.Default"), false);
         }
         if (!Main.getInstance().getConfig().getBoolean("variable.create.CrossWorldTP.CanCustomize")
-                && !owner.hasPermission("Scrollie.overrideCanCustomize.CrossWorldTP")) {
+                && !owner.hasPermission(Main.getInstance().getProperty("artifactId")
+                        + ".overrideCanCustomize.CrossWorldTP")) {
             setAllowCrossWorldTP(Main.getInstance().getConfig().getString("variable.create.CrossWorldTP.Default"),
                     false);
         }
         if (!Main.getInstance().getConfig().getBoolean("variable.create.TimesBeUsed.CanCustomize")
-                && !owner.hasPermission("Scrollie.overrideCanCustomize.TimesBeUsed")) {
+                && !owner.hasPermission(Main.getInstance().getProperty("artifactId")
+                        + ".overrideCanCustomize.TimesBeUsed")) {
             setTimesBeUsed(Main.getInstance().getConfig().getString("variable.create.TimesBeUsed.Default"), false);
         }
         return;
@@ -201,7 +206,7 @@ public class ScrollDatabase extends Database {
     public double getEXPRequired() {
         double EXPRequired = Main.getInstance().getConfig().getDouble("variable.make.BaseEXPRequired");
 
-        if (owner.hasPermission("Scrollie.VIP")) {
+        if (owner.hasPermission(Main.getInstance().getProperty("artifactId") + ".VIP")) {
             EXPRequired *= Main.getInstance().getConfig().getDouble("variable.make.VIPExpFactor");
         }
 
@@ -374,7 +379,8 @@ public class ScrollDatabase extends Database {
         if ((warmUpTime >= min) && (warmUpTime <= max) && (warmUpTime >= 0)) {
             this.warmUpTime = warmUpTime;
             return success(Lang.WARM_UP_TIME.toString(), warmUpTime.toString());
-        } else if (owner.hasPermission("Scrollie.overrideLimit.WarmUpTime") && (warmUpTime >= 0)) {
+        } else if (owner.hasPermission(Main.getInstance().getProperty("artifactId") + ".overrideLimit.WarmUpTime")
+                && (warmUpTime >= 0)) {
             this.warmUpTime = warmUpTime;
             return success(Lang.WARM_UP_TIME.toString(), warmUpTime.toString());
         } else if (min < 0) {
@@ -428,7 +434,8 @@ public class ScrollDatabase extends Database {
         if ((coolDownTime >= min) && (coolDownTime <= max) && (coolDownTime >= 0)) {
             this.coolDownTime = coolDownTime;
             return success(Lang.COOL_DOWN_TIME.toString(), coolDownTime.toString());
-        } else if (owner.hasPermission("Scrollie.overrideLimit.CoolDownTime") && (coolDownTime >= 0)) {
+        } else if (owner.hasPermission(Main.getInstance().getProperty("artifactId") + ".overrideLimit.CoolDownTime")
+                && (coolDownTime >= 0)) {
             this.coolDownTime = coolDownTime;
             return success(Lang.COOL_DOWN_TIME.toString(), coolDownTime.toString());
         } else if (min < 0) {
@@ -529,7 +536,8 @@ public class ScrollDatabase extends Database {
         if ((timesBeUsed >= min) && (timesBeUsed <= max) && (timesBeUsed >= 1)) {
             this.timesBeUsed = timesBeUsed;
             return success(Lang.TIMES_BE_USED.toString(), timesBeUsed.toString());
-        } else if (owner.hasPermission("Scrollie.overrideLimit.TimesBeUsed") && (timesBeUsed >= 1)) {
+        } else if (owner.hasPermission(Main.getInstance().getProperty("artifactId") + ".overrideLimit.TimesBeUsed")
+                && (timesBeUsed >= 1)) {
             this.timesBeUsed = timesBeUsed;
             return success(Lang.TIMES_BE_USED.toString(), timesBeUsed.toString());
         } else if (min < 1) {

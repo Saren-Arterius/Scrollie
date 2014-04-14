@@ -32,7 +32,7 @@ public class TeleportationTask extends BukkitRunnable {
         this.player = player;
         this.scroll = scroll;
         location = scroll.getLocation();
-        if (player.hasPermission("Scrollie.overrideWUCD")) {
+        if (player.hasPermission(Main.getInstance().getProperty("artifactId") + ".overrideWUCD")) {
             warmUpTime = 0;
             warmUpTimeLeft = 0;
         } else {

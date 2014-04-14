@@ -116,7 +116,7 @@ public class MakeProcess extends ScrollDatabase {
 
     public boolean magickScroll(boolean hasCost) {
 
-        if (player.hasPermission("Scrollie.noCostRequiredToMake")) {
+        if (player.hasPermission(Main.getInstance().getProperty("artifactId") + ".noCostRequiredToMake")) {
             hasCost = false;
         }
 
@@ -188,7 +188,7 @@ public class MakeProcess extends ScrollDatabase {
                 }
                 magickScroll(false);
             } else if (!player.getItemInHand().isSimilar(new ItemStack(itemTypeRequired, 1))
-                    && !player.hasPermission("Scrollie.noCostRequiredToMake")) {
+                    && !player.hasPermission(Main.getInstance().getProperty("artifactId") + ".noCostRequiredToMake")) {
                 final String msg = Lang.PLEASE_HOLD_ITEM.toString();
                 player.sendMessage(MessageFormat.format(msg, itemTypeRequiredString));
             } else if (getDestinationType() == 3) {

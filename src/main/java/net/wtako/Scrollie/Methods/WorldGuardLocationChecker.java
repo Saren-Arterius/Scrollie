@@ -18,7 +18,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 public class WorldGuardLocationChecker {
 
     public static boolean checkWorldGuard(Player player, Location location) {
-        if (player.hasPermission("Scrollie.canUseScrollInRestrictedAreas")) {
+        if (player.hasPermission(Main.getInstance().getProperty("artifactId") + ".canUseScrollInRestrictedAreas")) {
             return true;
         }
         try {

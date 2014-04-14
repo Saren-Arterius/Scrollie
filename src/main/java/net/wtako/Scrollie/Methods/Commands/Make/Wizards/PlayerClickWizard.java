@@ -84,12 +84,13 @@ public class PlayerClickWizard extends Wizard {
                         .getString("variable.make.ScrollItem");
                 final Material itemTypeRequired = Material.getMaterial(itemTypeRequiredString.toUpperCase());
                 if (!player.getItemInHand().isSimilar(new ItemStack(itemTypeRequired, 1))
-                        && !player.hasPermission("Scrollie.noCostRequiredToMake")) {
+                        && !player
+                                .hasPermission(Main.getInstance().getProperty("artifactId") + ".noCostRequiredToMake")) {
                     final String msg = Lang.PLEASE_HOLD_ITEM.toString();
                     player.sendMessage(MessageFormat.format(msg, itemTypeRequiredString));
                     return;
                 }
-                if (target.hasPermission("Scrollie.cantBeTeleportTarget")) {
+                if (target.hasPermission(Main.getInstance().getProperty("artifactId") + ".cantBeTeleportTarget")) {
                     player.sendMessage(Lang.NOT_PREMITTED_TO_TELEPORT_TO_THAT_PLAYER.toString());
                     return;
                 }

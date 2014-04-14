@@ -270,18 +270,19 @@ public class ScrollInstance extends Database {
     }
 
     public boolean doPreActions(Player player) throws SQLException {
-        if (!player.hasPermission("Scrollie.overrideWUCD") && !checkCoolDownTime(player)) {
+        if (!player.hasPermission(Main.getInstance().getProperty("artifactId") + ".overrideWUCD")
+                && !checkCoolDownTime(player)) {
             return false;
         }
         if (Main.getInstance().getConfig().getBoolean("variable.make.BanCreative")
                 && ((HumanEntity) player).getGameMode() == GameMode.CREATIVE
-                && !player.hasPermission("Scrollie.noCostRequiredToMake")) {
+                && !player.hasPermission(Main.getInstance().getProperty("artifactId") + ".noCostRequiredToMake")) {
             return false;
         }
         if ((destLoc = getLocation(player)) == null) {
             return false;
         }
-        if (!player.hasPermission("Scrollie.overrideWUCD") && !allowCrossWorldTP
+        if (!player.hasPermission(Main.getInstance().getProperty("artifactId") + ".overrideWUCD") && !allowCrossWorldTP
                 && !destLoc.getWorld().equals(player.getWorld())) {
             player.sendMessage(MessageFormat.format(Lang.NOT_POWERFUL_ENOUGH_CROSS_WORLD_TP.toString(), item
                     .getItemMeta().getDisplayName()));

@@ -50,7 +50,7 @@ public class SetScrollNameWizard extends Wizard {
         final String itemTypeRequiredString = Main.getInstance().getConfig().getString("variable.make.ScrollItem");
         final Material itemTypeRequired = Material.getMaterial(itemTypeRequiredString.toUpperCase());
         if (!player.getItemInHand().isSimilar(new ItemStack(itemTypeRequired, 1))
-                && !player.hasPermission("Scrollie.noCostRequiredToMake")) {
+                && !player.hasPermission(Main.getInstance().getProperty("artifactId") + ".noCostRequiredToMake")) {
             final String msg = Lang.PLEASE_HOLD_ITEM.toString();
             player.sendMessage(MessageFormat.format(msg, itemTypeRequiredString));
             return;
