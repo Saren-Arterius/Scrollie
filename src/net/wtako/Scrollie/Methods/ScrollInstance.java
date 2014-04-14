@@ -5,9 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.Methods.Commands.Make.MakeProcess;
@@ -18,50 +18,94 @@ import net.wtako.Scrollie.Methods.Locations.RandomLocation;
 import net.wtako.Scrollie.Methods.Locations.SpawnLocation;
 import net.wtako.Scrollie.Utils.Lang;
 
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 public class ScrollInstance extends Database {
 
-    public static String  lorePattern = "{0}: {1}";
-    private final Integer instanceID;
-    private Integer       destinationType;
-    private Integer       timesRemaining;
-    private Integer       warmUpTime;
-    private Integer       coolDownTime;
-    private Integer       destX;
-    private Integer       destY;
-    private Integer       destZ;
-    private Boolean       allowCrossWorldTP;
-    private String        destWorld;
-    private String        targetName;
-    private ItemStack     item;
-    private Location      destLoc;
+    public static String lorePattern = "{0}: {1}";
+    private Integer      destinationType;
+    private Integer      timesRemaining;
+    private Integer      warmUpTime;
+    private Integer      coolDownTime;
+    private Integer      destX;
+    private Integer      destY;
+    private Integer      destZ;
+    private Boolean      allowCrossWorldTP;
+    private String       destWorld;
+    private String       targetName;
+    private ItemStack    item;
+    private Location     destLoc;
 
     public ScrollInstance(ItemStack item) throws SQLException {
-        super();
-        instanceID = ScrollInstance.getScrollInstanceID(item);
         this.item = item;
-        if (instanceID != null) {
-            loadInfoFromDB();
-        }
+        loadProperties(this.item);
     }
 
-    public ScrollInstance(Integer instanceID) throws SQLException {
-        super();
-        this.instanceID = instanceID;
-        loadInfoFromDB();
+    public ScrollInstance(MakeProcess makeProcess) throws SQLException {
+        loadProperties(makeProcess);
+    }
+
+    public static String toInvisible(String s) {
+        String hidden = "";
+        for (final char c: s.toCharArray()) {
+            hidden += ChatColor.COLOR_CHAR + "" + c;
+        }
+        return hidden;
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static boolean isValid(ItemStack item) {
+        try {
+            if (item.getType() == Material.AIR) {
+                return false;
+            }
+
+            if (!item.hasItemMeta()) {
+                return false;
+            }
+
+            final List<String> itemLore = item.getItemMeta().getLore();
+
+            if (itemLore.size() < 6) {
+                return false;
+            }
+
+            final Map scrollProperties = (Map) JSONValue.parse(item.getItemMeta().getLore()
+                    .get(item.getItemMeta().getLore().size() - 2).replaceAll("§", ""));
+            if (((Long) scrollProperties.get("destinationType")).intValue() < 0) {
+                return false;
+            }
+        } catch (final Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public ItemStack getScrollItem(String name) throws SQLException {
+        final String itemTypeRequiredString = Main.getInstance().getConfig().getString("variable.make.ScrollItem");
+        final Material itemTypeRequired = Material.getMaterial(itemTypeRequiredString.toUpperCase());
+        final ItemStack scrollItem = new ItemStack(itemTypeRequired, 1);
+        final ItemMeta meta = scrollItem.getItemMeta();
+        meta.setLore(getLores());
+        meta.setDisplayName(name);
+        scrollItem.setItemMeta(meta);
+        scrollItem.addUnsafeEnchantment(Enchantment.LUCK, 1);
+        return scrollItem;
     }
 
     public List<String> getLores() throws SQLException {
         final List<String> lore = new ArrayList<String>();
 
-        lore.add(MessageFormat.format(ScrollInstance.lorePattern, "Scrollie ID", instanceID));
         lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.DESTINATION_TYPE,
                 ScrollDatabase.destinationTypeIntegerToString(getDestinationType())));
         if (targetName != null) {
@@ -82,87 +126,87 @@ public class ScrollInstance extends Database {
         } else {
             lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.CROSS_WORLD_TP.toString(), Lang.NOT_ALLOWED));
         }
+        lore.add(ScrollInstance.toInvisible(getJSONFromProperties()));
         lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.TIMES_REMAINING.toString(), getTimesRemaining()));
         return lore;
     }
 
-    public static Integer getScrollInstanceID(ItemStack item) {
-        if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasLore()) {
-            return null;
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public String getJSONFromProperties() {
+        final Map scrollProperties = new HashMap();
+        scrollProperties.put("destinationType", destinationType);
+        scrollProperties.put("warmUpTime", warmUpTime);
+        scrollProperties.put("coolDownTime", coolDownTime);
+        scrollProperties.put("timesRemaining", timesRemaining);
+        if (allowCrossWorldTP) {
+            scrollProperties.put("allowCrossWorldTP", 1);
+        } else {
+            scrollProperties.put("allowCrossWorldTP", 0);
         }
-        try {
-            final String IDRow = item.getItemMeta().getLore().get(0);
-            final String regex = "^" + MessageFormat.format(ScrollInstance.lorePattern, "Scrollie ID", "(\\d+)") + "$";
-            final Pattern pattern = Pattern.compile(regex);
-            final Matcher matcher = pattern.matcher(IDRow);
-            matcher.find();
-            return Integer.parseInt(matcher.group(1));
-        } catch (final Exception e) {
-            return null;
+        if (destX != null) {
+            scrollProperties.put("destX", destX);
+            scrollProperties.put("destY", destY);
+            scrollProperties.put("destZ", destZ);
+            scrollProperties.put("destWorld", destWorld);
         }
+        if (targetName != null) {
+            scrollProperties.put("targetName", targetName);
+        }
+        scrollProperties.put("random", Math.random());
+        scrollProperties.put("createTime", System.currentTimeMillis());
+        return JSONObject.toJSONString(scrollProperties);
     }
 
-    private void loadInfoFromDB() throws SQLException {
-        final PreparedStatement selStmt = Database.getInstance().conn
-                .prepareStatement("SELECT * FROM 'scrolls' WHERE rowid = ?");
-        selStmt.setInt(1, instanceID);
-        final ResultSet result = selStmt.executeQuery();
-
-        destinationType = result.getInt(2);
-        targetName = result.getString(3);
-        destX = result.getInt(4);
-        destY = result.getInt(5);
-        destZ = result.getInt(6);
-        destWorld = result.getString(7);
-        warmUpTime = result.getInt(8);
-        coolDownTime = result.getInt(9);
-        if (result.getInt(10) == 1) {
+    @SuppressWarnings({"rawtypes"})
+    private void loadProperties(ItemStack item) {
+        final Map scrollProperties = (Map) JSONValue.parse(item.getItemMeta().getLore()
+                .get(item.getItemMeta().getLore().size() - 2).replaceAll("§", ""));
+        destinationType = ((Long) scrollProperties.get("destinationType")).intValue();
+        warmUpTime = ((Long) scrollProperties.get("warmUpTime")).intValue();
+        coolDownTime = ((Long) scrollProperties.get("coolDownTime")).intValue();
+        timesRemaining = ((Long) scrollProperties.get("timesRemaining")).intValue();
+        if (((Long) scrollProperties.get("allowCrossWorldTP")).intValue() == 1) {
             allowCrossWorldTP = true;
         } else {
             allowCrossWorldTP = false;
         }
-        timesRemaining = result.getInt(11);
-        result.close();
-        selStmt.close();
+        if (scrollProperties.get("destX") != null) {
+            destX = ((Long) scrollProperties.get("destX")).intValue();
+            destY = ((Long) scrollProperties.get("destY")).intValue();
+            destZ = ((Long) scrollProperties.get("destZ")).intValue();
+            destWorld = (String) scrollProperties.get("destWorld");
+        }
+        if (scrollProperties.get("targetName") != null) {
+            targetName = (String) scrollProperties.get("targetName");
+        }
+
     }
 
-    public static int saveScrollInstance(MakeProcess proc) throws SQLException {
-        final PreparedStatement selStmt = Database.getInstance().conn
-                .prepareStatement("SELECT max(rowid) FROM 'scrolls'");
-        final int rowid = selStmt.executeQuery().getInt(1) + 1;
-        selStmt.close();
-
-        final PreparedStatement insStmt = Database.getInstance().conn
-                .prepareStatement("INSERT INTO `scrolls` (`rowid`, `scroll_destination`, `target_player`, `destination_x`, `destination_y`, `destination_z`, `destination_world`, `warm_up_time`, `cool_down_time`, `allow_cross_world_tp`, `times_remaining`, `timestamp`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        insStmt.setInt(1, rowid);
-        insStmt.setInt(2, proc.getDestinationType());
-        insStmt.setInt(8, proc.getWarmUpTime());
-        insStmt.setInt(9, proc.getCoolDownTime());
-        insStmt.setInt(11, proc.getTimesBeUsed());
-        insStmt.setInt(12, (int) (System.currentTimeMillis() / 1000L));
+    private void loadProperties(MakeProcess proc) {
+        destinationType = proc.getDestinationType();
+        warmUpTime = proc.getWarmUpTime();
+        coolDownTime = proc.getCoolDownTime();
+        timesRemaining = proc.getTimesBeUsed();
         if (proc.getAllowCrossWorldTP()) {
-            insStmt.setInt(10, 1);
+            allowCrossWorldTP = true;
         } else {
-            insStmt.setInt(10, 0);
+            allowCrossWorldTP = false;
         }
         if (proc.targetName != null) {
-            insStmt.setString(3, proc.targetName);
+            targetName = proc.targetName;
         }
         if (proc.getDestX() != null) {
-            insStmt.setInt(4, proc.getDestX());
+            destX = proc.getDestX();
         }
         if (proc.getDestY() != null) {
-            insStmt.setInt(5, proc.getDestY());
+            destY = proc.getDestY();
         }
         if (proc.getDestZ() != null) {
-            insStmt.setInt(6, proc.getDestZ());
+            destZ = proc.getDestZ();
         }
         if (proc.getDestWorld() != null) {
-            insStmt.setString(7, proc.getDestWorld());
+            destWorld = proc.getDestWorld();
         }
-        insStmt.execute();
-        insStmt.close();
-        return rowid;
     }
 
     private boolean checkCoolDownTime(Player player) throws SQLException {
@@ -257,6 +301,12 @@ public class ScrollInstance extends Database {
                 return false;
             }
         }
+
+        if (item.getAmount() > 1 && player.getInventory().firstEmpty() == -1) {
+            player.sendMessage(Lang.YOUR_INVENTORY_IS_FULL.toString());
+            return false;
+        }
+
         return true;
     }
 
@@ -298,12 +348,12 @@ public class ScrollInstance extends Database {
     public void updateRemainingTimes(Player player) throws SQLException {
         timesRemaining--;
         player.getInventory().remove(item);
+        if (item.getAmount() > 1) {
+            item.setAmount(item.getAmount() - 1);
+            player.getInventory().addItem(item);
+            item.setAmount(1);
+        }
         if (timesRemaining == 0) {
-            final PreparedStatement delStmt = Database.getInstance().conn
-                    .prepareStatement("DELETE FROM 'scrolls' WHERE rowid = ?");
-            delStmt.setInt(1, instanceID);
-            delStmt.execute();
-            delStmt.close();
             if (Main.getInstance().getConfig().getBoolean("variable.use.DestroyItemOnNoRemainingTimes")) {
                 player.sendMessage(MessageFormat.format(Lang.SCROLL_DISAPPEARED.toString(), item.getItemMeta()
                         .getDisplayName()));
@@ -315,12 +365,6 @@ public class ScrollInstance extends Database {
                         .getDisplayName()));
             }
         } else {
-            final PreparedStatement updateStmt = Database.getInstance().conn
-                    .prepareStatement("UPDATE 'scrolls' SET times_remaining = ? WHERE rowid = ?");
-            updateStmt.setInt(1, timesRemaining);
-            updateStmt.setInt(2, instanceID);
-            updateStmt.execute();
-            updateStmt.close();
             final ItemMeta meta = item.getItemMeta();
             meta.setLore(getLores());
             item.setItemMeta(meta);
@@ -347,19 +391,12 @@ public class ScrollInstance extends Database {
         return warmUpTime;
     }
 
-    public ItemStack getItem() {
-        return item;
-    }
-
     public Location getLocation() {
         return destLoc;
-    }
-
-    public Integer getScrollInstanceID() {
-        return instanceID;
     }
 
     public String getTargetName() {
         return targetName;
     }
+
 }

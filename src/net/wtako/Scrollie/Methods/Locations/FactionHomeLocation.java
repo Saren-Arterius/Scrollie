@@ -31,11 +31,11 @@ public class FactionHomeLocation implements LocationSource {
         if (uplayer == null) {
             return null;
         }
-        final Faction faction = uplayer.getFaction();
-        if (faction == null) {
+        if (!uplayer.hasFaction()) {
             player.sendMessage(Lang.YOU_ARE_NOT_FACTION_MEMBER.toString());
             return null;
         }
+        final Faction faction = uplayer.getFaction();
         if (faction.getHome() == null) {
             player.sendMessage(Lang.YOUR_FACTION_DOES_NOT_HAVE_HOME.toString());
             return null;

@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 
 import me.desht.dhutils.ExperienceManager;
@@ -22,10 +21,8 @@ import net.wtako.Scrollie.Utils.Lang;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class MakeProcess extends ScrollDatabase {
@@ -35,7 +32,6 @@ public class MakeProcess extends ScrollDatabase {
     private Integer       destX;
     private Integer       destY;
     private Integer       destZ;
-    private Integer       scrollInstanceID;
     private String        destWorld;
     public String         targetName;
     private boolean       readSuccess;
@@ -119,23 +115,20 @@ public class MakeProcess extends ScrollDatabase {
     }
 
     public boolean magickScroll(boolean hasCost) {
-        final String itemTypeRequiredString = Main.getInstance().getConfig().getString("variable.make.ScrollItem");
-        final Material itemTypeRequired = Material.getMaterial(itemTypeRequiredString.toUpperCase());
-        final ItemStack magicItem = new ItemStack(itemTypeRequired, 1);
-        List<String> lores;
 
         if (player.hasPermission("Scrollie.noCostRequiredToMake")) {
             hasCost = false;
         }
 
+        ItemStack scrollItem;
         if (player.getItemInHand().getAmount() > 1) {
             if (player.getInventory().firstEmpty() == -1) {
                 player.sendMessage(Lang.YOUR_INVENTORY_IS_FULL.toString());
                 return false;
             }
             try {
-                scrollInstanceID = ScrollInstance.saveScrollInstance(this);
-                lores = new ScrollInstance(scrollInstanceID).getLores();
+                final ScrollInstance scrollInstance = new ScrollInstance(this);
+                scrollItem = scrollInstance.getScrollItem(getScrollName());
             } catch (final SQLException e) {
                 player.sendMessage(Lang.DB_EXCEPTION.toString());
                 e.printStackTrace();
@@ -153,8 +146,8 @@ public class MakeProcess extends ScrollDatabase {
                 return false;
             }
             try {
-                scrollInstanceID = ScrollInstance.saveScrollInstance(this);
-                lores = new ScrollInstance(scrollInstanceID).getLores();
+                final ScrollInstance scrollInstance = new ScrollInstance(this);
+                scrollItem = scrollInstance.getScrollItem(getScrollName());
             } catch (final SQLException e) {
                 player.sendMessage(Lang.DB_EXCEPTION.toString());
                 e.printStackTrace();
@@ -167,13 +160,9 @@ public class MakeProcess extends ScrollDatabase {
                 player.getInventory().removeItem(player.getItemInHand());
             }
         }
-        final ItemMeta magicItemMeta = magicItem.getItemMeta();
-        magicItemMeta.setLore(lores);
-        magicItemMeta.setDisplayName(getScrollName());
-        magicItem.setItemMeta(magicItemMeta);
-        magicItem.addUnsafeEnchantment(Enchantment.LUCK, 1);
-        player.getInventory().addItem(magicItem);
-        player.sendMessage(MessageFormat.format(Lang.FINISHED_MAKING.toString(), magicItemMeta.getDisplayName()));
+        player.getInventory().addItem(scrollItem);
+        player.sendMessage(MessageFormat.format(Lang.FINISHED_MAKING.toString(), scrollItem.getItemMeta()
+                .getDisplayName()));
         return true;
     }
 

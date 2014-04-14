@@ -34,10 +34,10 @@ public final class ScrollUseListener implements Listener {
             return;
         }
         try {
-            final ScrollInstance scroll = new ScrollInstance(event.getItem());
-            if (scroll.getScrollInstanceID() == null) {
+            if (!ScrollInstance.isValid(event.getItem())) {
                 return;
             }
+            final ScrollInstance scroll = new ScrollInstance(event.getItem());
             if (scroll.doPreActions(player)) {
                 try {
                     ScrollUseListener.TPTask.put(player.getName(), new TeleportationTask(player, scroll));
