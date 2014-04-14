@@ -1,10 +1,10 @@
-name: Scrollie
-version: 0.0.2
+name: {$PluginName}
+version: {$VersionNumber}
 description: Yet another useless Minecraft Craftbukkit plugin.
 author: Saren
 website: https://gitlab.wtako.net/Saren/Scrollie
  
-main: net.wtako.Scrollie.Main
+main: {$PackageName}.{$MainClass}
 database: true
 softdepend: [mcore, Factions, Essentials, Vault, WorldGuard, WorldEdit]
 
