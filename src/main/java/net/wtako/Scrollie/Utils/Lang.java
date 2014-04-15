@@ -36,6 +36,7 @@ public enum Lang {
 
     VALUE_SET("value-set", "&aValue set. Total &cEXP&a required: &c{0} exp"),
     KEY_VALUE("key-value", "&a{0}: &c{1}"),
+    LORE_PATTERN("lore-pattern", "{0}: {1}"),
 
     LIST_PATTERN1("list-pattern1", "{0}. <&c{0}&f>"),
     LIST_PATTERN2("list-pattern2", "(&3D&f: {0}, &cW&f: {1}, &bC&f: {2}, &3CW&f: {3}, &3T&f: {4}, &cEXP&f: {5})"),

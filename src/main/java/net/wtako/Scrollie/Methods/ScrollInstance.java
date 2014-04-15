@@ -32,19 +32,19 @@ import org.json.simple.JSONValue;
 
 public class ScrollInstance extends Database {
 
-    public static String lorePattern = "{0}: {1}";
-    private Integer      destinationType;
-    private Integer      timesRemaining;
-    private Integer      warmUpTime;
-    private Integer      coolDownTime;
-    private Integer      destX;
-    private Integer      destY;
-    private Integer      destZ;
-    private Boolean      allowCrossWorldTP;
-    private String       destWorld;
-    private String       targetName;
-    private ItemStack    item;
-    private Location     destLoc;
+    public String     lorePattern = Lang.LORE_PATTERN.toString();
+    private Integer   destinationType;
+    private Integer   timesRemaining;
+    private Integer   warmUpTime;
+    private Integer   coolDownTime;
+    private Integer   destX;
+    private Integer   destY;
+    private Integer   destZ;
+    private Boolean   allowCrossWorldTP;
+    private String    destWorld;
+    private String    targetName;
+    private ItemStack item;
+    private Location  destLoc;
 
     public ScrollInstance(ItemStack item) throws SQLException {
         this.item = item;
@@ -106,28 +106,26 @@ public class ScrollInstance extends Database {
     public List<String> getLores() throws SQLException {
         final List<String> lore = new ArrayList<String>();
 
-        lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.DESTINATION_TYPE,
+        lore.add(MessageFormat.format(lorePattern, Lang.DESTINATION_TYPE,
                 ScrollDatabase.destinationTypeIntegerToString(getDestinationType())));
         if (targetName != null) {
-            lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.TARGET_PLAYER.toString(), targetName));
+            lore.add(MessageFormat.format(lorePattern, Lang.TARGET_PLAYER.toString(), targetName));
         }
         if (destX != null && destY != null && destZ != null && destWorld != null) {
             final String locationRepr = MessageFormat.format("<{0}: {1} - X: {2}, Y: {3}, Z: {4}>",
                     Lang.WORLD.toString(), destWorld, destX, destY, destZ);
-            lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.TARGET_LOCATION.toString(), ""));
+            lore.add(MessageFormat.format(lorePattern, Lang.TARGET_LOCATION.toString(), ""));
             lore.add(locationRepr);
         }
-        lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.WARM_UP_TIME.toString(), warmUpTime + " "
-                + Lang.SECONDS));
-        lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.COOL_DOWN_TIME.toString(), coolDownTime + " "
-                + Lang.SECONDS));
+        lore.add(MessageFormat.format(lorePattern, Lang.WARM_UP_TIME.toString(), warmUpTime + " " + Lang.SECONDS));
+        lore.add(MessageFormat.format(lorePattern, Lang.COOL_DOWN_TIME.toString(), coolDownTime + " " + Lang.SECONDS));
         if (allowCrossWorldTP) {
-            lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.CROSS_WORLD_TP.toString(), Lang.ALLOWED));
+            lore.add(MessageFormat.format(lorePattern, Lang.CROSS_WORLD_TP.toString(), Lang.ALLOWED));
         } else {
-            lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.CROSS_WORLD_TP.toString(), Lang.NOT_ALLOWED));
+            lore.add(MessageFormat.format(lorePattern, Lang.CROSS_WORLD_TP.toString(), Lang.NOT_ALLOWED));
         }
         lore.add(ScrollInstance.toInvisible(getJSONFromProperties()));
-        lore.add(MessageFormat.format(ScrollInstance.lorePattern, Lang.TIMES_REMAINING.toString(), getTimesRemaining()));
+        lore.add(MessageFormat.format(lorePattern, Lang.TIMES_REMAINING.toString(), getTimesRemaining()));
         return lore;
     }
 
