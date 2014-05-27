@@ -88,13 +88,13 @@ public class MakeProcess extends ScrollDatabase {
                         .getRegistration(net.milkbowl.vault.economy.Economy.class);
                 final Economy economy = provider.getProvider();
                 final double moneyRequired = getEXPRequired();
-                if (economy.has(player.getName(), moneyRequired)) {
-                    economy.withdrawPlayer(player.getName(), moneyRequired);
+                if (economy.has(player, moneyRequired)) {
+                    economy.withdrawPlayer(player, moneyRequired);
                     player.sendMessage(MessageFormat.format(Lang.COST_CHARGED.toString(), "$", moneyRequired));
                     return true;
                 }
                 player.sendMessage(MessageFormat.format(Lang.YOU_DONT_HAVE_ENOUGH_MONEY.toString(), moneyRequired,
-                        economy.getBalance(player.getName())));
+                        economy.getBalance(player)));
                 return false;
             } catch (final Error e) {
                 player.sendMessage(MessageFormat.format(Lang.ERROR_HOOKING.toString(), "Vault"));
@@ -184,6 +184,8 @@ public class MakeProcess extends ScrollDatabase {
                         player.sendMessage(Lang.DB_EXCEPTION.toString());
                         e.printStackTrace();
                         return;
+                    } catch (final NullPointerException e) {
+                        continue;
                     }
                 }
                 magickScroll(false);

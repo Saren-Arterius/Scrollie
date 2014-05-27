@@ -24,7 +24,7 @@ public final class ScrollUseListener implements Listener {
         final Player player = event.getPlayer();
         final TeleportationTask currentTPTask = ScrollUseListener.TPTask.get(player.getName());
         if (currentTPTask != null) {
-            /* Dirty hack */
+
             if (currentTPTask.getWarmUpTime() != currentTPTask.getWarmUpTimeLeft()) {
                 TeleportationTask.interrupt(player);
             }

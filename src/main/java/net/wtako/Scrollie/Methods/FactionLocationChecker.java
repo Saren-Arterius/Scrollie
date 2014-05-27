@@ -8,6 +8,7 @@ import net.wtako.Scrollie.Utils.Lang;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import com.massivecraft.factions.FFlag;
 import com.massivecraft.factions.entity.BoardColls;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.FactionColls;
@@ -34,6 +35,9 @@ public class FactionLocationChecker {
         final Faction destFaction = BoardColls.get().getFactionAt(PS.valueOf(destLoc));
         final Faction wilderness = FactionColls.get().getForUniverse(factionPlayer.getUniverse()).getNone();
         if (destFaction == wilderness) {
+            return true;
+        }
+        if (destFaction.getFlag(FFlag.PEACEFUL) && destFaction.getFlag(FFlag.PERMANENT)) {
             return true;
         }
         if (destFaction == playerSelfFaction) {

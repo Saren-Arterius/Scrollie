@@ -157,6 +157,13 @@ variable:
             # If set to Yes, plugin will choose a random location until at least a 3x1 air block is found, (Much slower and have a internal limit of finding 100 times maximum)
             # that means teleporting a player to cavern is possible. (But dangerous because of lava and network latency)
             # If set to No, plugin will choose a random location, teleport player to the highest block. (MinY, MaxY will be ignored)
+            NoTPBiomes:
+            - OCEAN
+            - DEEP_OCEAN
+            - RIVER
+            NoTPAnyYBlocks:
+            - LAVA
+            - STATIONARY_LAVA
             UseAlternativeMethod: No
             Default:
                 MinX: -1000

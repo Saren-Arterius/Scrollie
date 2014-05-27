@@ -22,7 +22,7 @@ public abstract class Wizard implements Listener {
 
     private static void enter(Player player, Wizard wizard) {
         wizard.begin();
-        /* The following code should cease to exist in my memory. */
+
         boolean needToRegisterEvent = true;
         final String wizardInstanceClassName = wizard.toString().split("@")[0];
         for (final RegisteredListener listener: HandlerList.getRegisteredListeners(Main.getInstance())) {

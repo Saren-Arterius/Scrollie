@@ -2,6 +2,7 @@ package net.wtako.Scrollie.Methods.Locations;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -12,23 +13,21 @@ import net.wtako.Scrollie.Methods.LocationSource;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.entity.BoardColls;
-import com.massivecraft.factions.entity.FactionColls;
-import com.massivecraft.factions.entity.UPlayer;
 import com.massivecraft.mcore.ps.PS;
 
 public class RandomLocation implements LocationSource {
 
-    private final Player               player;
     private Location                   destLoc;
     private final World                destWorld;
     private final Map<String, Integer> limits = new HashMap<String, Integer>();
 
     public RandomLocation(Player player, World destWorld) {
         this.destWorld = destWorld;
-        this.player = player;
         limits.put("MinX", -1000);
         limits.put("MaxX", 1000);
         limits.put("MinY", 64);
@@ -56,15 +55,23 @@ public class RandomLocation implements LocationSource {
                 destLoc = new Location(destWorld, RandomLocation.randInt(limits.get("MinX"), limits.get("MaxX")),
                         RandomLocation.randInt(limits.get("MinY"), limits.get("MaxY")), RandomLocation.randInt(
                                 limits.get("MinZ"), limits.get("MaxZ")));
-            } while (!locationIsAir(destLoc) || locationIsInFaction(destLoc) || loopCount <= 100);
-            destLoc.setY(destWorld.getHighestBlockYAt(destLoc));
+            } while ((locationIsInBadBiome(destLoc) || locationIsAir(destLoc) || locationIsInFaction(destLoc))
+                    || locationHasBadBlocksOnAnyY(destLoc) && loopCount <= 100);
+            if (loopCount > 100) {
+                return null;
+            }
             return destLoc;
         } else {
+            int loopCount = 0;
             do {
-                destLoc = new Location(destWorld, RandomLocation.randInt(limits.get("MinX"), limits.get("MaxX")),
-                        RandomLocation.randInt(limits.get("MinY"), limits.get("MaxY")), RandomLocation.randInt(
-                                limits.get("MinZ"), limits.get("MaxZ")));
-            } while (locationIsInFaction(destLoc));
+                loopCount++;
+                destLoc = new Location(destWorld, RandomLocation.randInt(limits.get("MinX"), limits.get("MaxX")), 255,
+                        RandomLocation.randInt(limits.get("MinZ"), limits.get("MaxZ")));
+            } while ((locationIsInBadBiome(destLoc) || locationIsInFaction(destLoc) || locationHasBadBlocksOnAnyY(destLoc))
+                    && loopCount <= 20);
+            if (loopCount > 20) {
+                return null;
+            }
             destLoc.setY(destWorld.getHighestBlockYAt(destLoc));
             return destLoc;
         }
@@ -73,25 +80,43 @@ public class RandomLocation implements LocationSource {
     private boolean locationIsAir(Location loc) {
         if (loc.getBlock().getType().equals(Material.AIR) && loc.add(0, 1, 0).getBlock().getType().equals(Material.AIR)
                 && loc.subtract(0, 1, 0).getBlock().getType().equals(Material.AIR)) {
-            Main.log.info("A");
             return true;
         }
-        Main.log.info("B");
         return false;
     }
 
     private boolean locationIsInFaction(Location loc) {
         if (Main.getInstance().getConfig().getBoolean("system.FactionSupport")) {
             try {
-                final UPlayer factionPlayer = UPlayer.get(player);
-                if (BoardColls.get().getFactionAt(PS.valueOf(loc)) == FactionColls.get()
-                        .getForUniverse(factionPlayer.getUniverse()).getNone()) {
-                    return false;
-                } else {
-                    return true;
-                }
+                return BoardColls.get().getFactionAt(PS.valueOf(loc)).isNone();
             } catch (final Error e) {
                 return false;
+            }
+        }
+        return false;
+    }
+
+    private boolean locationIsInBadBiome(Location loc) {
+        final Biome biome = loc.getWorld().getBiome(loc.getBlockX(), loc.getBlockZ());
+        for (final String biomeName: Main.getInstance().getConfig().getStringList("variable.use.Random.NoTPBiomes")) {
+            if (Biome.valueOf(biomeName.toUpperCase()) == biome) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean locationHasBadBlocksOnAnyY(Location loc) {
+        final Location checkLocation = destLoc.clone();
+        final List<String> noTPBlocks = Main.getInstance().getConfig()
+                .getStringList("variable.use.Random.NoTPAnyYBlocks");
+        for (int y = 0; y < 256; y++) {
+            checkLocation.setY(y);
+            final Block checkBlock = checkLocation.getBlock();
+            for (final String blockName: noTPBlocks) {
+                if (Material.getMaterial(blockName.toUpperCase()) == checkBlock.getType()) {
+                    return true;
+                }
             }
         }
         return false;
