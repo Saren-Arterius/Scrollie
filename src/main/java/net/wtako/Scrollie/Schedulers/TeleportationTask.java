@@ -12,6 +12,7 @@ import net.wtako.Scrollie.Utils.Lang;
 
 import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -70,7 +71,14 @@ public class TeleportationTask extends BukkitRunnable {
                 e.printStackTrace();
             }
             TeleportationTask.end(player);
-            player.teleport(location);
+            if (player.isInsideVehicle() && player.getVehicle() != null && player.getVehicle() instanceof Horse) {
+                Horse horse = (Horse) player.getVehicle();
+                horse.teleport(location);
+                player.teleport(location);
+                horse.setPassenger(player);
+            } else {
+                player.teleport(location);
+            }
             if (scroll.getTargetName() != null) {
                 player.sendMessage(MessageFormat.format(Lang.FINISHED_USING.toString(), scroll.getTargetName(),
                         location.getBlockX(), location.getBlockY(), location.getBlockZ()));
