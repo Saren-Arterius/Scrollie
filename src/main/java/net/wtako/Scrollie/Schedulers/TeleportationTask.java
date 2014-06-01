@@ -72,7 +72,7 @@ public class TeleportationTask extends BukkitRunnable {
             }
             TeleportationTask.end(player);
             if (player.isInsideVehicle() && player.getVehicle() != null && player.getVehicle() instanceof Horse) {
-                Horse horse = (Horse) player.getVehicle();
+                final Horse horse = (Horse) player.getVehicle();
                 horse.teleport(location);
                 player.teleport(location);
                 horse.setPassenger(player);
