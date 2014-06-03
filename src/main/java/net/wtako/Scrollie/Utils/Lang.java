@@ -13,6 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public enum Lang {
 
     TITLE("title", "[" + Main.getInstance().getName() + "]"),
+    FIXING_LOCATION("fixing-location", "Fixing location... Attempt {0}/{1}"),
     WIZARD_ENTER("wizard-enter", "&3Enter wizard mode. Type 'exit' to exit."),
     WIZARD_EXIT("wizard-exit", "&3Exiting wizard mode."),
     WHAT_DESTINATION("what-destination", "&6What is the &3destination&6 of the new scroll?"),

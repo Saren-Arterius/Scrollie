@@ -88,6 +88,7 @@ public class TeleportationTask extends BukkitRunnable {
                         ScrollDatabase.destinationTypeIntegerToString(scroll.getDestinationType()),
                         location.getBlockX(), location.getBlockY(), location.getBlockZ()));
             }
+            new PlayerPositionChecker(player, location);
         }
     }
 

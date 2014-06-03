@@ -177,6 +177,11 @@ variable:
             # To set restricted areas, enable worldguard support, define a region and set 'grass-growth' to deny.
             # Set this to yes to enable global white list, that players are restricted to use scrolls only in WG regions with 'grass-growth' flag set to deny.
             WhiteList: No
+        LocationFixer:
+            MaxAttempt: 10
+            # In Ticks
+            Interval: 20
+            Delay: 0
 
 system:
     FactionsSupport: No
