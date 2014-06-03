@@ -30,6 +30,7 @@ public class PlayerPositionChecker extends BukkitRunnable {
     public void run() {
         if (currentAttempt <= maxAttempt && player.getLocation().getBlock().getType() != Material.AIR) {
             player.sendMessage(MessageFormat.format(Lang.FIXING_LOCATION.toString(), currentAttempt, maxAttempt));
+            location.add(0, 1, 0);
             player.teleport(location);
             currentAttempt++;
         } else {
