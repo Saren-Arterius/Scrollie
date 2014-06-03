@@ -9,6 +9,7 @@ import java.util.Random;
 
 import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.Methods.LocationSource;
+import net.wtako.Scrollie.Schedulers.PlayerPositionChecker;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -55,7 +56,7 @@ public class RandomLocation implements LocationSource {
                 destLoc = new Location(destWorld, RandomLocation.randInt(limits.get("MinX"), limits.get("MaxX")),
                         RandomLocation.randInt(limits.get("MinY"), limits.get("MaxY")), RandomLocation.randInt(
                                 limits.get("MinZ"), limits.get("MaxZ")));
-            } while ((locationIsInBadBiome(destLoc) || locationIsAir(destLoc) || locationIsInFaction(destLoc))
+            } while ((locationIsInBadBiome(destLoc) || !PlayerPositionChecker.isSafeLocation(destLoc) || locationIsInFaction(destLoc))
                     || locationHasBadBlocksOnAnyY(destLoc) && loopCount <= 100);
             if (loopCount > 100) {
                 return null;
@@ -75,14 +76,6 @@ public class RandomLocation implements LocationSource {
             destLoc.setY(destWorld.getHighestBlockYAt(destLoc));
             return destLoc;
         }
-    }
-
-    private boolean locationIsAir(Location loc) {
-        if (loc.getBlock().getType().equals(Material.AIR) && loc.add(0, 1, 0).getBlock().getType().equals(Material.AIR)
-                && loc.subtract(0, 1, 0).getBlock().getType().equals(Material.AIR)) {
-            return true;
-        }
-        return false;
     }
 
     private boolean locationIsInFaction(Location loc) {

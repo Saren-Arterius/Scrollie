@@ -181,8 +181,22 @@ variable:
             MaxAttempt: 10
             # In Ticks
             ConfidenceToCancel: 5
-            Interval: 20
+            Interval: 5
             Delay: 0
+            SafeBlocks:
+            - AIR
+            - WATER
+            - STATIONARY_WATER
+            - VINE
+            - GRASS
+            - LONG_GRASS
+            - RAILS
+            - ACTIVATOR_RAIL
+            - REDSTONE_WIRE
+            - TORCH
+            - REDSTONE_TORCH_ON
+            - REDSTONE_TORCH_OFF
+            - DEAD_BUSH
 
 system:
     FactionsSupport: No

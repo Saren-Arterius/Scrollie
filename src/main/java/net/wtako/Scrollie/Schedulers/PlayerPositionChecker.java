@@ -30,14 +30,11 @@ public class PlayerPositionChecker extends BukkitRunnable {
 
     @Override
     public void run() {
-        Location upperLocation = player.getLocation();
-        upperLocation.add(0, 1, 0);
-        if (currentAttempt <= maxAttempt && (!isSafeBlockType(player.getLocation()) || !isSafeBlockType(upperLocation))) {
+        if (currentAttempt <= maxAttempt && !isSafeLocation(player.getLocation())) {
             player.sendMessage(MessageFormat.format(Lang.FIXING_LOCATION.toString(), currentAttempt, maxAttempt));
-            location.add(0, 1, 0);
             player.teleport(location);
+            location.add(0, 1, 0);
             currentAttempt++;
-            confidence--;
         } else if (confidence >= Main.getInstance().getConfig().getInt("variable.use.LocationFixer.ConfidenceToCancel")) {
             cancel();
         } else {
@@ -45,17 +42,20 @@ public class PlayerPositionChecker extends BukkitRunnable {
         }
     }
 
-    public static boolean isSafeBlockType(Location location) {
-        if (location.getBlock().getType() == Material.AIR) {
-            return true;
+    public static boolean isSafeLocation(Location location) {
+        if (location.getY() < 0) {
+            return false;
         }
-        if (location.getBlock().getType() == Material.WATER) {
-            return true;
-        }
-        if (location.getBlock().getType() == Material.STATIONARY_WATER) {
-            return true;
+        for (String blockTypeString: Main.getInstance().getConfig()
+                .getStringList("variable.use.LocationFixer.SafeBlocks")) {
+            if (location.getBlock().getType() == Material.getMaterial(blockTypeString.toUpperCase())
+                    && location.add(0, 1, 0).getBlock().getType() == Material
+                            .getMaterial(blockTypeString.toUpperCase())
+                    && location.subtract(0, 1, 0).getBlock().getType() == Material.getMaterial(blockTypeString
+                            .toUpperCase())) {
+                return true;
+            }
         }
         return false;
     }
-
 }
