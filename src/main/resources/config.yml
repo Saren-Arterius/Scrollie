@@ -180,6 +180,7 @@ variable:
         LocationFixer:
             MaxAttempt: 10
             # In Ticks
+            ConfidenceToCancel: 5
             Interval: 20
             Delay: 0
 

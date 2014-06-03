@@ -16,10 +16,12 @@ public class PlayerPositionChecker extends BukkitRunnable {
     private final Location location;
     private int            currentAttempt;
     private final int      maxAttempt;
+    private int            confidence;
 
     public PlayerPositionChecker(Player player, Location location) {
         this.player = player;
         this.location = location;
+        confidence = 0;
         currentAttempt = 1;
         maxAttempt = Main.getInstance().getConfig().getInt("variable.use.LocationFixer.MaxAttempt");
         runTaskTimer(Main.getInstance(), Main.getInstance().getConfig().getInt("variable.use.LocationFixer.Delay"),
@@ -28,14 +30,32 @@ public class PlayerPositionChecker extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (currentAttempt <= maxAttempt && player.getLocation().getBlock().getType() != Material.AIR) {
+        Location upperLocation = player.getLocation();
+        upperLocation.add(0, 1, 0);
+        if (currentAttempt <= maxAttempt && (!isSafeBlockType(player.getLocation()) || !isSafeBlockType(upperLocation))) {
             player.sendMessage(MessageFormat.format(Lang.FIXING_LOCATION.toString(), currentAttempt, maxAttempt));
             location.add(0, 1, 0);
             player.teleport(location);
             currentAttempt++;
-        } else {
+            confidence--;
+        } else if (confidence >= Main.getInstance().getConfig().getInt("variable.use.LocationFixer.ConfidenceToCancel")) {
             cancel();
+        } else {
+            confidence++;
         }
+    }
+
+    public static boolean isSafeBlockType(Location location) {
+        if (location.getBlock().getType() == Material.AIR) {
+            return true;
+        }
+        if (location.getBlock().getType() == Material.WATER) {
+            return true;
+        }
+        if (location.getBlock().getType() == Material.STATIONARY_WATER) {
+            return true;
+        }
+        return false;
     }
 
 }
