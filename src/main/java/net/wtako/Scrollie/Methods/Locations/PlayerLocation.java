@@ -28,6 +28,7 @@ public class PlayerLocation implements LocationSource {
         this.player = player;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public Location get() {
         if (PlayerLocation.hasTargetTurnedOffTP(targetName)) {

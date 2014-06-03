@@ -91,6 +91,7 @@ public class ScrollDatabase extends Database {
         return finalMessage;
     }
 
+    @SuppressWarnings("deprecation")
     public static String[] listAll(Player player) throws SQLException {
         final String pattern1 = Lang.LIST_PATTERN1.toString();
         final String pattern2 = Lang.LIST_PATTERN2.toString();

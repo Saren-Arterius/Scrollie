@@ -23,7 +23,7 @@ public class WorldGuardLocationChecker {
         }
         try {
             final WorldGuardPlugin worldGuard = WorldGuardLocationChecker.getWorldGuard();
-            final RegionManager regionManager = worldGuard.getRegionManager(player.getWorld());
+            final RegionManager regionManager = worldGuard.getRegionManager(location.getWorld());
             final ApplicableRegionSet set = regionManager.getApplicableRegions(BukkitUtil.toVector(location));
             if (Main.getInstance().getConfig().getBoolean("variable.use.RestrictedAreas.WhiteList")) {
                 return !set.allows(DefaultFlag.GRASS_SPREAD);
