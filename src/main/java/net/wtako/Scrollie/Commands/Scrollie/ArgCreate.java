@@ -38,21 +38,19 @@ public class ArgCreate {
     public boolean canGoToWizard() throws SQLException {
         if (sender.hasPermission(Main.getInstance().getProperty("artifactId") + ".overrideLimit.MaxScrolls")) {
             return true;
-        } else {
-            final int scrollsLimit = Main.getInstance().getConfig().getInt("variable.create.MaxScrolls");
-            final PreparedStatement selStmt = Database.getInstance().conn
-                    .prepareStatement("SELECT count(rowid) FROM 'scroll_creations' WHERE owner = ?");
-            selStmt.setString(1, sender.getName().toLowerCase());
-            final int scrollsCount = selStmt.executeQuery().getInt(1);
-            selStmt.close();
-            if (scrollsCount < scrollsLimit) {
-                return true;
-            } else {
-                sender.sendMessage(Lang.TOO_MANY_SCROLLS.toString());
-                sender.sendMessage(Lang.HELP_LIST.toString());
-                sender.sendMessage(Lang.HELP_DELETE.toString());
-                return false;
-            }
         }
+        final int scrollsLimit = Main.getInstance().getConfig().getInt("variable.create.MaxScrolls");
+        final PreparedStatement selStmt = Database.getInstance().conn
+                .prepareStatement("SELECT count(rowid) FROM 'scroll_creations' WHERE owner = ?");
+        selStmt.setString(1, sender.getName().toLowerCase());
+        final int scrollsCount = selStmt.executeQuery().getInt(1);
+        selStmt.close();
+        if (scrollsCount < scrollsLimit) {
+            return true;
+        }
+        sender.sendMessage(Lang.TOO_MANY_SCROLLS.toString());
+        sender.sendMessage(Lang.HELP_LIST.toString());
+        sender.sendMessage(Lang.HELP_DELETE.toString());
+        return false;
     }
 }

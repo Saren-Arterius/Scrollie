@@ -21,9 +21,8 @@ public class FactionLocationChecker {
         if (FactionLocationChecker.checkIfCanTeleportTo(player, destLoc)
                 && FactionLocationChecker.checkIfCanTeleportFrom(player)) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     private static boolean checkIfCanTeleportTo(Player player, Location destLoc) {
@@ -42,24 +41,21 @@ public class FactionLocationChecker {
         }
         if (destFaction == playerSelfFaction) {
             return Main.getInstance().getConfig().getBoolean("variable.use.Factions.SELF.CanTeleportToTerritories");
-        } else {
-            final String relationWish = destFaction.getRelationWish(playerSelfFaction).toString();
-            final String node = MessageFormat
-                    .format("variable.use.Factions.{0}.CanTeleportToTerritories", relationWish);
-            if (!Main.getInstance().getConfig().getBoolean(node)) {
-                if (Main.getInstance().getConfig()
-                        .getBoolean("variable.use.Factions.IfSelfFactionPowerIsHigherThenOverrideTPTo")
-                        && FactionLocationChecker.isPowerHigher(playerSelfFaction, destFaction)) {
-                    player.sendMessage(Lang.YOUR_SCROLL_STILL_WORKS.toString());
-                    return true;
-                } else {
-                    player.sendMessage(Lang.CANT_TP_TO_ENEMY_TERRITORY.toString());
-                    return false;
-                }
-            } else {
+        }
+        final String relationWish = destFaction.getRelationWish(playerSelfFaction).toString();
+        final String node = MessageFormat
+                .format("variable.use.Factions.{0}.CanTeleportToTerritories", relationWish);
+        if (!Main.getInstance().getConfig().getBoolean(node)) {
+            if (Main.getInstance().getConfig()
+                    .getBoolean("variable.use.Factions.IfSelfFactionPowerIsHigherThenOverrideTPTo")
+                    && FactionLocationChecker.isPowerHigher(playerSelfFaction, destFaction)) {
+                player.sendMessage(Lang.YOUR_SCROLL_STILL_WORKS.toString());
                 return true;
             }
+            player.sendMessage(Lang.CANT_TP_TO_ENEMY_TERRITORY.toString());
+            return false;
         }
+        return true;
     }
 
     public static boolean checkIfCanTeleportFrom(Player player) {
@@ -75,24 +71,21 @@ public class FactionLocationChecker {
         }
         if (sourceLocationFaction == playerSelfFaction) {
             return Main.getInstance().getConfig().getBoolean("variable.use.Factions.SELF.CanTeleportFromTerritories");
-        } else {
-            final String relationWish = sourceLocationFaction.getRelationWish(playerSelfFaction).toString();
-            final String node = MessageFormat.format("variable.use.Factions.{0}.CanTeleportFromTerritories",
-                    relationWish);
-            if (!Main.getInstance().getConfig().getBoolean(node)) {
-                if (Main.getInstance().getConfig()
-                        .getBoolean("variable.use.Factions.IfSelfFactionPowerIsHigherThenOverrideTPFrom")
-                        && FactionLocationChecker.isPowerHigher(playerSelfFaction, sourceLocationFaction)) {
-                    player.sendMessage(Lang.YOUR_SCROLL_STILL_WORKS.toString());
-                    return true;
-                } else {
-                    player.sendMessage(Lang.CANT_TP_FROM_ENEMY_TERRITORY.toString());
-                    return false;
-                }
-            } else {
+        }
+        final String relationWish = sourceLocationFaction.getRelationWish(playerSelfFaction).toString();
+        final String node = MessageFormat.format("variable.use.Factions.{0}.CanTeleportFromTerritories",
+                relationWish);
+        if (!Main.getInstance().getConfig().getBoolean(node)) {
+            if (Main.getInstance().getConfig()
+                    .getBoolean("variable.use.Factions.IfSelfFactionPowerIsHigherThenOverrideTPFrom")
+                    && FactionLocationChecker.isPowerHigher(playerSelfFaction, sourceLocationFaction)) {
+                player.sendMessage(Lang.YOUR_SCROLL_STILL_WORKS.toString());
                 return true;
             }
+            player.sendMessage(Lang.CANT_TP_FROM_ENEMY_TERRITORY.toString());
+            return false;
         }
+        return true;
     }
 
     public static boolean checkIfCanTeleportPlayer(Player teleporter, Player target) {
@@ -105,25 +98,22 @@ public class FactionLocationChecker {
         final Faction targetPlayerFaction = targetFactionPlayer.getFaction();
         if (targetPlayerFaction == teleporterSelfFaction) {
             return Main.getInstance().getConfig().getBoolean("variable.make.CanTeleportToFactionPlayer.SELF");
-        } else {
-            final String relationWish = targetPlayerFaction.getRelationWish(teleporterSelfFaction).toString();
-            final String node = MessageFormat.format("variable.make.CanTeleportToFactionPlayer.{0}", relationWish);
-            if (!Main.getInstance().getConfig().getBoolean(node)) {
-                if (Main.getInstance().getConfig()
-                        .getBoolean("variable.make.IfSelfFactionPowerIsHigherThenOverrideTPTo")
-                        && FactionLocationChecker.isPowerHigher(teleporterSelfFaction, targetPlayerFaction)) {
-                    teleporter.sendMessage(MessageFormat.format(Lang.YOU_CAN_TP_TO_HIM_BECAUSE_POWER_HIGHER.toString(),
-                            target.getName()));
-                    return true;
-                } else {
-                    teleporter.sendMessage(MessageFormat.format(Lang.YOU_CANT_TP_TO_HIM_BECAUSE_FACTION_BAD.toString(),
-                            target.getName()));
-                    return false;
-                }
-            } else {
+        }
+        final String relationWish = targetPlayerFaction.getRelationWish(teleporterSelfFaction).toString();
+        final String node = MessageFormat.format("variable.make.CanTeleportToFactionPlayer.{0}", relationWish);
+        if (!Main.getInstance().getConfig().getBoolean(node)) {
+            if (Main.getInstance().getConfig()
+                    .getBoolean("variable.make.IfSelfFactionPowerIsHigherThenOverrideTPTo")
+                    && FactionLocationChecker.isPowerHigher(teleporterSelfFaction, targetPlayerFaction)) {
+                teleporter.sendMessage(MessageFormat.format(Lang.YOU_CAN_TP_TO_HIM_BECAUSE_POWER_HIGHER.toString(),
+                        target.getName()));
                 return true;
             }
+            teleporter.sendMessage(MessageFormat.format(Lang.YOU_CANT_TP_TO_HIM_BECAUSE_FACTION_BAD.toString(),
+                    target.getName()));
+            return false;
         }
+        return true;
     }
 
     private static boolean isPowerHigher(Faction f1, Faction f2) {

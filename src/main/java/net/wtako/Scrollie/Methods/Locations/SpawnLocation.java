@@ -39,9 +39,8 @@ public class SpawnLocation implements LocationSource {
                 return destLoc;
             }
             return player.getWorld().getSpawnLocation();
-        } else {
-            return player.getWorld().getSpawnLocation();
         }
+        return player.getWorld().getSpawnLocation();
     }
 
 }

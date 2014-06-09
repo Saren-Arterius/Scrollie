@@ -389,22 +389,20 @@ public class ScrollDatabase extends Database {
                 this.warmUpTime = defaultVal;
                 final String expected = MessageFormat.format("{0} >= 0", Lang.MIN_VALUE.toString());
                 return wrongConfigValue("variable.create.WarmUpTime.Min", expected, min, defaultVal);
-            } else {
-                this.warmUpTime = fallback;
-                final String expected = MessageFormat.format("{0} >= 0", Lang.DEFAULT_VALUE.toString());
-                return wrongConfigValue("variable.create.WarmUpTime.Default", expected, defaultVal, fallback);
             }
+            this.warmUpTime = fallback;
+            final String expected = MessageFormat.format("{0} >= 0", Lang.DEFAULT_VALUE.toString());
+            return wrongConfigValue("variable.create.WarmUpTime.Default", expected, defaultVal, fallback);
         } else if ((max < 0) || (min > max)) {
             if (defaultVal >= 0) {
                 this.warmUpTime = defaultVal;
                 final String expected = MessageFormat.format("{0} >= 0, {1} <= {0}", Lang.MAX_VALUE.toString(),
                         Lang.MIN_VALUE.toString());
                 return wrongConfigValue("variable.create.WarmUpTime.Max", expected, max, defaultVal);
-            } else {
-                this.warmUpTime = fallback;
-                final String expected = MessageFormat.format("{0} >= 0", Lang.DEFAULT_VALUE.toString());
-                return wrongConfigValue("variable.create.WarmUpTime.Default", expected, defaultVal, fallback);
             }
+            this.warmUpTime = fallback;
+            final String expected = MessageFormat.format("{0} >= 0", Lang.DEFAULT_VALUE.toString());
+            return wrongConfigValue("variable.create.WarmUpTime.Default", expected, defaultVal, fallback);
         } else {
             if (useDefaultOnFail) {
                 return checkWarmUpTime(defaultVal, false);
@@ -444,22 +442,20 @@ public class ScrollDatabase extends Database {
                 this.coolDownTime = defaultVal;
                 final String expected = MessageFormat.format("{0} >= 0", Lang.MIN_VALUE.toString());
                 return wrongConfigValue("variable.create.CoolDownTime.Min", expected, min, defaultVal);
-            } else {
-                this.coolDownTime = fallback;
-                final String expected = MessageFormat.format("{0} >= 0", Lang.DEFAULT_VALUE.toString());
-                return wrongConfigValue("variable.create.CoolDownTime.Default", expected, defaultVal, fallback);
             }
+            this.coolDownTime = fallback;
+            final String expected = MessageFormat.format("{0} >= 0", Lang.DEFAULT_VALUE.toString());
+            return wrongConfigValue("variable.create.CoolDownTime.Default", expected, defaultVal, fallback);
         } else if ((max < 0) || (min > max)) {
             if (defaultVal >= 0) {
                 this.coolDownTime = defaultVal;
                 final String expected = MessageFormat.format("{0} >= 0, {1} <= {0}", Lang.MAX_VALUE.toString(),
                         Lang.MIN_VALUE.toString());
                 return wrongConfigValue("variable.create.CoolDownTime.Max", expected, max, defaultVal);
-            } else {
-                this.coolDownTime = fallback;
-                final String expected = MessageFormat.format("{0} >= 0", Lang.DEFAULT_VALUE.toString());
-                return wrongConfigValue("variable.create.CoolDownTime.Default", expected, defaultVal, fallback);
             }
+            this.coolDownTime = fallback;
+            final String expected = MessageFormat.format("{0} >= 0", Lang.DEFAULT_VALUE.toString());
+            return wrongConfigValue("variable.create.CoolDownTime.Default", expected, defaultVal, fallback);
         } else {
             if (useDefaultOnFail) {
                 return checkCoolDownTime(defaultVal, false);
@@ -546,22 +542,20 @@ public class ScrollDatabase extends Database {
                 this.timesBeUsed = defaultVal;
                 final String expected = MessageFormat.format("{0} >= 1", Lang.MIN_VALUE.toString());
                 return wrongConfigValue("variable.create.TimesBeUsed.Min", expected, min, defaultVal);
-            } else {
-                this.timesBeUsed = fallback;
-                final String expected = MessageFormat.format("{0} >= 1", Lang.DEFAULT_VALUE.toString());
-                return wrongConfigValue("variable.create.TimesBeUsed.Default", expected, defaultVal, fallback);
             }
+            this.timesBeUsed = fallback;
+            final String expected = MessageFormat.format("{0} >= 1", Lang.DEFAULT_VALUE.toString());
+            return wrongConfigValue("variable.create.TimesBeUsed.Default", expected, defaultVal, fallback);
         } else if ((max < 1) || (min > max)) {
             if (defaultVal >= 1) {
                 this.timesBeUsed = defaultVal;
                 final String expected = MessageFormat.format("{0} >= 1, {1} <= {0}", Lang.MAX_VALUE.toString(),
                         Lang.MIN_VALUE.toString());
                 return wrongConfigValue("variable.create.TimesBeUsed.Max", expected, max, defaultVal);
-            } else {
-                this.timesBeUsed = fallback;
-                final String expected = MessageFormat.format("{0} >= 1", Lang.DEFAULT_VALUE.toString());
-                return wrongConfigValue("variable.create.TimesBeUsed.Default", expected, defaultVal, fallback);
             }
+            this.timesBeUsed = fallback;
+            final String expected = MessageFormat.format("{0} >= 1", Lang.DEFAULT_VALUE.toString());
+            return wrongConfigValue("variable.create.TimesBeUsed.Default", expected, defaultVal, fallback);
         } else {
             if (useDefaultOnFail) {
                 return checkTimesBeUsed(defaultVal, false);
@@ -595,15 +589,14 @@ public class ScrollDatabase extends Database {
             }
             name = input;
             return success(Lang.SCROLL_NAME.toString(), input);
-        } else {
-            final String expected = MessageFormat.format(Lang.MATCHING_REGEX.toString(), regex);
-            final String got = MessageFormat.format(Lang.NOT_MATCHING_REGEX.toString(), regex);
-            if (useDefaultOnFail) {
-                final String defaultVal = Main.getInstance().getConfig().getString("variable.create.EnterName.Default");
-                name = defaultVal;
-            }
-            return enterAgain(expected, got);
         }
+        final String expected = MessageFormat.format(Lang.MATCHING_REGEX.toString(), regex);
+        final String got = MessageFormat.format(Lang.NOT_MATCHING_REGEX.toString(), regex);
+        if (useDefaultOnFail) {
+            final String defaultVal = Main.getInstance().getConfig().getString("variable.create.EnterName.Default");
+            name = defaultVal;
+        }
+        return enterAgain(expected, got);
     }
 
 }

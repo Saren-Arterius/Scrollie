@@ -100,18 +100,17 @@ public class MakeProcess extends ScrollDatabase {
                 player.sendMessage(MessageFormat.format(Lang.ERROR_HOOKING.toString(), "Vault"));
                 return false;
             }
-        } else {
-            final ExperienceManager man = new ExperienceManager(player);
-            final double EXPRequied = getEXPRequired();
-            if (!man.hasExp(EXPRequied)) {
-                player.sendMessage(MessageFormat.format(Lang.YOU_DONT_HAVE_ENOUGH_EXP.toString(), EXPRequied,
-                        man.getCurrentExp(), Lang.EXP.toString()));
-                return false;
-            }
-            man.changeExp(-EXPRequied);
-            player.sendMessage(MessageFormat.format(Lang.COST_CHARGED.toString(), EXPRequied, Lang.EXP.toString()));
-            return true;
         }
+        final ExperienceManager man = new ExperienceManager(player);
+        final double EXPRequied = getEXPRequired();
+        if (!man.hasExp(EXPRequied)) {
+            player.sendMessage(MessageFormat.format(Lang.YOU_DONT_HAVE_ENOUGH_EXP.toString(), EXPRequied,
+                    man.getCurrentExp(), Lang.EXP.toString()));
+            return false;
+        }
+        man.changeExp(-EXPRequied);
+        player.sendMessage(MessageFormat.format(Lang.COST_CHARGED.toString(), EXPRequied, Lang.EXP.toString()));
+        return true;
     }
 
     public boolean magickScroll(boolean hasCost) {

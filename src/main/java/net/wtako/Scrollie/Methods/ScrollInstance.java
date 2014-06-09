@@ -91,7 +91,7 @@ public class ScrollInstance extends Database {
         return true;
     }
 
-    public ItemStack getScrollItem(String name) throws SQLException {
+    public ItemStack getScrollItem(String name) {
         final String itemTypeRequiredString = Main.getInstance().getConfig().getString("variable.make.ScrollItem");
         final Material itemTypeRequired = Material.getMaterial(itemTypeRequiredString.toUpperCase());
         final ItemStack scrollItem = new ItemStack(itemTypeRequired, 1);
@@ -103,7 +103,7 @@ public class ScrollInstance extends Database {
         return scrollItem;
     }
 
-    public List<String> getLores() throws SQLException {
+    public List<String> getLores() {
         final List<String> lore = new ArrayList<String>();
 
         lore.add(MessageFormat.format(lorePattern, Lang.DESTINATION_TYPE,
@@ -344,7 +344,7 @@ public class ScrollInstance extends Database {
         selStmt.close();
     }
 
-    public void updateRemainingTimes(Player player) throws SQLException {
+    public void updateRemainingTimes(Player player) {
         timesRemaining--;
         player.getInventory().remove(item);
         if (item.getAmount() > 1) {

@@ -62,20 +62,19 @@ public class RandomLocation implements LocationSource {
                 return null;
             }
             return destLoc;
-        } else {
-            int loopCount = 0;
-            do {
-                loopCount++;
-                destLoc = new Location(destWorld, RandomLocation.randInt(limits.get("MinX"), limits.get("MaxX")), 255,
-                        RandomLocation.randInt(limits.get("MinZ"), limits.get("MaxZ")));
-            } while ((locationIsInBadBiome(destLoc) || locationIsInFaction(destLoc) || locationHasBadBlocksOnAnyY(destLoc))
-                    && loopCount <= 20);
-            if (loopCount > 20) {
-                return null;
-            }
-            destLoc.setY(destWorld.getHighestBlockYAt(destLoc));
-            return destLoc;
         }
+        int loopCount = 0;
+        do {
+            loopCount++;
+            destLoc = new Location(destWorld, RandomLocation.randInt(limits.get("MinX"), limits.get("MaxX")), 255,
+                    RandomLocation.randInt(limits.get("MinZ"), limits.get("MaxZ")));
+        } while ((locationIsInBadBiome(destLoc) || locationIsInFaction(destLoc) || locationHasBadBlocksOnAnyY(destLoc))
+                && loopCount <= 20);
+        if (loopCount > 20) {
+            return null;
+        }
+        destLoc.setY(destWorld.getHighestBlockYAt(destLoc));
+        return destLoc;
     }
 
     private boolean locationIsInFaction(Location loc) {
