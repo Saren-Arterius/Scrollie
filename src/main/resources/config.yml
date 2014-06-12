@@ -114,6 +114,8 @@ variable:
             SELF: Yes
 
     use:
+        SpawnWorld: world_urs
+    
         BanCreative: Yes
         
         # If set to Yes, remaining count will get decreased by 1 on teleportation success/fail.

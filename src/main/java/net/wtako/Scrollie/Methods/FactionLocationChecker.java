@@ -43,8 +43,7 @@ public class FactionLocationChecker {
             return Main.getInstance().getConfig().getBoolean("variable.use.Factions.SELF.CanTeleportToTerritories");
         }
         final String relationWish = destFaction.getRelationWish(playerSelfFaction).toString();
-        final String node = MessageFormat
-                .format("variable.use.Factions.{0}.CanTeleportToTerritories", relationWish);
+        final String node = MessageFormat.format("variable.use.Factions.{0}.CanTeleportToTerritories", relationWish);
         if (!Main.getInstance().getConfig().getBoolean(node)) {
             if (Main.getInstance().getConfig()
                     .getBoolean("variable.use.Factions.IfSelfFactionPowerIsHigherThenOverrideTPTo")
@@ -73,8 +72,7 @@ public class FactionLocationChecker {
             return Main.getInstance().getConfig().getBoolean("variable.use.Factions.SELF.CanTeleportFromTerritories");
         }
         final String relationWish = sourceLocationFaction.getRelationWish(playerSelfFaction).toString();
-        final String node = MessageFormat.format("variable.use.Factions.{0}.CanTeleportFromTerritories",
-                relationWish);
+        final String node = MessageFormat.format("variable.use.Factions.{0}.CanTeleportFromTerritories", relationWish);
         if (!Main.getInstance().getConfig().getBoolean(node)) {
             if (Main.getInstance().getConfig()
                     .getBoolean("variable.use.Factions.IfSelfFactionPowerIsHigherThenOverrideTPFrom")
@@ -102,8 +100,7 @@ public class FactionLocationChecker {
         final String relationWish = targetPlayerFaction.getRelationWish(teleporterSelfFaction).toString();
         final String node = MessageFormat.format("variable.make.CanTeleportToFactionPlayer.{0}", relationWish);
         if (!Main.getInstance().getConfig().getBoolean(node)) {
-            if (Main.getInstance().getConfig()
-                    .getBoolean("variable.make.IfSelfFactionPowerIsHigherThenOverrideTPTo")
+            if (Main.getInstance().getConfig().getBoolean("variable.make.IfSelfFactionPowerIsHigherThenOverrideTPTo")
                     && FactionLocationChecker.isPowerHigher(teleporterSelfFaction, targetPlayerFaction)) {
                 teleporter.sendMessage(MessageFormat.format(Lang.YOU_CAN_TP_TO_HIM_BECAUSE_POWER_HIGHER.toString(),
                         target.getName()));
