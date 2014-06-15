@@ -63,6 +63,11 @@ public class FactionLocationChecker {
         }
         final UPlayer factionPlayer = UPlayer.get(player);
         final Faction playerSelfFaction = factionPlayer.getFaction();
+
+        if (playerSelfFaction.getFlag(FFlag.PEACEFUL)) {
+            return true;
+        }
+
         final Faction sourceLocationFaction = BoardColls.get().getFactionAt(PS.valueOf(player.getLocation()));
         final Faction wilderness = FactionColls.get().getForUniverse(factionPlayer.getUniverse()).getNone();
         if (sourceLocationFaction == wilderness) {

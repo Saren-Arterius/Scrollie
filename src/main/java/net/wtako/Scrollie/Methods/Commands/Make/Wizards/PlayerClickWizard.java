@@ -44,6 +44,7 @@ public class PlayerClickWizard extends Wizard {
         PlayerClickWizard.inProcess.remove(player.getName());
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         final Player player = event.getPlayer();
@@ -56,6 +57,19 @@ public class PlayerClickWizard extends Wizard {
             player.sendMessage(Lang.EXIT_MAKING.toString());
             Wizard.leave(player);
             event.setCancelled(true);
+        }
+        if (player.hasPermission(Main.getInstance().getProperty("artifactId") + ".admin")) {
+            event.setCancelled(true);
+            final Player targetPlayer = Main.getInstance().getServer().getPlayer(input);
+            if (targetPlayer != null) {
+                process.targetName = targetPlayer.getName();
+            } else {
+                process.targetName = input;
+            }
+            if (process.magickScroll(false)) {
+                Wizard.leave(player);
+            }
+            return;
         }
     }
 

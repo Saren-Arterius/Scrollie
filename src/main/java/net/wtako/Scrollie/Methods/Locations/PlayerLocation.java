@@ -8,6 +8,7 @@ import java.text.MessageFormat;
 
 import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.Methods.Database;
+import net.wtako.Scrollie.Methods.FactionLocationChecker;
 import net.wtako.Scrollie.Methods.LocationSource;
 import net.wtako.Scrollie.Utils.FileTool;
 import net.wtako.Scrollie.Utils.Lang;
@@ -39,6 +40,10 @@ public class PlayerLocation implements LocationSource {
         if (target != null) {
             if (target.hasPermission(Main.getInstance().getProperty("artifactId") + ".cantBeTeleportTarget")) {
                 player.sendMessage(Lang.NOT_PREMITTED_TO_TELEPORT_TO_THAT_PLAYER.toString());
+                return null;
+            }
+            if (Main.getInstance().getConfig().getBoolean("system.FactionsSupport")
+                    && !FactionLocationChecker.checkIfCanTeleportPlayer(player, target)) {
                 return null;
             }
             return target.getLocation();

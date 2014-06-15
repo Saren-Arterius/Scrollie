@@ -2,6 +2,7 @@ package net.wtako.Scrollie.Methods.Locations;
 
 import net.wtako.Scrollie.Main;
 import net.wtako.Scrollie.Methods.LocationSource;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
