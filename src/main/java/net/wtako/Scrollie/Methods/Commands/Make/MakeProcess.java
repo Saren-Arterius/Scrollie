@@ -196,7 +196,7 @@ public class MakeProcess extends ScrollDatabase {
                 Wizard.enterOrLeave(player, new PlayerClickWizard(player, this));
             } else if (getDestinationType() == 4) {
                 if (Main.getInstance().getConfig().getBoolean("system.FactionsSupport")
-                        && !FactionLocationChecker.checkIfCanTeleportFrom(player)) {
+                        && !FactionLocationChecker.canTeleportFrom(player)) {
                     return;
                 }
                 destWorld = player.getWorld().getName();

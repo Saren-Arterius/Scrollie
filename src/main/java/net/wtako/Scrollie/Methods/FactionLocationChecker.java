@@ -11,36 +11,34 @@ import org.bukkit.entity.Player;
 import com.massivecraft.factions.FFlag;
 import com.massivecraft.factions.entity.BoardColls;
 import com.massivecraft.factions.entity.Faction;
-import com.massivecraft.factions.entity.FactionColls;
 import com.massivecraft.factions.entity.UPlayer;
 import com.massivecraft.mcore.ps.PS;
 
 public class FactionLocationChecker {
 
     public static boolean checkFaction(Player player, Location destLoc) {
-        if (FactionLocationChecker.checkIfCanTeleportTo(player, destLoc)
-                && FactionLocationChecker.checkIfCanTeleportFrom(player)) {
+        if (FactionLocationChecker.canTeleportTo(player, destLoc)
+                && FactionLocationChecker.canTeleportFrom(player)) {
             return true;
         }
         return false;
     }
 
-    private static boolean checkIfCanTeleportTo(Player player, Location destLoc) {
+    private static boolean canTeleportTo(Player player, Location destLoc) {
         if (player.hasPermission(Main.getInstance().getProperty("artifactId") + ".canUseScrollInRestrictedAreas")) {
             return true;
         }
         final UPlayer factionPlayer = UPlayer.get(player);
         final Faction playerSelfFaction = factionPlayer.getFaction();
         final Faction destFaction = BoardColls.get().getFactionAt(PS.valueOf(destLoc));
-        final Faction wilderness = FactionColls.get().getForUniverse(factionPlayer.getUniverse()).getNone();
-        if (destFaction == wilderness) {
+        if (destFaction.isNone()) {
             return true;
         }
         if (destFaction.getFlag(FFlag.PEACEFUL) && destFaction.getFlag(FFlag.PERMANENT)) {
             return true;
         }
         if (destFaction == playerSelfFaction) {
-            return Main.getInstance().getConfig().getBoolean("variable.use.Factions.SELF.CanTeleportToTerritories");
+            return true;
         }
         final String relationWish = destFaction.getRelationWish(playerSelfFaction).toString();
         final String node = MessageFormat.format("variable.use.Factions.{0}.CanTeleportToTerritories", relationWish);
@@ -51,13 +49,13 @@ public class FactionLocationChecker {
                 player.sendMessage(Lang.YOUR_SCROLL_STILL_WORKS.toString());
                 return true;
             }
-            player.sendMessage(Lang.CANT_TP_TO_ENEMY_TERRITORY.toString());
+            player.sendMessage(MessageFormat.format(Lang.CANT_TP_TO_ENEMY_TERRITORY.toString(), destFaction.getName()));
             return false;
         }
         return true;
     }
 
-    public static boolean checkIfCanTeleportFrom(Player player) {
+    public static boolean canTeleportFrom(Player player) {
         if (player.hasPermission(Main.getInstance().getProperty("artifactId") + ".canUseScrollInRestrictedAreas")) {
             return true;
         }
@@ -67,14 +65,12 @@ public class FactionLocationChecker {
         if (playerSelfFaction.getFlag(FFlag.PEACEFUL)) {
             return true;
         }
-
         final Faction sourceLocationFaction = BoardColls.get().getFactionAt(PS.valueOf(player.getLocation()));
-        final Faction wilderness = FactionColls.get().getForUniverse(factionPlayer.getUniverse()).getNone();
-        if (sourceLocationFaction == wilderness) {
+        if (sourceLocationFaction.isNone()) {
             return true;
         }
         if (sourceLocationFaction == playerSelfFaction) {
-            return Main.getInstance().getConfig().getBoolean("variable.use.Factions.SELF.CanTeleportFromTerritories");
+            return true;
         }
         final String relationWish = sourceLocationFaction.getRelationWish(playerSelfFaction).toString();
         final String node = MessageFormat.format("variable.use.Factions.{0}.CanTeleportFromTerritories", relationWish);
@@ -85,7 +81,8 @@ public class FactionLocationChecker {
                 player.sendMessage(Lang.YOUR_SCROLL_STILL_WORKS.toString());
                 return true;
             }
-            player.sendMessage(Lang.CANT_TP_FROM_ENEMY_TERRITORY.toString());
+            player.sendMessage(MessageFormat.format(Lang.CANT_TP_FROM_ENEMY_TERRITORY.toString(),
+                    sourceLocationFaction.getName()));
             return false;
         }
         return true;

@@ -24,7 +24,7 @@ public class CommandScrollie implements CommandExecutor {
                 new ArgMake(sender, args).goToWizard();
                 return true;
             } else if (args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("ls")) {
-                new ArgList(sender, args);
+                new ArgList(sender);
                 return true;
             } else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("del")
                     || args[0].equalsIgnoreCase("rm")) {

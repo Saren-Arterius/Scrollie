@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.wtako</groupId>
 	<artifactId>Scrollie</artifactId>
-	<version>0.0.6c</version>
+	<version>0.0.6d</version>
 	<name>Scrollie</name>
 	<description>Yet another useless scroll teleportation Minecraft plugin.</description>
 	<url>https://gitlab.wtako.net/Saren/Scrollie</url>

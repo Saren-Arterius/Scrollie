@@ -8,19 +8,26 @@ import net.wtako.Scrollie.Utils.Lang;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class ArgList {
 
-    public ArgList(CommandSender sender, String[] args) {
+    public ArgList(final CommandSender sender) {
         if (!sender.hasPermission(Main.getInstance().getProperty("artifactId") + ".make")) {
             sender.sendMessage(Lang.NO_PERMISSION_COMMAND.toString());
             return;
         }
-        try {
-            sender.sendMessage(ScrollDatabase.listAll((Player) sender));
-        } catch (final SQLException e) {
-            e.printStackTrace();
-            sender.sendMessage(Lang.DB_EXCEPTION.toString());
-        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    sender.sendMessage(ScrollDatabase.listAll((Player) sender));
+                } catch (final SQLException e) {
+                    e.printStackTrace();
+                    sender.sendMessage(Lang.DB_EXCEPTION.toString());
+                }
+            }
+        }.runTaskAsynchronously(Main.getInstance());
+
     }
 }

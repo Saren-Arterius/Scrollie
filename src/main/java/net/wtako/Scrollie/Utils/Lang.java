@@ -117,10 +117,10 @@ public enum Lang {
             "&eYour scroll (will) still works because your faction has higher power than others'."),
     CANT_TP_FROM_ENEMY_TERRITORY(
             "cant-tp-from-enemy-territory",
-            "&cYour scroll isn't (will not) going to work! Are you in other faction's territory?"),
+            "&cYour scroll isn't (will not) going to work! Are you in other faction's territory? &f<&c{0}&f>"),
     CANT_TP_TO_ENEMY_TERRITORY(
             "cant-tp-to-enemy-territory",
-            "&cYour scroll isn't going to work! Are you teleporting to other faction's territory?"),
+            "&cYour scroll isn't going to work! Are you teleporting to other faction's territory? &f<&c{0}&f>"),
     TARGET_PLAYER_IS_OFFLINE("target-player-is-offline", "&e{0} is offline."),
     WILL_TP_TO_OFFLINE_PLAYER_LOCATION(
             "will-tp-to-offline-player-location",
