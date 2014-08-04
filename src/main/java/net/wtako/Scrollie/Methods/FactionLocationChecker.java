@@ -17,8 +17,7 @@ import com.massivecraft.mcore.ps.PS;
 public class FactionLocationChecker {
 
     public static boolean checkFaction(Player player, Location destLoc) {
-        if (FactionLocationChecker.canTeleportTo(player, destLoc)
-                && FactionLocationChecker.canTeleportFrom(player)) {
+        if (FactionLocationChecker.canTeleportTo(player, destLoc) && FactionLocationChecker.canTeleportFrom(player)) {
             return true;
         }
         return false;

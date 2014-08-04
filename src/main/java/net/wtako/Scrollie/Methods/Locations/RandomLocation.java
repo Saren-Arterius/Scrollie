@@ -14,6 +14,7 @@ import net.wtako.Scrollie.Schedulers.PlayerPositionChecker;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -49,13 +50,18 @@ public class RandomLocation implements LocationSource {
 
     @Override
     public Location get() {
-        if (Main.getInstance().getConfig().getBoolean("variable.use.Random.UseAlternativeMethod")) {
+        if (destWorld.getEnvironment() == Environment.THE_END) {
+            return null;
+        }
+        if (destWorld.getEnvironment() == Environment.NETHER
+                || Main.getInstance().getConfig().getBoolean("variable.use.Random.UseAlternativeMethod")) {
             int loopCount = 0;
             do {
                 loopCount++;
                 destLoc = new Location(destWorld, RandomLocation.randInt(limits.get("MinX"), limits.get("MaxX")),
-                        RandomLocation.randInt(limits.get("MinY"), limits.get("MaxY")), RandomLocation.randInt(
-                                limits.get("MinZ"), limits.get("MaxZ")));
+                        RandomLocation.randInt(limits.get("MinY"),
+                                destWorld.getEnvironment() == Environment.NETHER ? 127 : limits.get("MaxY")),
+                        RandomLocation.randInt(limits.get("MinZ"), limits.get("MaxZ")));
             } while ((locationIsInBadBiome(destLoc) || !PlayerPositionChecker.isSafeLocation(destLoc) || locationIsInFaction(destLoc))
                     || locationHasBadBlocksOnAnyY(destLoc) && loopCount <= 100);
             if (loopCount > 100) {
