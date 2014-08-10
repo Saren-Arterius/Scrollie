@@ -22,7 +22,7 @@ public class TPCommandListener implements Listener {
         if (!event.getMessage().equalsIgnoreCase("/spawn")) {
             return;
         }
-        if (event.getPlayer().hasPermission("Scrollie.admin")) {
+        if (event.getPlayer().hasPermission(Main.getInstance().getProperty("artifactId") + ".admin")) {
             return;
         }
         event.setCancelled(true);
@@ -45,7 +45,7 @@ public class TPCommandListener implements Listener {
         if (!event.getMessage().equalsIgnoreCase("/home")) {
             return;
         }
-        if (event.getPlayer().hasPermission("Scrollie.admin")) {
+        if (event.getPlayer().hasPermission(Main.getInstance().getProperty("artifactId") + ".admin")) {
             return;
         }
         event.setCancelled(true);
@@ -57,10 +57,10 @@ public class TPCommandListener implements Listener {
 
     @EventHandler
     public void onTPCommands(PlayerCommandPreprocessEvent event) {
-        if (!event.getMessage().equalsIgnoreCase("/tp") && !event.getMessage().equalsIgnoreCase("/tpa")) {
+        if (!event.getMessage().toLowerCase().startsWith("/tp")) {
             return;
         }
-        if (event.getPlayer().hasPermission("Scrollie.admin")) {
+        if (event.getPlayer().hasPermission(Main.getInstance().getProperty("artifactId") + ".admin")) {
             return;
         }
         event.setCancelled(true);
