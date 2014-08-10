@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import net.wtako.Scrollie.Commands.CommandScrollie;
 import net.wtako.Scrollie.EventHandlers.PlayerDamageListener;
 import net.wtako.Scrollie.EventHandlers.ScrollUseListener;
-import net.wtako.Scrollie.EventHandlers.SpawnCommandListener;
+import net.wtako.Scrollie.EventHandlers.TPCommandListener;
 import net.wtako.Scrollie.Methods.Database;
 import net.wtako.Scrollie.Utils.Lang;
 
@@ -32,7 +32,7 @@ public final class Main extends JavaPlugin {
         getCommand(Main.getInstance().getName()).setExecutor(new CommandScrollie());
         getServer().getPluginManager().registerEvents(new ScrollUseListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDamageListener(), this);
-        getServer().getPluginManager().registerEvents(new SpawnCommandListener(), this);
+        getServer().getPluginManager().registerEvents(new TPCommandListener(), this);
         loadLang();
         try {
             new Database().check();

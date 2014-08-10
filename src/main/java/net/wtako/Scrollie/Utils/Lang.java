@@ -150,6 +150,10 @@ public enum Lang {
     MAKE_USAGE("make-usage", "Usage: &a/" + Main.getInstance().getName()
             + " make &f<&cScroll ID&f> [<&3Max use times&f> (&coverrides&f)], &a[] = Optional"),
     DELETE_USAGE("delete-usage", "Usage: &a/" + Main.getInstance().getName() + " delete &f<&cScroll ID&f>"),
+    
+    PLEASE_USE_SCROLLIE("please-use-scrollie", "&cPlease use Scrollie for that."),
+    TUTORIAL("tutorial", "(Here lies the tutorial.)"),
+    TUTORIAL_TPA("tutorial-tpa", "(Here lies the tpa tutorial.)"),
 
     DEFAULT_VALUE("default-value", "Default"),
     MIN_VALUE("min-value", "Min"),
